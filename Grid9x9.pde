@@ -1,16 +1,4 @@
 public class Grid9x9 extends BaseGrid {
-  private color gameFill = color(255);
-  private color gameStroke = color(51);
-  private color baseFill = color(220);
-  private color neighbourFill = color(255, 255, 200);
-  private color thisFill = color(255, 255, 100);
-  private color buttonFill = color(51);
-  private color buttonStroke = color(220);
-  private color flashFill = color(255, 200, 200);
-  private color darkBgFore = color(220);
-  private color lightBgFore = color(51);
-  private color blue = color(0, 0, 255);
-
   FlashSquareList flashSquares = new FlashSquareList();
   boolean smallNumbers = false;
   boolean numFirst = true;
@@ -78,6 +66,8 @@ public class Grid9x9 extends BaseGrid {
     line(0, 9 * sy, width, 9 * sy);
     pop();
 
+    boolean allNine = true;
+
     for (int i = 0; i < 9; i++) {
       drawNumber(i, 9, i, selectedn == i);
       push();
@@ -90,12 +80,20 @@ public class Grid9x9 extends BaseGrid {
       fill((selectedn == i) ? lightBgFore : darkBgFore);
       strokeWeight(0);
       text(counts[i], 2 * sxs, 0);
+      if (counts[i] < 9) allNine = false;
       pop();
     }
+
+    if (allNine) println("Solved");
 
     push();
     fill(darkBgFore);
     drawText(0, 10, "*");
+    pop();
+
+    push();
+    fill((flashSquares.contains(5, 10))?lightBgFore:darkBgFore);
+    drawText(5, 10, "?");
     pop();
 
     if (smallNumbers) {
@@ -162,7 +160,7 @@ public class Grid9x9 extends BaseGrid {
   }
 
   private color cellBg(int x, int y) {
-    if (flashSquares.contains(x, y)) return flashFill;
+    if (flashSquares.contains(x, y)) return flashSquares.colorOf(x, y);
     else if (x == selectedn && y == 9) return thisFill;
     else if (x == 7 && y == 10 && selectedn == -2) return thisFill;
     else if (y < 9 && selectedn != -1 && selectedn!=-2 && (selectedn == game[x][y] || (game[x][y] == -1 && notes[x][y][selectedn]))) return neighbourFill;
@@ -214,17 +212,18 @@ public class Grid9x9 extends BaseGrid {
         newGame(gen.generate());
         break;
       case 1:
-        lockAsBase(true);
         break;
       case 2:
         break;
       case 3:
         break;
       case 4:
-        getSolver().countSolutions();
         break;
       case 5:
-        setSolver(getSolver());
+        int count = getSolver().countSolutions();
+        if (count < 1) flashSquares.newNow(5, 10, 40, flashFillBad);
+        else if (count > 1) flashSquares.newNow(5, 10, 40, neighbourFill);
+        else flashSquares.newNow(5, 10, 40, flashFillGood);
         break;
       case 6:
         numFirst = !numFirst;
@@ -290,14 +289,14 @@ public class Grid9x9 extends BaseGrid {
       for (int x = 0; x < cols; x++) {
         if (isRowColSc(x, y, atx, aty) && game[x][y] == num) {
           can = false;
-          if (flashTime > -1) flashSquares.newNow(x, y, flashTime);
+          if (flashTime > -1) flashSquares.newNow(x, y, flashTime, flashFillBad);
         }
       }
     }
     return can;
   }
 
-  public void lockAsBase(boolean output) {
+  public void lockAsBase(boolean output, boolean finalise) {
     baseClues = 0;
     for (int y = 0; y < rows; y++) {
       for (int x = 0; x < cols; x++) {
@@ -321,9 +320,36 @@ public class Grid9x9 extends BaseGrid {
       }
     }
   }
-  
+
   public BaseSolver getSolver() {
     return new Solver9x9(this);
+  }
+
+  public BaseGrid clone() {
+    Grid9x9 clone = new Grid9x9(sizex, sizey, extraRows);
+
+    clone.baseClues = baseClues;
+    clone.game = new int[clone.cols][clone.rows];
+    for (int y = 0; y < clone.rows; y++) {
+      for (int x = 0; x < clone.cols; x++) {
+        clone.game[x][y] = game[x][y];
+        clone.baseGame[x][y] = baseGame[x][y];
+        for (int n = 0; n < 9; n++) {
+          clone.notes[x][y][n] = notes[x][y][n];
+        }
+      }
+    }
+    clone.selectedx = selectedx;
+    clone.selectedy = selectedy;
+    clone.selectedn = selectedn;
+
+    clone.flashSquares = flashSquares.clone();
+
+    clone.smallNumbers = smallNumbers;
+    clone.numFirst = numFirst;
+    clone.finalised = finalised;
+
+    return clone;
   }
 }
 

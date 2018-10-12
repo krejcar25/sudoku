@@ -15,34 +15,42 @@ public abstract class BaseGrid {
   int selectedy = -1;
   int selectedn = -1;
 
-  private color gameFill = color(255);
-  private color gameStroke = color(51);
-  private color baseFill = color(220);
-  private color neighbourFill = color(255, 255, 200);
-  private color thisFill = color(255, 255, 100);
-  private color buttonFill = color(51);
-  private color buttonStroke = color(220);
-  private color flashFill = color(255, 200, 200);
-  private color darkBgFore = color(220);
-  private color lightBgFore = color(51);
-  private color blue = color(0, 0, 255);
+  protected color gameFill = color(255);
+  protected color gameStroke = color(51);
+  protected color baseFill = color(220);
+  protected color neighbourFill = color(255, 255, 200);
+  protected color thisFill = color(255, 255, 100);
+  protected color buttonFill = color(51);
+  protected color buttonStroke = color(220);
+  protected color flashFillBad = color(255, 200, 200);
+  protected color flashFillGood = color(200, 255, 200);
+  protected color darkBgFore = color(220);
+  protected color lightBgFore = color(51);
+  protected color blue = color(0, 0, 255);
 
-  FlashSquareList flashSquares = new FlashSquareList();
-  boolean smallNumbers = false;
-  boolean numFirst = true;
+  FlashSquareList flashSquares;
+  boolean smallNumbers;
+  boolean numFirst;
+
+  boolean finalised;
 
   public BaseGrid(int sizex, int sizey, int extraRows) {
     this.sizex = sizex;
     this.sizey = sizey;
     this.extraRows = extraRows;
+    this.flashSquares = new FlashSquareList();
+    smallNumbers = false;
+    numFirst = true;
+    finalised = false;
   }
-  
+
   public abstract void show();
   public abstract void click(int x, int y, boolean right);
   public abstract void select(int x, int y);
   public abstract void placeNumber(int num, int x, int y);
   public abstract boolean canPlaceNumber(int num, int atx, int aty, int flashTime);
-  public abstract void lockAsBase(boolean output);
+  public abstract void lockAsBase(boolean output, boolean finalise);
   public abstract void keyInput(int k);
   public abstract BaseSolver getSolver();
+  public abstract BaseGrid clone();
 }

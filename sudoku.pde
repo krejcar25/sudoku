@@ -1,15 +1,56 @@
 BaseGrid game;
 BaseSolver solver;
 int desiredClues = 30;
+long[] times;
+int done;
+boolean benchmark = false;
 
 void setup() {
   size(810, 990);
-  SudokuGenerator gen = new Sudoku9x9Generator(desiredClues, width, height);
-  game = gen.generate();
+  times = new long[10000];
+  done = 0;
+  if (!benchmark) generateGame();
 }
 
 void draw() {
-  if (solver != null && frameCount % 1 == 0) {
+  if (benchmark) benchmark();
+  else runGame();
+}
+
+void benchmark() {
+  times[done] = generateGame();
+  done++;
+  if (done >= times.length) {
+    String[] t = new String[times.length];
+    for (int i = 0; i < times.length; i++) {
+      t[i] = String.valueOf(times[i]);
+    }
+    saveStrings("genTimes.txt", t);
+    text("Finished", 80, 240);
+    noLoop();
+  }
+
+  background(220);
+  fill(51);
+  noStroke();
+  textSize(60);
+  text("Finished cycles: " + done, 80, 80);
+  long sum = 0;
+  for (int i = 0; i < done; i++) {
+    sum += times[i];
+  }
+  float avg = ((float)sum) / done;
+  text("Average time: " + avg, 80, 160);
+}
+
+long generateGame() {
+  SudokuGenerator gen = new Sudoku9x9Generator(desiredClues, width, height);
+  game = gen.generate();
+  return gen.timer.getElapsedTime();
+}
+
+void runGame() {
+  if (solver != null && frameCount % 20 == 0) {
     if (solver.cycleAllowed) solver.cycle();
     else if (!solver.used) {
       if (!solver.prepare()) solver = null;

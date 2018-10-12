@@ -12,7 +12,8 @@ public abstract class BaseSolver {
   protected boolean wentBack;
 
   public BaseSolver(BaseGrid game) {
-    this.game = game;
+    this.game = game.clone();
+    this.game.lockAsBase(false,false);
     timer = new StopWatch("GridSolver");
     numbers = new ArrayList<ArrayList<ArrayList<Integer>>>();
     tryNext = true;
@@ -111,6 +112,7 @@ public class Solver9x9 extends BaseSolver {
   
   public int finish() {
     println("Solving finished in " + timer.getElapsedTimeSecs() + " seconds (" + timer.getElapsedTime() + " milliseconds, to be precise). Found " + count + " solutions.");
+    game.select(-1,-1);
     return count;
   }
 

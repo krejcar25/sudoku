@@ -83,7 +83,7 @@ public class Sudoku9x9Generator extends SudokuGenerator {
       if (game.game[x][y] > -1) {
         int cell = game.game[x][y];
         game.game[x][y] = -1;
-        game.lockAsBase(false);
+        game.lockAsBase(false, false);
         int solutions = game.getSolver().countSolutions();
         if (solutions > 1) {
           game.game[x][y] = cell;
@@ -94,7 +94,7 @@ public class Sudoku9x9Generator extends SudokuGenerator {
     game.select(-1, -1);
     
     println("removal target: " + (80 - targetCount) + ", removed: " + removed);
-    game.lockAsBase(true);
+    game.lockAsBase(true, true);
     timer.stop();
     println("Generation finished in " + timer.getElapsedTimeSecs() + " seconds (" + timer.getElapsedTime() + " milliseconds, to be precise)");
     return game;

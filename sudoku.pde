@@ -1,20 +1,23 @@
 BaseGrid game;
 BaseSolver solver;
-int desiredClues = 30;
+int desiredClues = 28;
 long[] times;
 int done;
 boolean benchmark = false;
+WinOverlay overlay;
 
 void setup() {
   size(810, 990);
   times = new long[10000];
   done = 0;
   if (!benchmark) generateGame();
+  overlay = new WinOverlay(55,350,700,200);
 }
 
 void draw() {
   if (benchmark) benchmark();
   else runGame();
+  image(overlay.show(), overlay.x, overlay.y);
 }
 
 void benchmark() {

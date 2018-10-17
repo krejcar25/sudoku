@@ -34,6 +34,8 @@ public abstract class BaseGrid {
 
   boolean finalised;
 
+  StopWatch timer;
+
   public BaseGrid(int sizex, int sizey, int extraRows) {
     this.sizex = sizex;
     this.sizey = sizey;
@@ -42,6 +44,7 @@ public abstract class BaseGrid {
     smallNumbers = false;
     numFirst = true;
     finalised = false;
+    timer = new StopWatch("9x9 Grid");
   }
 
   public abstract void show();

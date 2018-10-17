@@ -84,7 +84,10 @@ public class Grid9x9 extends BaseGrid {
       pop();
     }
 
-    if (allNine) println("Solved");
+    if (allNine && timer.running) {
+      timer.stop();
+      println("Solved");
+    }
 
     push();
     fill(darkBgFore);
@@ -92,13 +95,13 @@ public class Grid9x9 extends BaseGrid {
     pop();
 
     push();
-    fill((flashSquares.contains(5, 10))?lightBgFore:darkBgFore);
-    drawText(5, 10, "?");
+    fill((flashSquares.contains(1, 10))?lightBgFore:darkBgFore);
+    drawText(1, 10, "?");
     pop();
 
     if (smallNumbers) {
       push();
-      translate(8 * sx, 10 * sy);
+      translate(4 * sx, 10 * sy);
       strokeWeight(1);
       stroke(220);
       line(sx / 3, 0, sx / 3, sy);
@@ -110,28 +113,36 @@ public class Grid9x9 extends BaseGrid {
       push();
       fill(220);
       strokeWeight(0);
-      drawText(8, 10, "#");
+      drawText(4, 10, "#");
       pop();
     }
 
     push();
     fill((selectedn==-2)?lightBgFore:darkBgFore);
-    drawText(7, 10, "x");
+    drawText(3, 10, "x");
     pop();
 
     if (numFirst) {
       push();
       fill(220);
       strokeWeight(0);
-      drawText(6, 10, "N");
+      drawText(2, 10, "N");
       pop();
     } else {
       push();
       fill(220);
       strokeWeight(0);
-      drawText(6, 10, "C");
+      drawText(2, 10, "C");
       pop();
     }
+    
+    push();
+    fill(buttonFill);
+    stroke(buttonStroke);
+    strokeWeight(1);
+    rect(5 * sx, 10 * sy, 4 * sx, sy);
+    pop();
+    image(timer.show(), 9 * sx - 5 - timer.getx(sy - 10), 10 * sy + 5, timer.getx(sy - 10), sy - 10);
   }
 
   private void drawNumber(int x, int y, int num, boolean black) {
@@ -162,7 +173,7 @@ public class Grid9x9 extends BaseGrid {
   private color cellBg(int x, int y) {
     if (flashSquares.contains(x, y)) return flashSquares.colorOf(x, y);
     else if (x == selectedn && y == 9) return thisFill;
-    else if (x == 7 && y == 10 && selectedn == -2) return thisFill;
+    else if (x == 3 && y == 10 && selectedn == -2) return thisFill;
     else if (y < 9 && selectedn != -1 && selectedn!=-2 && (selectedn == game[x][y] || (game[x][y] == -1 && notes[x][y][selectedn]))) return neighbourFill;
     else if (y > 8) return buttonFill;
     else if (x == selectedx && y == selectedy) return thisFill;
@@ -212,30 +223,22 @@ public class Grid9x9 extends BaseGrid {
         newGame(gen.generate());
         break;
       case 1:
+        int count = getSolver().countSolutions();
+        if (count < 1) flashSquares.newNow(1, 10, 40, flashFillBad);
+        else if (count > 1) flashSquares.newNow(1, 10, 40, neighbourFill);
+        else flashSquares.newNow(1, 10, 40, flashFillGood);
         break;
       case 2:
-        break;
-      case 3:
-        break;
-      case 4:
-        break;
-      case 5:
-        int count = getSolver().countSolutions();
-        if (count < 1) flashSquares.newNow(5, 10, 40, flashFillBad);
-        else if (count > 1) flashSquares.newNow(5, 10, 40, neighbourFill);
-        else flashSquares.newNow(5, 10, 40, flashFillGood);
-        break;
-      case 6:
         numFirst = !numFirst;
         selectedx = -1;
         selectedy = -1;
         selectedn = -1;
         break;
-      case 7:
+      case 3:
         if (numFirst) selectedn = (selectedn==-2)?-1:-2;
         else placeNumber(-2, selectedx, selectedy);
         break;
-      case 8:
+      case 4:
         smallNumbers = !smallNumbers;
         break;
       }

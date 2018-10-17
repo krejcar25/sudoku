@@ -1,58 +1,16 @@
 BaseGrid game;
 BaseSolver solver;
 int desiredClues = 28;
-long[] times;
-int done;
-boolean benchmark = false;
 WinOverlay overlay;
 
 void setup() {
   size(810, 990);
-  times = new long[10000];
-  done = 0;
-  if (!benchmark) generateGame();
-  overlay = new WinOverlay(55,350,700,200);
+  SudokuGenerator gen = new Sudoku9x9Generator(desiredClues, width, height);
+  game = gen.generate();
+  overlay = new WinOverlay(55, 350, 700, 300);
 }
 
 void draw() {
-  if (benchmark) benchmark();
-  else runGame();
-  image(overlay.show(), overlay.x, overlay.y);
-}
-
-void benchmark() {
-  times[done] = generateGame();
-  done++;
-  if (done >= times.length) {
-    String[] t = new String[times.length];
-    for (int i = 0; i < times.length; i++) {
-      t[i] = String.valueOf(times[i]);
-    }
-    saveStrings("genTimes.txt", t);
-    text("Finished", 80, 240);
-    noLoop();
-  }
-
-  background(220);
-  fill(51);
-  noStroke();
-  textSize(60);
-  text("Finished cycles: " + done, 80, 80);
-  long sum = 0;
-  for (int i = 0; i < done; i++) {
-    sum += times[i];
-  }
-  float avg = ((float)sum) / done;
-  text("Average time: " + avg, 80, 160);
-}
-
-long generateGame() {
-  SudokuGenerator gen = new Sudoku9x9Generator(desiredClues, width, height);
-  game = gen.generate();
-  return gen.timer.getElapsedTime();
-}
-
-void runGame() {
   if (solver != null && frameCount % 20 == 0) {
     if (solver.cycleAllowed) solver.cycle();
     else if (!solver.used) {
@@ -63,6 +21,7 @@ void runGame() {
     }
   }
   game.show();
+  image(overlay.show(), overlay.x, overlay.y);
 }
 
 boolean xor(boolean a, boolean b) {

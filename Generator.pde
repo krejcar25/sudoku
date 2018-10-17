@@ -97,6 +97,7 @@ public class Sudoku9x9Generator extends SudokuGenerator {
     game.lockAsBase(true, true);
     timer.stop();
     println("Generation finished in " + timer.getElapsedTimeSecs() + " seconds (" + timer.getElapsedTime() + " milliseconds, to be precise)");
+    game.timer.start();
     return game;
   }
 

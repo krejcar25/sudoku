@@ -2,7 +2,10 @@ public class StopWatch {
 
   private long startTime = 0;
   private long stopTime = 0;
+  private long pauseStart = -1;
+  private long pauseTotal = 0;
   private boolean running = false;
+  private boolean finished = false;
   public String name;
 
   public StopWatch(String name) {
@@ -13,25 +16,46 @@ public class StopWatch {
     start(0);
   }
   public void start(long offset) {
-    this.startTime = System.currentTimeMillis() - offset;
-    println("StopWatch " + name + " started at " + startTime);
-    this.running = true;
+    if (finished) return;
+    long startTime = System.currentTimeMillis() - offset;
+    if (running && pauseStart > -1) {
+      pauseTotal += (startTime - pauseStart);
+      pauseStart = -1;
+      println("StopWatch " + name + " resumed at " + startTime);
+    } else if (!running) { 
+      this.startTime = startTime;
+      println("StopWatch " + name + " started at " + startTime);
+      this.running = true;
+    }
+  }
+
+  public void pause() {
+    pause(0);
+  }
+  public void pause(long offset) {
+    if (running && pauseStart == -1) {
+      long pauseStart = System.currentTimeMillis() - offset;
+      this.pauseStart = pauseStart;
+      println("StopWatch " + name + " paused at " + pauseStart);
+    }
   }
 
   public void stop() {
+    if (!running) return;
     this.stopTime = System.currentTimeMillis();
     println("StopWatch " + name + " stopped at " + stopTime);
     this.running = false;
+    this.finished = true;
   }
 
 
   //elaspsed time in milliseconds
   public long getElapsedTime() {
-    long elapsed;
+    long elapsed = -pauseTotal;
     if (running) {
-      elapsed = (System.currentTimeMillis() - startTime);
+      elapsed += (System.currentTimeMillis() - startTime);
     } else {
-      elapsed = (stopTime - startTime);
+      elapsed += (stopTime - startTime);
     }
     return elapsed;
   }
@@ -39,13 +63,11 @@ public class StopWatch {
 
   //elaspsed time in seconds
   public long getElapsedTimeSecs() {
-    long elapsed;
-    if (running) {
-      elapsed = ((System.currentTimeMillis() - startTime) / 1000);
-    } else {
-      elapsed = ((stopTime - startTime) / 1000);
-    }
-    return elapsed;
+    return getElapsedTime() / 1000;
+  }
+  
+  public boolean isPaused() {
+    return pauseStart > -1;
   }
 
   private final int sx = 975;
@@ -81,6 +103,6 @@ public class StopWatch {
   }
 
   public float gety(float x) {
-    return x * sx / sy;
+    return x * sy / sx;
   }
 }

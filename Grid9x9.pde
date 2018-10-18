@@ -3,8 +3,8 @@ public class Grid9x9 extends BaseGrid {
   boolean smallNumbers = false;
   boolean numFirst = true;
 
-  Grid9x9(int sizex, int sizey, int extraRows) {
-    super(sizex, sizey, extraRows);
+  Grid9x9(IGameView parent) {
+    super(parent, 2);
 
     cols = 9;
     rows = 9;
@@ -19,8 +19,10 @@ public class Grid9x9 extends BaseGrid {
   }
 
   void show() {
-    int sx = sizex / cols;
-    int sy = sizey / (rows + extraRows);
+    int sx = ((BaseView)parent).sizex / cols;
+    int sy = ((BaseView)parent).sizey / (rows + extraRows);
+
+    if (timer.isPaused()) timer.start();
 
     int[] counts = new int[9];
 
@@ -37,6 +39,7 @@ public class Grid9x9 extends BaseGrid {
           drawNumber(x, y, game[x][y], baseGame[x][y]);
           counts[game[x][y]]++;
         }
+        BaseSolver solver = parent.getSolver();
         boolean solverRunning = solver != null && solver.used && solver.cycleAllowed;
         if (y < 9 && (solverRunning || game[x][y] < 0)) {
           push();
@@ -95,7 +98,7 @@ public class Grid9x9 extends BaseGrid {
     pop();
 
     push();
-    fill((flashSquares.contains(1, 10))?lightBgFore:darkBgFore);
+    fill((flashSquares.contains(1, 10)) ? lightBgFore : darkBgFore);
     drawText(1, 10, "?");
     pop();
 
@@ -118,7 +121,7 @@ public class Grid9x9 extends BaseGrid {
     }
 
     push();
-    fill((selectedn==-2)?lightBgFore:darkBgFore);
+    fill((selectedn == -2) ? lightBgFore : darkBgFore);
     drawText(3, 10, "x");
     pop();
 
@@ -135,14 +138,39 @@ public class Grid9x9 extends BaseGrid {
       drawText(2, 10, "C");
       pop();
     }
-    
+
+    push();
+    translate(5 * sx, 10 * sy);
+    translate(sx / 2, sy / 2);
+    fill(darkBgFore);
+    ellipse(0, 0, sx / 2, sy / 2);
+    fill(buttonFill);
+    ellipse(0, 0, sx / 3, sy / 3);
+    rectMode(CENTER);
+    fill(darkBgFore);
+
+    for (int i = 0; i < 8; i++) {
+      push();
+      rotate(PI * i / 4);
+      translate(sx / 4, 0);
+      rect(0, 0, sx / 8, sx / 8);
+      pop();
+    }
+    pop();
+
+    push();
+    translate(6 * sx, 10 * sy);
+    image(door, 10, 10, sx - 20, sy - 20);    
+    pop();
+
     push();
     fill(buttonFill);
     stroke(buttonStroke);
     strokeWeight(1);
-    rect(5 * sx, 10 * sy, 4 * sx, sy);
+    rect(7 * sx, 10 * sy, 2 * sx, sy);
     pop();
-    image(timer.show(), 9 * sx - 5 - timer.getx(sy - 10), 10 * sy + 5, timer.getx(sy - 10), sy - 10);
+
+    image(timer.show(), 7 * sx + 10, 10 * sy + (sy - timer.gety(2 * sx - 20)) / 2, 2 * sx - 20, timer.gety(2 * sx - 20));
   }
 
   private void drawNumber(int x, int y, int num, boolean black) {
@@ -158,8 +186,8 @@ public class Grid9x9 extends BaseGrid {
 
   private void drawText(int x, int y, String text) {
     push();
-    int sx = sizex/cols;
-    int sy = sizey/(rows+extraRows);
+    int sx = ((BaseView)parent).sizex / cols;
+    int sy = ((BaseView)parent).sizey / (rows+extraRows);
     translate(x * sx, y * sy);
     translate(sx / 2, sy / 2);
     translate(0, -7);
@@ -219,8 +247,8 @@ public class Grid9x9 extends BaseGrid {
     } else if (y == 10) {
       switch (x) {
       case 0:
-        Sudoku9x9Generator gen = new Sudoku9x9Generator(desiredClues, sizex, sizey);
-        newGame(gen.generate());
+        parent.newGenerator();
+        parent.generate();
         break;
       case 1:
         int count = getSolver().countSolutions();
@@ -235,11 +263,18 @@ public class Grid9x9 extends BaseGrid {
         selectedn = -1;
         break;
       case 3:
-        if (numFirst) selectedn = (selectedn==-2)?-1:-2;
+        if (numFirst) selectedn = (selectedn == -2) ? -1 : -2;
         else placeNumber(-2, selectedx, selectedy);
         break;
       case 4:
         smallNumbers = !smallNumbers;
+        break;
+      case 5:
+        timer.pause();
+        stack.push(new SettingsView());
+        break;
+      case 6:
+        stack.pop();
         break;
       }
     }
@@ -325,11 +360,11 @@ public class Grid9x9 extends BaseGrid {
   }
 
   public BaseSolver getSolver() {
-    return new Solver9x9(this);
+    return new Sudoku9x9Solver(this);
   }
 
   public BaseGrid clone() {
-    Grid9x9 clone = new Grid9x9(sizex, sizey, extraRows);
+    Grid9x9 clone = new Grid9x9(parent);
 
     clone.baseClues = baseClues;
     clone.game = new int[clone.cols][clone.rows];

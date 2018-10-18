@@ -1,45 +1,43 @@
-BaseGrid game;
-BaseSolver solver;
 int desiredClues = 28;
-WinOverlay overlay;
+
+ViewStack stack;
+PImage door;
 
 void setup() {
   size(810, 990);
-  SudokuGenerator gen = new Sudoku9x9Generator(desiredClues, width, height);
-  game = gen.generate();
-  overlay = new WinOverlay(55, 350, 700, 300);
+  stack = new ViewStack(new MainMenuView());
+  BaseView v = stack.get();
+  loadImages();
 }
 
 void draw() {
-  if (solver != null && frameCount % 20 == 0) {
-    if (solver.cycleAllowed) solver.cycle();
-    else if (!solver.used) {
-      if (!solver.prepare()) solver = null;
-    } else {
-      solver.finish();
-      solver = null;
-    }
-  }
-  game.show();
-  image(overlay.show(), overlay.x, overlay.y);
-}
-
-boolean xor(boolean a, boolean b) {
-  return (a && !b) || (!a && b);
+  BaseView view = stack.get();
+  surface.setSize(view.sizex, view.sizey);
+  view.show();
 }
 
 void mouseClicked() {
-  int sizex = floor(width / game.cols);
-  int sizey = floor(height / (game.rows + game.extraRows));
-
-  int x = floor(mouseX / sizex);
-  int y = floor(mouseY / sizey);
-
-  game.click(x, y, mouseButton == RIGHT);
+  stack.get().click(mouseX, mouseY);
 }
 
 void keyPressed() {
-  if (tryParseInt(String.valueOf(key))) game.keyInput(Integer.parseInt(String.valueOf(key)));
+  if (stack.get() instanceof IGameView) {
+    BaseGrid game = ((IGameView)stack.get()).getGrid();
+    if (tryParseInt(String.valueOf(key))) game.keyInput(Integer.parseInt(String.valueOf(key)));
+  }
+}
+
+void loadImages() {
+  door = loadImage("media/door.png");
+  door.loadPixels();
+  for (int i = 0; i < door.width * door.height; i++) {
+    door.pixels[i] = (door.pixels[i] == 0) ? color(51) : color(220);
+  }
+  door.updatePixels();
+} 
+
+boolean xor(boolean a, boolean b) {
+  return (a && !b) || (!a && b);
 }
 
 boolean tryParseInt(String value) {  
@@ -50,16 +48,4 @@ boolean tryParseInt(String value) {
   catch (NumberFormatException e) {  
     return false;
   }
-}
-
-void newGame(BaseGrid ng) {
-  game = ng;
-}
-
-void setSolver(BaseSolver s) {
-  solver = s;
-}
-
-void endSolver() {
-  solver = null;
 }

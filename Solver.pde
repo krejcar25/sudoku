@@ -27,9 +27,9 @@ public abstract class BaseSolver {
   public abstract int finish();
 }
 
-public class Solver9x9 extends BaseSolver {
+public class Sudoku9x9Solver extends BaseSolver {
 
-  public Solver9x9(Grid9x9 game) {
+  public Sudoku9x9Solver(Grid9x9 game) {
     super(game);
     for (int x = 0; x < game.cols; x++) {
       numbers.add(new ArrayList<ArrayList<Integer>>());

@@ -5,6 +5,7 @@ public abstract class BaseOverlay {
   public int sy;
   public OverlayResult result;
   public OverlayType type;
+  ArrayList<Button> buttons;
 
   public BaseOverlay(int x, int y, int sx, int sy, OverlayType type) {
     this.x = x;
@@ -13,58 +14,32 @@ public abstract class BaseOverlay {
     this.sy = sy;
     this.result = OverlayResult.None;
     this.type = type;
-  }
-
-  public void drawButtons(PGraphics g) {
-    g.rectMode(CENTER);
-    g.pushStyle();
-    g.fill(0);
-    g.noStroke();
-    g.pushMatrix();
-    g.translate(sx / 2, sy - 40);
-
+    this.buttons = new ArrayList<Button>();
+    
+    int bsx = 135;
+    int bsy = 40;
+    int bbx = 2;
+    int bby = 2;
     switch (type.buttonCount) {
     case 1:
-      drawButton(g, type.buttonLabels[0]);
+      buttons.add(new Button(sx / 2, sy - 40, bsx, bsy, bbx, bby, type.buttonLabels[0]));
       break;
     case 2:
-      g.pushMatrix();
-      g.translate(-sx / 2, 0);
-      g.translate(sx / 3, 0);
-      drawButton(g, type.buttonLabels[0]);
-      g.translate(sx / 3, 0);
-      drawButton(g, type.buttonLabels[1]);
-      g.popMatrix();
-
+      buttons.add(new Button(sx / 3, sy - 40, bsx, bsy, bbx, bby, type.buttonLabels[0]));
+      buttons.add(new Button(2 * sx / 3, sy - 40, bsx, bsy, bbx, bby, type.buttonLabels[1]));
       break;
     case 3:
-      g.pushMatrix();
-      g.translate(-sx / 4, 0);
-      drawButton(g, type.buttonLabels[0]);
-      g.popMatrix();
-
-      drawButton(g, type.buttonLabels[1]);
-
-      g.pushMatrix();
-      g.translate(sx / 4, 0);
-      drawButton(g, type.buttonLabels[2]);
-      g.popMatrix();
+      buttons.add(new Button(sx / 4, sy - 40, bsx, bsy, bbx, bby, type.buttonLabels[0]));
+      buttons.add(new Button(sx / 2, sy - 40, bsx, bsy, bbx, bby, type.buttonLabels[1]));
+      buttons.add(new Button(3 * sx / 4, sy - 40, bsx, bsy, bbx, bby, type.buttonLabels[2]));
       break;
     }
   }
 
-  private void drawButton(PGraphics g, String buttonLabel) {
-    g.rect(0, 0, 135, 40);
-    g.pushStyle();
-    g.fill(51);
-    g.rect(0, 0, 131, 36);
-    g.popStyle();
-    g.pushStyle();
-    g.fill(255);
-    g.textSize(40);
-    g.textAlign(CENTER, CENTER);
-    g.text(buttonLabel, 0, -3);
-    g.popStyle();
+  protected void drawButtons(PGraphics g) {
+    for (int i = 0; i < buttons.size(); i++) {
+      buttons.get(i).show(g);
+    }
   }
 
   public abstract PGraphics show();
@@ -72,8 +47,8 @@ public abstract class BaseOverlay {
 }
 
 public class WinOverlay extends BaseOverlay {
-  public WinOverlay(int x, int y, int sx, int sy) {
-    super(x, y, sx, sy, OverlayType.YesNoCancel);
+  public WinOverlay() {
+    super(105, 300, 600, 200, OverlayType.OK);
   }
 
   public PGraphics show() {

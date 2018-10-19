@@ -1,10 +1,21 @@
 int desiredClues = 28;
+PApplet pa;
 
 ViewStack stack;
 PImage door;
 
 void setup() {
-  size(810, 990);
+  size(100, 100);
+  pa = this;
+  
+  push();
+  background(51);
+  fill(220);
+  textSize(50);
+  textAlign(CENTER, CENTER);
+  text("Wait", 50, 50);
+  pop();
+  
   stack = new ViewStack(new MainMenuView());
   BaseView v = stack.get();
   loadImages();

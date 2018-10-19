@@ -8,6 +8,7 @@ public class Sudoku9x9View extends BaseView implements IGameView {
     super(810, 990);
     this.clueCount = targetCount;
     newGenerator();
+    overlay = new WinOverlay();
   }
 
   public void show() {

@@ -1,15 +1,15 @@
 package cz.krejcar25.sudoku;
 
-import processing.core.*;
+import processing.core.PApplet;
 
-public class Sudoku9x9View extends BaseView implements IGameView {
+public class Sudoku4x4View extends BaseView implements IGameView {
     private BaseSolver solver;
-    private Sudoku9x9Generator generator;
-    private Grid9x9 game;
+    private Sudoku4x4Generator generator;
+    private Grid4x4 game;
     private int clueCount;
 
-    public Sudoku9x9View(Main applet, int targetCount) {
-        super(applet, 810, 990);
+    public Sudoku4x4View(Main applet, int targetCount) {
+        super(applet, 360, 720);
         this.clueCount = targetCount;
         newGenerator();
         //overlay = new WinOverlay();
@@ -32,11 +32,11 @@ public class Sudoku9x9View extends BaseView implements IGameView {
     }
 
     public void generate() {
-        game = (Grid9x9)generator.generate();
+        game = (Grid4x4)generator.generate();
     }
 
     public void newGenerator() {
-        generator = new Sudoku9x9Generator(this, clueCount);
+        generator = new Sudoku4x4Generator(this, clueCount);
     }
 
     public BaseSolver getSolver() {
@@ -47,11 +47,11 @@ public class Sudoku9x9View extends BaseView implements IGameView {
         solver = game.getSolver();
     }
 
-    public Sudoku9x9Generator getGenerator() {
+    public Sudoku4x4Generator getGenerator() {
         return generator;
     }
 
-    public Grid9x9 getGrid() {
+    public Grid4x4 getGrid() {
         return game;
     }
 }

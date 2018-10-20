@@ -3,12 +3,12 @@ package cz.krejcar25.sudoku;
 import processing.core.*;
 
 public class WinOverlay extends BaseOverlay {
-    public WinOverlay() {
-        super(105, 300, 600, 200, OverlayType.OK);
+    public WinOverlay(BaseView parent) {
+        super(parent, 105, 300, 600, 200, OverlayType.OK);
     }
 
     public PGraphics show() {
-        PGraphics g = Main.pa.createGraphics(sx, sy);
+        PGraphics g = parent.applet.createGraphics(sx, sy);
         g.beginDraw();
         g.background(0);
         g.pushStyle();

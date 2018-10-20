@@ -25,10 +25,10 @@ public class StopWatch {
         if (running && pauseStart > -1) {
             pauseTotal += (startTime - pauseStart);
             pauseStart = -1;
-            Main.pa.println("StopWatch " + name + " resumed at " + startTime);
+            System.out.println("StopWatch " + name + " resumed at " + startTime);
         } else if (!running) {
             this.startTime = startTime;
-            Main.pa.println("StopWatch " + name + " started at " + startTime);
+            System.out.println("StopWatch " + name + " started at " + startTime);
             this.running = true;
         }
     }
@@ -40,14 +40,14 @@ public class StopWatch {
         if (running && pauseStart == -1) {
             long pauseStart = System.currentTimeMillis() - offset;
             this.pauseStart = pauseStart;
-            Main.pa.println("StopWatch " + name + " paused at " + pauseStart);
+            System.out.println("StopWatch " + name + " paused at " + pauseStart);
         }
     }
 
     public void stop() {
         if (!running) return;
         this.stopTime = System.currentTimeMillis();
-        Main.pa.println("StopWatch " + name + " stopped at " + stopTime);
+        System.out.println("StopWatch " + name + " stopped at " + stopTime);
         this.running = false;
         this.finished = true;
     }
@@ -81,14 +81,14 @@ public class StopWatch {
     private final int sx = 975;
     private final int sy = 370;
 
-    public PGraphics show() {
+    public PGraphics show(PApplet applet) {
         long time = getElapsedTimeSecs();
         int minD = PApplet.abs(PApplet.floor(PApplet.floor(time / 60) / 10));
         int minU = PApplet.abs(PApplet.floor(time / 60) % 10);
         int secD = PApplet.abs(PApplet.floor(PApplet.floor(time % 60) / 10));
         int secU = PApplet.abs(PApplet.floor(time % 60) % 10);
-        Digit d = new Digit(0, 0);
-        PGraphics g = Main.pa.createGraphics(sx, sy);
+        Digit d = new Digit(applet, 0, 0);
+        PGraphics g = applet.createGraphics(sx, sy);
 
         g.beginDraw();
         g.background(51);

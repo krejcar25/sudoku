@@ -7,20 +7,21 @@ public class Digit {
     int y;
     float sx;
     float sy;
-    final byte[] digits = new byte[] { 0x7E, 0x30, 0x6D, 0x79, 0x33, 0x5B, 0x5F, 0x70, 0x7F, 0x7B, 0x77, 0x1F, 0x4E, 0x3D, 0x4F, 0x47 };
+    final byte[] digits = new byte[]{0x7E, 0x30, 0x6D, 0x79, 0x33, 0x5B, 0x5F, 0x70, 0x7F, 0x7B, 0x77, 0x1F, 0x4E, 0x3D, 0x4F, 0x47};
+    PApplet applet;
 
-    final int on = Main.pa.color(255, 0, 0);
-    final int off = Main.pa.color(51,0,0);
+    final int on;
+    final int off;
 
-    public Digit(int x, int y) {
+    Digit(PApplet applet, int x, int y) {
+        this.applet = applet;
         this.x = x;
         this.y = y;
         this.sx = 230;
         this.sy = 370;
-    }
 
-    public PGraphics show(int digit, boolean decimal) {
-        return show((decimal) ? (byte)(digits[digit] + 0x80) : digits[digit]);
+        this.on = applet.color(255, 0, 0);
+        this.off = applet.color(51, 0, 0);
     }
 
     public float getx(float y) {
@@ -31,11 +32,16 @@ public class Digit {
         return x * (sy / sx);
     }
 
-    public PGraphics show(byte segments) {
-        Main.pa.noStroke();
-        PGraphics g = Main.pa.createGraphics((int)sx, (int)sy);
-        PShape h = Main.pa.createShape();
-        PShape v = Main.pa.createShape();
+    public PGraphics show(int digit, boolean decimal) {
+        return show(applet, (decimal) ? (byte) (digits[digit] + 0x80) : digits[digit]);
+    }
+
+    public PGraphics show(PApplet applet, byte segments) {
+        PGraphics g = applet.createGraphics((int) sx, (int) sy);
+        g.beginDraw();
+        g.noStroke();
+        PShape h = g.createShape();
+        PShape v = g.createShape();
 
         h.beginShape();
         h.vertex(25, 0);
@@ -54,9 +60,6 @@ public class Digit {
         v.vertex(0, 125);
         v.vertex(10, 25);
         v.endShape(PApplet.CLOSE);
-
-        g.beginDraw();
-        g.noStroke();
 
         g.fill(isBitOn(segments, 0));
         g.ellipse(215, 355, 30, 30);
@@ -88,6 +91,6 @@ public class Digit {
     }
 
     private int isBitOn(byte segments, int segment) {
-        return (((segments >> (byte)(7 - segment)) & 0x1) == 1) ? on : off;
+        return (((segments >> (byte) (7 - segment)) & 0x1) == 1) ? on : off;
     }
 }

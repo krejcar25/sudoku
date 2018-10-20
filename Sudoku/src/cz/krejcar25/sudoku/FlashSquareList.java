@@ -1,29 +1,33 @@
 package cz.krejcar25.sudoku;
 
+import processing.core.PApplet;
 import java.util.ArrayList;
 
 class FlashSquareList {
     ArrayList<FlashSquare> squares;
-    FlashSquareList() {
+    PApplet applet;
+
+    FlashSquareList(PApplet applet) {
         squares = new ArrayList<FlashSquare>();
+        this.applet = applet;
     }
 
-    public void newNow(int x, int y, int lifespan, int c) {
-        push(new FlashSquare(x, y, lifespan, c));
+    void newNow(int x, int y, int lifespan, int c) {
+        push(new FlashSquare(x, y, applet.frameCount, lifespan, c));
     }
 
-    public void push(FlashSquare square) {
+    void push(FlashSquare square) {
         squares.add(square);
     }
 
-    public boolean contains(int x, int y) {
+    boolean contains(int x, int y) {
         return colorOf(x, y) != -1;
     }
 
-    public int colorOf(int x, int y) {
+    int colorOf(int x, int y) {
         for (int i = squares.size() - 1; i >= 0; i--) {
             FlashSquare square = squares.get(i);
-            if (!(square.isValid())) {
+            if (!(square.isValid(applet.frameCount))) {
                 squares.remove(square);
             } else if (square.x == x && square.y == y) return square.c;
         }
@@ -31,7 +35,7 @@ class FlashSquareList {
     }
 
     public FlashSquareList clone() {
-        FlashSquareList clone = new FlashSquareList();
+        FlashSquareList clone = new FlashSquareList(applet);
         for (FlashSquare s : squares) {
             clone.squares.add(s);
         }

@@ -5,13 +5,14 @@ import processing.core.*;
 public class Button {
     int x;
     int y;
-    int sx;
-    int sy;
-    int bx;
-    int by;
-    String label;
+    private int sx;
+    private int sy;
+    private int bx;
+    private int by;
+    private String label;
+    IButtonClick click;
 
-    public Button(int x, int y, int sx, int sy, int bx, int by, String label) {
+    Button(int x, int y, int sx, int sy, int bx, int by, String label, IButtonClick click) {
         this.x = x;
         this.y = y;
         this.sx = sx;
@@ -19,6 +20,7 @@ public class Button {
         this.bx = bx;
         this.by = by;
         this.label = label;
+        this.click = click;
     }
 
     public void show(PGraphics g) {
@@ -42,4 +44,9 @@ public class Button {
         g.popStyle();
         g.popMatrix();
     }
+
+    boolean isClick(int x, int y) {
+        return ((this.x - this.sx / 2) < x && x < (this.x + this.sx / 2)) && ((this.y - this.sy / 2) < y && y < (this.y + this.sy / 2));
+    }
 }
+

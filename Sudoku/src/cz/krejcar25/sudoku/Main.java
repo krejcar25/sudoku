@@ -2,9 +2,10 @@ package cz.krejcar25.sudoku;
 
 import processing.core.*;
 
+import java.util.Random;
+
 public class Main extends PApplet {
     static int desiredClues = 28;
-    static Main pa;
 
     public static void main(String[] args) {
 	    System.out.println("Hello World!");
@@ -19,8 +20,6 @@ public class Main extends PApplet {
     public PImage door;
 
     public void setup() {
-        pa = this;
-
         push();
         background(51);
         fill(220);
@@ -29,7 +28,7 @@ public class Main extends PApplet {
         text("Wait", 50, 50);
         pop();
 
-        stack = new ViewStack(new MainMenuView());
+        stack = new ViewStack(new MainMenuView(this));
         BaseView v = stack.get();
         loadImages();
     }
@@ -74,21 +73,6 @@ public class Main extends PApplet {
         }
     }
 
-    public static PVector[] shuffle(PVector[] input) {
-        int m = input.length;
-        int i;
-        PVector t;
-
-        while (m > 0) {
-            i = floor(pa.random(m--));
-            t = input[m];
-            input[m] = input[i];
-            input[i] = t;
-        }
-
-        return input;
-    }
-
     public void push() {
         pushMatrix();
         pushStyle();
@@ -97,5 +81,20 @@ public class Main extends PApplet {
     public void pop() {
         popStyle();
         popMatrix();
+    }
+
+    static <T> T[] shuffle(T[] input) {
+        int m = input.length;
+        int i;
+        T t;
+
+        while (m > 0) {
+            i = PApplet.floor(new Random().nextInt(m--));
+            t = input[m];
+            input[m] = input[i];
+            input[i] = t;
+        }
+
+        return input;
     }
 }

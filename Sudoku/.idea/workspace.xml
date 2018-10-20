@@ -1,28 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="4f35109b-fd5a-4007-be39-34ef3164963a" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/cz/krejcar25/sudoku/BaseGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cz/krejcar25/sudoku/BaseGenerator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/cz/krejcar25/sudoku/BaseGrid.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cz/krejcar25/sudoku/BaseGrid.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/cz/krejcar25/sudoku/BaseOverlay.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cz/krejcar25/sudoku/BaseOverlay.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/cz/krejcar25/sudoku/BaseSolver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cz/krejcar25/sudoku/BaseSolver.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/cz/krejcar25/sudoku/BaseView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cz/krejcar25/sudoku/BaseView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/cz/krejcar25/sudoku/Button.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cz/krejcar25/sudoku/Button.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/cz/krejcar25/sudoku/Digit.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cz/krejcar25/sudoku/Digit.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/cz/krejcar25/sudoku/FlashSquare.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cz/krejcar25/sudoku/FlashSquare.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/cz/krejcar25/sudoku/FlashSquareList.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cz/krejcar25/sudoku/FlashSquareList.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/cz/krejcar25/sudoku/Grid9x9.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cz/krejcar25/sudoku/Grid9x9.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/cz/krejcar25/sudoku/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cz/krejcar25/sudoku/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/cz/krejcar25/sudoku/MainMenuView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cz/krejcar25/sudoku/MainMenuView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/cz/krejcar25/sudoku/SettingsView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cz/krejcar25/sudoku/SettingsView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/cz/krejcar25/sudoku/StopWatch.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cz/krejcar25/sudoku/StopWatch.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/cz/krejcar25/sudoku/Sudoku9x9Generator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cz/krejcar25/sudoku/Sudoku9x9Generator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/cz/krejcar25/sudoku/Sudoku9x9Solver.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cz/krejcar25/sudoku/Sudoku9x9Solver.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/cz/krejcar25/sudoku/Sudoku9x9View.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cz/krejcar25/sudoku/Sudoku9x9View.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/cz/krejcar25/sudoku/ViewStack.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cz/krejcar25/sudoku/ViewStack.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/cz/krejcar25/sudoku/WinOverlay.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/cz/krejcar25/sudoku/WinOverlay.java" afterDir="false" />
-    </list>
+    <list default="true" id="4f35109b-fd5a-4007-be39-34ef3164963a" name="Default Changelist" comment="" />
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -42,33 +21,47 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="java" value="7879" />
+          <entry key="java" value="7882" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="JAVA" value="7879" />
+          <entry key="JAVA" value="7882" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
-          <entry key="java" value="116" />
+          <entry key="java" value="117" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
-          <entry key="JAVA" value="116" />
+          <entry key="JAVA" value="117" />
         </counts>
       </usages-collector>
     </session>
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/cz/krejcar25/sudoku/Main.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="595">
+              <caret line="91" column="50" selection-start-line="91" selection-start-column="50" selection-end-line="91" selection-end-column="50" />
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="e#884#885#0" expanded="true" />
+                <element signature="e#933#934#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/cz/krejcar25/sudoku/BaseGrid.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="356">
-              <caret line="186" column="53" selection-start-line="186" selection-start-column="53" selection-end-line="186" selection-end-column="53" />
+            <state relative-caret-position="341">
+              <caret line="185" column="64" lean-forward="true" selection-start-line="185" selection-start-column="64" selection-end-line="185" selection-end-column="64" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -91,19 +84,6 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/cz/krejcar25/sudoku/Sudoku4x4View.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="340">
-              <caret line="30" column="62" lean-forward="true" selection-start-line="30" selection-start-column="62" selection-end-line="30" selection-end-column="62" />
-              <folding>
-                <element signature="e#943#944#0" expanded="true" />
-                <element signature="e#995#996#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/cz/krejcar25/sudoku/Grid6x6.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="210">
@@ -115,8 +95,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/cz/krejcar25/sudoku/BaseGenerator.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1165">
-              <caret line="97" column="33" lean-forward="true" selection-start-line="97" selection-start-column="33" selection-end-line="97" selection-end-column="33" />
+            <state relative-caret-position="490">
+              <caret line="97" column="32" selection-start-line="97" selection-start-column="32" selection-end-line="97" selection-end-column="32" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -163,11 +143,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/cz/krejcar25/sudoku/MainMenuView.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="310">
-              <caret line="56" column="56" selection-start-line="56" selection-start-column="56" selection-end-line="56" selection-end-column="56" />
+              <caret line="56" column="57" selection-start-line="56" selection-start-column="57" selection-end-line="56" selection-end-column="57" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -235,9 +215,9 @@
         <option value="$PROJECT_DIR$/src/cz/krejcar25/sudoku/Sudoku6x6Solver.java" />
         <option value="$PROJECT_DIR$/src/cz/krejcar25/sudoku/Sudoku6x6View.java" />
         <option value="$PROJECT_DIR$/src/cz/krejcar25/sudoku/Grid6x6.java" />
-        <option value="$PROJECT_DIR$/src/cz/krejcar25/sudoku/MainMenuView.java" />
-        <option value="$PROJECT_DIR$/src/cz/krejcar25/sudoku/BaseGenerator.java" />
         <option value="$PROJECT_DIR$/src/cz/krejcar25/sudoku/BaseGrid.java" />
+        <option value="$PROJECT_DIR$/src/cz/krejcar25/sudoku/BaseGenerator.java" />
+        <option value="$PROJECT_DIR$/src/cz/krejcar25/sudoku/MainMenuView.java" />
       </list>
     </option>
   </component>
@@ -287,7 +267,7 @@
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1540076947471" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1540077257603" />
     <property name="last_opened_file_path" value="$USER_HOME$/processing-3.4/core/library/core.jar!/" />
     <property name="project.structure.last.edited" value="Libraries" />
     <property name="project.structure.proportion" value="0.0" />
@@ -338,12 +318,12 @@
       <option name="presentableId" value="Default" />
       <updated>1539943057479</updated>
       <workItem from="1539943058827" duration="5625000" />
-      <workItem from="1539951983993" duration="22163000" />
+      <workItem from="1539951983993" duration="22554000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="27788000" />
+    <option name="totallyTimeSpent" value="28179000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="67" y="-2" width="1853" height="1082" extended-state="6" />
@@ -536,18 +516,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/cz/krejcar25/sudoku/Main.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="460">
-          <caret line="91" column="50" selection-start-line="91" selection-start-column="50" selection-end-line="91" selection-end-column="50" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#884#885#0" expanded="true" />
-            <element signature="e#933#934#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/cz/krejcar25/sudoku/Sudoku4x4Generator.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="75">
@@ -639,10 +607,20 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/cz/krejcar25/sudoku/MainMenuView.java">
+    <entry file="file://$PROJECT_DIR$/src/cz/krejcar25/sudoku/BaseOverlay.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="310">
-          <caret line="56" column="56" selection-start-line="56" selection-start-column="56" selection-end-line="56" selection-end-column="56" />
+        <state relative-caret-position="220">
+          <caret line="17" column="29" selection-start-line="17" selection-start-column="29" selection-end-line="17" selection-end-column="29" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/cz/krejcar25/sudoku/BaseGrid.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="341">
+          <caret line="185" column="64" lean-forward="true" selection-start-line="185" selection-start-column="64" selection-end-line="185" selection-end-column="64" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -658,28 +636,30 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/cz/krejcar25/sudoku/BaseGenerator.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1165">
-          <caret line="97" column="33" lean-forward="true" selection-start-line="97" selection-start-column="33" selection-end-line="97" selection-end-column="33" />
+        <state relative-caret-position="490">
+          <caret line="97" column="32" selection-start-line="97" selection-start-column="32" selection-end-line="97" selection-end-column="32" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/cz/krejcar25/sudoku/BaseOverlay.java">
+    <entry file="file://$PROJECT_DIR$/src/cz/krejcar25/sudoku/Main.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="220">
-          <caret line="17" column="29" selection-start-line="17" selection-start-column="29" selection-end-line="17" selection-end-column="29" />
+        <state relative-caret-position="595">
+          <caret line="91" column="50" selection-start-line="91" selection-start-column="50" selection-end-line="91" selection-end-column="50" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="e#884#885#0" expanded="true" />
+            <element signature="e#933#934#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/cz/krejcar25/sudoku/BaseGrid.java">
+    <entry file="file://$PROJECT_DIR$/src/cz/krejcar25/sudoku/MainMenuView.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="356">
-          <caret line="186" column="53" selection-start-line="186" selection-start-column="53" selection-end-line="186" selection-end-column="53" />
+        <state relative-caret-position="310">
+          <caret line="56" column="57" selection-start-line="56" selection-start-column="57" selection-end-line="56" selection-end-column="57" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>

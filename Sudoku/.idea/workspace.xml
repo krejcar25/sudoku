@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="4f35109b-fd5a-4007-be39-34ef3164963a" name="Default Changelist" comment="" />
+    <list default="true" id="4f35109b-fd5a-4007-be39-34ef3164963a" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -267,7 +269,7 @@
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1540077257603" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1540077472345" />
     <property name="last_opened_file_path" value="$USER_HOME$/processing-3.4/core/library/core.jar!/" />
     <property name="project.structure.last.edited" value="Libraries" />
     <property name="project.structure.proportion" value="0.0" />
@@ -318,12 +320,12 @@
       <option name="presentableId" value="Default" />
       <updated>1539943057479</updated>
       <workItem from="1539943058827" duration="5625000" />
-      <workItem from="1539951983993" duration="22554000" />
+      <workItem from="1539951983993" duration="22863000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="28179000" />
+    <option name="totallyTimeSpent" value="28488000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="67" y="-2" width="1853" height="1082" extended-state="6" />

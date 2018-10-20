@@ -1,11 +1,15 @@
 package cz.krejcar25.sudoku;
 
-public abstract class BaseView {
-    public int sizex;
-    public int sizey;
-    public BaseOverlay overlay;
+import processing.core.PApplet;
 
-    public BaseView(int sizex, int sizey) {
+public abstract class BaseView {
+    int sizex;
+    int sizey;
+    BaseOverlay overlay;
+    Main applet;
+
+    BaseView(Main applet, int sizex, int sizey) {
+        this.applet = applet;
         this.sizex = sizex;
         this.sizey = sizey;
     }

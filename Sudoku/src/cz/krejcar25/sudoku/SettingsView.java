@@ -3,24 +3,24 @@ package cz.krejcar25.sudoku;
 import processing.core.*;
 
 public class SettingsView extends BaseView {
-    public SettingsView() {
-        super(800, 600);
+    public SettingsView(Main applet) {
+        super(applet,800, 600);
     }
 
     public void show() {
-        Main.pa.push();
-        Main.pa.background(51);
-        Main.pa.textSize(40);
-        Main.pa.fill(220);
-        Main.pa.text("Settings", 280, 350);
+        applet.push();
+        applet.background(51);
+        applet.textSize(40);
+        applet.fill(220);
+        applet.text("Settings", 280, 350);
 
-        if (overlay != null) Main.pa.image(overlay.show(), overlay.x, overlay.y);
-        Main.pa.pop();
+        if (overlay != null) applet.image(overlay.show(), overlay.x, overlay.y);
+        applet.pop();
     }
 
     public void click(int x, int y) {
-        if (Main.pa.mouseButton == PApplet.RIGHT) {
-            Main.pa.stack.pop();
+        if (applet.mouseButton == PApplet.RIGHT) {
+            applet.stack.pop();
         }
     }
 }

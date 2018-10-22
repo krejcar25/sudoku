@@ -27,6 +27,7 @@ public class Main extends PApplet {
         textAlign(CENTER, CENTER);
         text("Wait", 50, 50);
         pop();
+        frame.setTitle("Sudoku");
 
         stack = new ViewStack(new MainMenuView(this));
         BaseView v = stack.get();

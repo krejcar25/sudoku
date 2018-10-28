@@ -2,6 +2,8 @@ package cz.krejcar25.sudoku;
 
 import processing.core.*;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.util.Random;
 
 public class Main extends PApplet {
@@ -52,7 +54,11 @@ public class Main extends PApplet {
     }
 
     public void loadImages() {
-        door = loadImage("media/door.png");
+        try {
+            door = getImage("/cz/krejcar25/sudoku/media/door.png");
+        } catch (Exception ex) {
+            return;
+        }
         door.loadPixels();
         for (int i = 0; i < door.width * door.height; i++) {
             door.pixels[i] = (door.pixels[i] == 0) ? color(51) : color(220);
@@ -97,5 +103,10 @@ public class Main extends PApplet {
         }
 
         return input;
+    }
+
+    public static PImage getImage(String url) throws Exception {
+        BufferedImage image = ImageIO.read(Main.class.getResourceAsStream(url));
+        return new PImage(image);
     }
 }

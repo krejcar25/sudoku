@@ -6,10 +6,8 @@ import java.awt.*;
 public abstract class BaseGrid {
     BaseView parent;
 
-    int smallCols;
-    int bigCols;
-    int smallRows;
-    int bigRows;
+    int sizea;
+    int sizeb;
     int extraRows;
     int baseClues;
 
@@ -45,12 +43,10 @@ public abstract class BaseGrid {
 
     StopWatch timer;
 
-    BaseGrid(BaseView parent, int smallCols, int bigCols, int smallRows, int bigRows, int extraRows) {
+    BaseGrid(BaseView parent, int sizea, int sizeb, int extraRows) {
         this.parent = parent;
-        this.smallCols = smallCols;
-        this.bigCols = bigCols;
-        this.smallRows = smallRows;
-        this.bigRows = bigRows;
+        this.sizea = sizea;
+        this.sizeb = sizeb;
         this.extraRows = extraRows;
         this.flashSquares = new FlashSquareList(parent.applet);
         smallNumbers = false;
@@ -122,15 +118,15 @@ public abstract class BaseGrid {
     }
 
     protected int cols() {
-        return smallCols * bigCols;
+        return sizea * sizeb;
     }
 
     protected int rows() {
-        return smallRows * bigRows;
+        return sizea * sizeb;
     }
 
     protected int numbers() {
-        return smallCols * smallRows;
+        return sizea * sizeb;
     }
 
     protected void drawBigLines() {
@@ -139,12 +135,12 @@ public abstract class BaseGrid {
         parent.applet.push();
         parent.applet.stroke(0);
         parent.applet.strokeWeight(3);
-        for (int i = 1; i  < bigCols; i++) {
-            int linex = i * smallCols * sx;
+        for (int i = 1; i  < sizeb; i++) {
+            int linex = i * sizea * sx;
             parent.applet.line(linex, 0, linex, parent.applet.height - extraRows * sy);
         }
-        for (int i = 1; i  <= bigRows; i++) {
-            int liney = i * smallRows * sy;
+        for (int i = 1; i  <= sizea; i++) {
+            int liney = i * sizeb * sy;
             parent.applet.line(0, liney, parent.applet.width, liney);
         }
         parent.applet.pop();
@@ -207,8 +203,8 @@ public abstract class BaseGrid {
     }
 
     boolean isSc(int x, int y, int ofx, int ofy) {
-        boolean isScX = PApplet.floor(x / smallCols) == PApplet.floor(((ofx != -1) ? ofx : selectedx) / smallCols);
-        boolean isScY = PApplet.floor(y / smallRows) == PApplet.floor(((ofy != -1) ? ofy : selectedy) / smallRows);
+        boolean isScX = PApplet.floor(x / sizea) == PApplet.floor(((ofx != -1) ? ofx : selectedx) / sizea);
+        boolean isScY = PApplet.floor(y / sizeb) == PApplet.floor(((ofy != -1) ? ofy : selectedy) / sizeb);
 
         return isScX && isScY;
     }
@@ -330,15 +326,15 @@ public abstract class BaseGrid {
                 if (y < rows && game[x][y] < 0) {
                     parent.applet.push();
                     parent.applet.translate(x * sx, y * sy);
-                    int sxs = sx / smallCols;
-                    int sys = sy / smallRows;
+                    int sxs = sx / sizea;
+                    int sys = sy / sizeb;
                     parent.applet.translate(sxs / 2, sys / 2 - 3);
                     parent.applet.textSize(sys);
                     parent.applet.textAlign(PApplet.CENTER, PApplet.CENTER);
                     parent.applet.fill(0);
                     parent.applet.strokeWeight(0);
                     for (int i = 0; i < numbers(); i++) {
-                        if (notes[x][y][i]) parent.applet.text(i + 1, (i % smallCols) * sxs, parent.applet.floor(i / bigRows) * sys);
+                        if (notes[x][y][i]) parent.applet.text(i + 1, (i % sizea) * sxs, parent.applet.floor(i / sizea) * sys);
                     }
                     parent.applet.pop();
                 }
@@ -385,12 +381,12 @@ public abstract class BaseGrid {
             parent.applet.translate(smallNumPos.x * sx, smallNumPos.y * sy);
             parent.applet.strokeWeight(1);
             parent.applet.stroke(220);
-            int sxs = sx / smallCols;
-            int sys = sy / smallRows;
-            for (int i = 1; i < smallCols; i++) {
+            int sxs = sx / sizea;
+            int sys = sy / sizeb;
+            for (int i = 1; i < sizea; i++) {
                 parent.applet.line(i * sxs, 0, i * sxs, sy);
             }
-            for (int i = 1; i < smallRows; i++){
+            for (int i = 1; i < sizeb; i++){
                 parent.applet.line(0, i * sys, sx, i * sys);
             }
             parent.applet.pop();

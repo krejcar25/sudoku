@@ -7,7 +7,7 @@ import processing.core.*;
 
 public class Grid9x9 extends BaseGrid {
     Grid9x9(BaseView parent) {
-        super(parent, 3, 3, 3, 3, 2);
+        super(parent, 3, 3, 2);
         newGamePos = new Point(0, 10);
         helpPos = new Point(1, 10);
         orderTogglePos = new Point(2, 10);

@@ -6,7 +6,7 @@ import java.awt.*;
 
 public class Grid4x4 extends BaseGrid {
     Grid4x4(BaseView parent) {
-        super(parent, 2,2,2,2, 4);
+        super(parent, 2,2, 4);
         newGamePos = new Point(0, 5);
         helpPos = new Point(1, 5);
         orderTogglePos = new Point(2, 5);

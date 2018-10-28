@@ -66,7 +66,7 @@ public class MainMenuView extends BaseView {
     }
 
     private void buttonClick16x16() {
-        Sudoku16x16View view = new Sudoku16x16View(applet,85);
+        Sudoku16x16View view = new Sudoku16x16View(applet,150);
         view.generate();
         applet.stack.push(view);
     }

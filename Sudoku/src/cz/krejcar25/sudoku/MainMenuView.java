@@ -6,9 +6,9 @@ import java.util.ArrayList;
 import java.util.function.Function;
 
 public class MainMenuView extends BaseView {
-    public MainMenuView(Main applet) {
+    MainMenuView(Main applet) {
         super(applet, 800, 600);
-        buttons = new ArrayList<Button>();
+        buttons = new ArrayList<>();
         int bsx = 280;
         int bsy = 40;
         int bbx = 2;
@@ -31,8 +31,8 @@ public class MainMenuView extends BaseView {
         applet.textAlign(PApplet.CENTER, PApplet.CENTER);
         applet.text("Main menu", 400, 100);
 
-        for (int i = 0; i < buttons.size(); i++) {
-            buttons.get(i).show(applet.g);
+        for (Button button : buttons) {
+            button.show(applet.g);
         }
 
         if (overlay != null) applet.image(overlay.show(), overlay.x, overlay.y);
@@ -48,7 +48,7 @@ public class MainMenuView extends BaseView {
     }
 
     private void buttonClick9x9() {
-        Sudoku9x9View view = new Sudoku9x9View(applet, applet.desiredClues);
+        Sudoku9x9View view = new Sudoku9x9View(applet, 30);
         view.generate();
         applet.stack.push(view);
     }
@@ -60,7 +60,7 @@ public class MainMenuView extends BaseView {
     }
 
     private void buttonClick4x4() {
-        Sudoku4x4View view = new Sudoku4x4View(applet, 5);
+        Sudoku4x4View view = new Sudoku4x4View(applet, 6);
         view.generate();
         applet.stack.push(view);
     }

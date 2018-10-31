@@ -8,11 +8,10 @@ public class Sudoku9x9View extends BaseView implements IGameView {
     private Grid9x9 game;
     private int clueCount;
 
-    public Sudoku9x9View(Main applet, int targetCount) {
+    Sudoku9x9View(Main applet, int targetCount) {
         super(applet, 810, 990);
         this.clueCount = targetCount;
         newGenerator();
-        //overlay = new WinOverlay();
     }
 
     public void show() {
@@ -22,17 +21,25 @@ public class Sudoku9x9View extends BaseView implements IGameView {
     }
 
     public void click(int mx, int my) {
-        int sx = PApplet.floor(this.sizex / game.cols());
-        int sy = PApplet.floor(this.sizey / (game.rows() + game.extraRows));
+        if (overlay == null) {
+            //noinspection IntegerDivisionInFloatingPointContext
+            int sx = PApplet.floor(this.sizex / game.cols());
+            //noinspection IntegerDivisionInFloatingPointContext
+            int sy = PApplet.floor(this.sizey / (game.rows() + game.extraRows));
 
-        int x = PApplet.floor(mx / sx);
-        int y = PApplet.floor(my / sy);
+            //noinspection IntegerDivisionInFloatingPointContext
+            int x = PApplet.floor(mx / sx);
+            //noinspection IntegerDivisionInFloatingPointContext
+            int y = PApplet.floor(my / sy);
 
-        game.click(x, y, applet.mouseButton == PApplet.RIGHT);
+            game.click(x, y, applet.mouseButton == PApplet.RIGHT);
+        } else {
+            overlay.click(mx - overlay.x, my - overlay.y);
+        }
     }
 
     public void generate() {
-        game = (Grid9x9)generator.generate();
+        game = (Grid9x9) generator.generate();
     }
 
     public void newGenerator() {

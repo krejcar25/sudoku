@@ -8,10 +8,10 @@ import java.util.ArrayList;
 
 abstract class BaseGenerator {
     BaseView parent;
-    int targetCount;
-    ArrayList<ArrayList<ArrayList<Integer>>> numbers;
-    StopWatch timer;
-    boolean used;
+    private int targetCount;
+    private ArrayList<ArrayList<ArrayList<Integer>>> numbers;
+    private StopWatch timer;
+    private boolean used;
     BaseGrid game;
 
     BaseGenerator(BaseView parent, int targetCount) {
@@ -30,7 +30,7 @@ abstract class BaseGenerator {
         }
     }
 
-    public BaseGrid generate() {
+    BaseGrid generate() {
         timer.start();
         if (used) return null;
         used = true;
@@ -48,7 +48,7 @@ abstract class BaseGenerator {
             }
         }
 
-        while (true) {
+        do {
             if (available(gx, gy)) {
                 int n = PApplet.floor(parent.applet.random(numbers.get(gx).get(gy).size()));
                 if (game.canPlaceNumber(numbers.get(gx).get(gy).get(n), gx, gy, -1)) {
@@ -70,9 +70,7 @@ abstract class BaseGenerator {
                 gx -= cols;
                 gy++;
             }
-
-            if (gy < 0 || gy >= rows) break;
-        }
+        } while (gy >= 0 && gy < rows);
 
         Point[] cells = new Point[cols * rows];
 
@@ -82,11 +80,11 @@ abstract class BaseGenerator {
             }
         }
 
-        cells = Main.shuffle(cells);
+        Main.shuffle(cells);
         int removed = 0;
-        int remStart = (cols * rows) - 1;
+        int remStart = (cols * rows);
 
-        for (int i = remStart; removed < (remStart - targetCount) && i >= 0; i--) {
+        for (int i = remStart - 1; removed < (remStart - targetCount) && i >= 0; i--) {
             Point v = cells[i];
             int x = PApplet.floor(v.x);
             int y = PApplet.floor(v.y);

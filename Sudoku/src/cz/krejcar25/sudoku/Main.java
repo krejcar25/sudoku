@@ -7,7 +7,6 @@ import java.awt.image.BufferedImage;
 import java.util.Random;
 
 public class Main extends PApplet {
-    static int desiredClues = 28;
 
     public static void main(String[] args) {
 	    System.out.println("Hello World!");
@@ -18,8 +17,8 @@ public class Main extends PApplet {
         size(10, 10);
     }
 
-    public ViewStack stack;
-    public PImage door;
+    ViewStack stack;
+    PImage door;
 
     public void setup() {
         push();
@@ -53,7 +52,7 @@ public class Main extends PApplet {
         }
     }
 
-    public void loadImages() {
+    private void loadImages() {
         try {
             door = getImage("/cz/krejcar25/sudoku/media/door.png");
         } catch (Exception ex) {
@@ -66,11 +65,11 @@ public class Main extends PApplet {
         door.updatePixels();
     }
 
-    public static boolean xor(boolean a, boolean b) {
+    static boolean xor(boolean a, boolean b) {
         return (a && !b) || (!a && b);
     }
 
-    public static boolean tryParseInt(String value) {
+    private static boolean tryParseInt(String value) {
         try {
             Integer.parseInt(value);
             return true;
@@ -80,17 +79,17 @@ public class Main extends PApplet {
         }
     }
 
-    public void push() {
+    void push() {
         pushMatrix();
         pushStyle();
     }
 
-    public void pop() {
+    void pop() {
         popStyle();
         popMatrix();
     }
 
-    static <T> T[] shuffle(T[] input) {
+    static <T> void shuffle(T[] input) {
         int m = input.length;
         int i;
         T t;
@@ -101,11 +100,9 @@ public class Main extends PApplet {
             input[m] = input[i];
             input[i] = t;
         }
-
-        return input;
     }
 
-    public static PImage getImage(String url) throws Exception {
+    private static PImage getImage(String url) throws Exception {
         BufferedImage image = ImageIO.read(Main.class.getResourceAsStream(url));
         return new PImage(image);
     }

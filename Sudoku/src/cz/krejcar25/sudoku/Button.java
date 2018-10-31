@@ -8,19 +8,19 @@ public class Button {
     final int y;
     private int sx;
     private int sy;
-    private int bx;
+    //private int bx;
     private int by;
     private String label;
     IButtonClick click;
 
-    ButtonStyle style;
+    private ButtonStyle style;
 
     Button(int x, int y, int sx, int sy, int bx, int by, String label, IButtonClick click) {
         this.x = x;
         this.y = y;
         this.sx = sx;
         this.sy = sy;
-        this.bx = bx;
+        //this.bx = bx;
         this.by = by;
         this.label = label;
         this.click = click;
@@ -35,6 +35,7 @@ public class Button {
         g.pushMatrix();
         g.fill(style.border.r, style.border.g, style.border.b);
         g.pushMatrix();
+        //noinspection IntegerDivisionInFloatingPointContext
         g.translate(-sx / 2, -sy / 2);
         g.translate(-style.borderThickness.left, -style.borderThickness.top);
         g.rect(0, 0, sx + style.borderThickness.totalRl(), sy + style.borderThickness.totalTb());
@@ -55,7 +56,13 @@ public class Button {
     }
 
     boolean isClick(int x, int y) {
-        return ((this.x - this.sx / 2) < x && x < (this.x + this.sx / 2)) && ((this.y - this.sy / 2) < y && y < (this.y + this.sy / 2));
+        int left = (this.x - this.sx / 2);
+        int right = (this.x + this.sx / 2);
+        boolean hor = left < x && x < right;
+        int top = (this.y - this.sy / 2);
+        int bottom = (this.y + this.sy / 2);
+        boolean ver = top < y && y < bottom;
+        return hor && ver;
     }
 }
 

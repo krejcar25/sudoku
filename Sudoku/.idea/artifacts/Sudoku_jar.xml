@@ -3,7 +3,7 @@
     <output-path>$PROJECT_DIR$/out/artifacts/Sudoku_jar</output-path>
     <root id="archive" name="Sudoku.jar">
       <element id="module-output" name="Sudoku" />
-      <element id="extracted-dir" path="$USER_HOME$/processing-3.4/core/library/core.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/core.jar" path-in-jar="/" />
     </root>
   </artifact>
 </component>

@@ -2,6 +2,7 @@ package cz.krejcar25.sudoku;
 
 import java.util.ArrayList;
 
+import cz.krejcar25.sudoku.event.IButtonClick;
 import processing.core.*;
 
 public abstract class BaseOverlay {

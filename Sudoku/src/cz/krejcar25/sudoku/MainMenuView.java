@@ -1,9 +1,10 @@
 package cz.krejcar25.sudoku;
 
+import cz.krejcar25.sudoku.style.ButtonStyle;
+import cz.krejcar25.sudoku.style.Color;
 import processing.core.PApplet;
 
 import java.util.ArrayList;
-import java.util.function.Function;
 
 public class MainMenuView extends BaseView {
     MainMenuView(Main applet) {
@@ -17,8 +18,16 @@ public class MainMenuView extends BaseView {
         buttons.add(new Button(3 * sizex / 4, 200, bsx, bsy, bbx, bby, "Sudoku 6x6", this::buttonClick6x6));
         buttons.add(new Button(sizex / 4, 280, bsx, bsy, bbx, bby, "Sudoku 4x4", this::buttonClick4x4));
         buttons.add(new Button(3 * sizex / 4, 280, bsx, bsy, bbx, bby, "Sudoku 16x16", this::buttonClick16x16));
-        buttons.add(new Button(sizex / 4, 360, bsx, bsy, bbx, bby, "Settings", this::buttonClickSettings));
-        buttons.add(new Button(3 * sizex / 4, 360, bsx, bsy, bbx, bby, "Scoreboard", this::buttonClickScoreboard));
+        ButtonStyle nyiStyle = new ButtonStyle();
+        nyiStyle.border = new Color(255,0,0);
+        nyiStyle.background = new Color(255);
+        nyiStyle.foreground = new Color(255,0,0);
+        Button settingButton = new Button(sizex / 4, 360, bsx, bsy, bbx, bby, "Settings", this::buttonClickSettings);
+        settingButton.style = nyiStyle;
+        Button scoreboardButton = new Button(3 * sizex / 4, 360, bsx, bsy, bbx, bby, "Scoreboard", this::buttonClickScoreboard);
+        scoreboardButton.style = nyiStyle;
+        buttons.add(settingButton);
+        buttons.add(scoreboardButton);
     }
 
     private ArrayList<Button> buttons;
@@ -42,40 +51,44 @@ public class MainMenuView extends BaseView {
     public void click(int mx, int my) {
         if (applet.mouseButton == PApplet.LEFT) {
             for (Button button : buttons) {
-                if (button.isClick(mx, my)) button.click.click();
+                if (button.isClick(mx, my)) button.click.click(button);
             }
         }
     }
 
-    private void buttonClick9x9() {
+    private void buttonClick9x9(Button button) {
         Sudoku9x9View view = new Sudoku9x9View(applet, 30);
         view.generate();
         applet.stack.push(view);
     }
 
-    private void buttonClick6x6() {
+    private void buttonClick6x6(Button button) {
         Sudoku6x6View view = new Sudoku6x6View(applet, 12);
         view.generate();
         applet.stack.push(view);
     }
 
-    private void buttonClick4x4() {
+    private void buttonClick4x4(Button button) {
         Sudoku4x4View view = new Sudoku4x4View(applet, 6);
         view.generate();
         applet.stack.push(view);
     }
 
-    private void buttonClick16x16() {
+    private void buttonClick16x16(Button button) {
         Sudoku16x16View view = new Sudoku16x16View(applet,150);
         view.generate();
         applet.stack.push(view);
     }
 
-    private void buttonClickSettings() {
+    private void buttonClickSettings(Button button) {
+        applet.stack.push(new SettingsView(applet));
+    }
+
+    private void buttonClickScoreboard(Button button) {
 
     }
 
-    private void buttonClickScoreboard() {
-
+    public void keyPress() {
+        if (applet.isKeyPressed(Main.ESC)) applet.exit();
     }
 }

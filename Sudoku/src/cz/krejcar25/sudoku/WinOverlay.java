@@ -4,7 +4,7 @@ import processing.core.*;
 
 public class WinOverlay extends BaseOverlay {
     WinOverlay(BaseView parent) {
-        super(parent, 105, 300, 600, 200, OverlayType.OK, () -> {
+        super(parent, 105, 300, 600, 200, OverlayType.OK, (button) -> {
             System.out.println("WinOverlay OK button has received click event, popping");
             parent.applet.stack.pop();
         });
@@ -36,7 +36,7 @@ public class WinOverlay extends BaseOverlay {
         for (Button button : buttons) {
             if (button.isClick(x, y)) {
                 System.out.println("WinOverlay has found appropriate button");
-                button.click.click();
+                button.click.click(button);
             }
         }
     }

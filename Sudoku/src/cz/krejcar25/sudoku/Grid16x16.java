@@ -5,14 +5,15 @@ import java.awt.*;
 public class Grid16x16 extends BaseGrid {
     Grid16x16(BaseView parent) {
         super(parent, 4,4, 2);
-        newGamePos = new Point(0, 0);
-        helpPos = new Point(0, 1);
-        orderTogglePos = new Point(0, 2);
-        deletePos = new Point(0, 3);
-        smallNumPos = new Point(0, 4);
-        settingsPos = new Point(0, 5);
-        exitPos = new Point(0, 6);
-        timerPos = new Point(0,14);
+        newGamePos = new Point(0, 17);
+        helpPos = new Point(1, 17);
+        orderTogglePos = new Point(2, 17);
+        deletePos = new Point(3, 17);
+        smallNumPos = new Point(4, 17);
+        settingsPos = new Point(5, 17);
+        exitPos = new Point(6, 17);
+        timerPos = new Point(14,17);
+        drawNumberOffset = 0;
     }
 
     public BaseGrid clone() {

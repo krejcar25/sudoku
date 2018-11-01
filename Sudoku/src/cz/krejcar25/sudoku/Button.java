@@ -1,5 +1,6 @@
 package cz.krejcar25.sudoku;
 
+import cz.krejcar25.sudoku.event.IButtonClick;
 import cz.krejcar25.sudoku.style.ButtonStyle;
 import processing.core.*;
 
@@ -13,7 +14,7 @@ public class Button {
     private String label;
     IButtonClick click;
 
-    private ButtonStyle style;
+    ButtonStyle style;
 
     Button(int x, int y, int sx, int sy, int bx, int by, String label, IButtonClick click) {
         this.x = x;

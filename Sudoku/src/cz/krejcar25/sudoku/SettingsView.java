@@ -2,20 +2,25 @@ package cz.krejcar25.sudoku;
 
 import processing.core.*;
 
-public class SettingsView extends BaseView {
-    public SettingsView(Main applet) {
+public class SettingsView extends ScrollView {
+    SettingsView(Main applet) {
         super(applet,800, 600);
     }
 
     public void show() {
-        applet.push();
-        applet.background(51);
-        applet.textSize(40);
-        applet.fill(220);
-        applet.text("Settings", 280, 350);
+        content = applet.createGraphics(800, 1200);
+        setResizable(content.width, content.height);
+        content.beginDraw();
+        content.pushStyle();
+        content.background(51);
+        content.textSize(40);
+        content.fill(220);
+        content.text("Settings", 280, 350);
+        content.text("Footer", 280, 900);
+        content.popStyle();
+        content.endDraw();
 
-        if (overlay != null) applet.image(overlay.show(), overlay.x, overlay.y);
-        applet.pop();
+        super.show();
     }
 
     public void click(int x, int y) {

@@ -1,5 +1,6 @@
 package cz.krejcar25.sudoku;
 
+import cz.krejcar25.sudoku.event.IControlClick;
 import processing.core.*;
 
 import java.awt.*;
@@ -13,7 +14,7 @@ public abstract class BaseGrid {
     private int baseClues;
 
     Point newGamePos, helpPos, orderTogglePos, deletePos, smallNumPos, settingsPos, exitPos, timerPos;
-    private IButtonClick newGameClick, helpClick, orderToggleClick, deleteClick, smallNumClick, settingsClick, exitClick;
+    private IControlClick newGameClick, helpClick, orderToggleClick, deleteClick, smallNumClick, settingsClick, exitClick;
 
     int[][] game;
     boolean[][] baseGame;
@@ -22,6 +23,8 @@ public abstract class BaseGrid {
     int selectedx = -1;
     int selectedy = -1;
     int selectedn = -1;
+
+    protected int drawNumberOffset = 1;
 
     private int gameFill;
     private int gameStroke;
@@ -85,9 +88,9 @@ public abstract class BaseGrid {
 
     private void setClicks() {
         newGameClick = () -> {
-            if (parent instanceof IGameView) {
-                ((IGameView) parent).newGenerator();
-                ((IGameView) parent).generate();
+            if (parent instanceof GameView) {
+                ((GameView) parent).newGenerator();
+                ((GameView) parent).generate();
             }
         };
         helpClick = () -> {
@@ -153,7 +156,7 @@ public abstract class BaseGrid {
             if (black) parent.applet.fill(lightBgFore);
             else if (y >= rows()) parent.applet.fill(darkBgFore);
             else parent.applet.fill(blue);
-            drawText(x, y, Integer.toString(num + 1));
+            drawText(x, y, String.format("%X",num + drawNumberOffset));
             parent.applet.pop();
         }
     }
@@ -336,7 +339,7 @@ public abstract class BaseGrid {
                     for (int i = 0; i < numbers(); i++) {
                         if (notes[x][y][i])
                             //noinspection IntegerDivisionInFloatingPointContext
-                            parent.applet.text(i + 1, (i % sizea) * sxs, Main.floor(i / sizea) * sys);
+                            parent.applet.text(String.format("%X", i + drawNumberOffset), (i % sizea) * sxs, Main.floor(i / sizea) * sys);
                     }
                     parent.applet.pop();
                 }

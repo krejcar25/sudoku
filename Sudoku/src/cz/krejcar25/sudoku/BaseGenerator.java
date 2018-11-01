@@ -89,6 +89,8 @@ abstract class BaseGenerator {
             int x = PApplet.floor(v.x);
             int y = PApplet.floor(v.y);
 
+            Main.println("Trying to remove clue " + i + ", " + removed + " already removed, " + (remStart - targetCount - removed) + " remaining.");
+
             if (game.game[x][y] > -1) {
                 int cell = game.game[x][y];
                 game.game[x][y] = -1;
@@ -96,6 +98,7 @@ abstract class BaseGenerator {
                 int solutions = game.getSolver().countSolutions();
                 if (solutions > 1) {
                     game.game[x][y] = cell;
+                    Main.println("Actually I had to put it back, found multiple solutions...");
                 } else removed++;
             }
         }

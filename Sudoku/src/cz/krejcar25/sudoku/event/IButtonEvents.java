@@ -1,6 +1,6 @@
 package cz.krejcar25.sudoku.event;
 
-import cz.krejcar25.sudoku.Button;
+import cz.krejcar25.sudoku.control.Button;
 
 @FunctionalInterface
 public interface IButtonClick {

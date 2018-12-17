@@ -1,10 +1,12 @@
 package cz.krejcar25.sudoku;
 
 import cz.krejcar25.sudoku.style.Color;
-import processing.core.PGraphics;
+import cz.krejcar25.sudoku.ui.Drawable;
+import processing.event.KeyEvent;
+import processing.event.MouseEvent;
 
 public abstract class ScrollView extends BaseView {
-    protected PGraphics content;
+    protected Drawable content;
 
     public int horizontalScrollBarWidth = 5;
     public ScrollBarVisibility horizontalScrollBarVisibility = ScrollBarVisibility.Automatic;
@@ -22,66 +24,75 @@ public abstract class ScrollView extends BaseView {
     private int hScrollO = -1;
     private int vScrollO = -1;
 
-    public ScrollView(Main applet, int sizex, int sizey) {
-        super(applet, sizex, sizey);
+    public ScrollView(SudokuApplet applet, int width, int height) {
+        super(applet, width, height);
     }
 
-    public void show() {
-        boolean showH = horizontalScrollBarVisibility.showScrollBar(sizex, content.width);
-        boolean showV = verticalScrollBarVisibility.showScrollBar(sizey, content.height);
+    @Override
+    protected void draw() {
+        boolean showH = horizontalScrollBarVisibility.showScrollBar(width, content.width);
+        boolean showV = verticalScrollBarVisibility.showScrollBar(height, content.height);
 
-        applet.background(220);
-        applet.image(content.get(horizontalScroll, verticalScroll, sizex - (showV ? verticalScrollBarWidth : 0), sizey - (showH ? horizontalScrollBarWidth : 0)), 0, 0);
-        applet.push();
-        applet.noStroke();
+        background(220);
+        content.update();
+        image(content.get(horizontalScroll, verticalScroll, width - (showV ? verticalScrollBarWidth : 0), height - (showH ? horizontalScrollBarWidth : 0)), 0, 0);
+        push();
+        noStroke();
 
         if (showH) {
-            applet.push();
-            applet.translate(0, sizey - horizontalScrollBarWidth);
-            applet.fill(horizontalScrollBarColor.r, horizontalScrollBarColor.g, horizontalScrollBarColor.b);
-            float r = (((float) sizex) / content.width);
-            applet.rect(horizontalScroll * r, 0, (sizex - (showV ? verticalScrollBarWidth : 0)) * r, horizontalScrollBarWidth);
-            applet.pop();
+            push();
+            translate(0, height - horizontalScrollBarWidth);
+            fill(horizontalScrollBarColor.r, horizontalScrollBarColor.g, horizontalScrollBarColor.b);
+            float r = (((float) width) / content.width);
+            rect(horizontalScroll * r, 0, (width - (showV ? verticalScrollBarWidth : 0)) * r, horizontalScrollBarWidth);
+            pop();
         }
 
         if (showV) {
-            applet.push();
-            applet.translate(sizex - verticalScrollBarWidth, 0);
-            applet.fill(verticalScrollBarColor.r, verticalScrollBarColor.g, verticalScrollBarColor.b);
-            float r = (((float) sizey) / content.height);
-            applet.rect(0, verticalScroll * r, verticalScrollBarWidth, (sizey - (showH ? horizontalScrollBarWidth : 0)) * r);
-            applet.pop();
+            push();
+            translate(width - verticalScrollBarWidth, 0);
+            fill(verticalScrollBarColor.r, verticalScrollBarColor.g, verticalScrollBarColor.b);
+            float r = (((float) height) / content.height);
+            rect(0, verticalScroll * r, verticalScrollBarWidth, (height - (showH ? horizontalScrollBarWidth : 0)) * r);
+            pop();
         }
 
-        applet.pop();
-        if (overlay != null) content.image(overlay.show(), overlay.x, overlay.y);
+        pop();
+        if (overlay != null) {
+            overlay.update();
+            image(overlay, overlay.x, overlay.y);
+        }
     }
 
-    public void keyPress() {
+    @Override
+    public void keyDown(KeyEvent keyEvent) {
         int x = 0;
         int y = 0;
 
-        if (applet.isKeyPressed(Main.UP)) y += -scrollSpeed;
-        if (applet.isKeyPressed(Main.RIGHT)) x += scrollSpeed;
-        if (applet.isKeyPressed(Main.DOWN)) y += scrollSpeed;
-        if (applet.isKeyPressed(Main.LEFT)) x += -scrollSpeed;
+        if (getApplet().isKeyPressed(SudokuApplet.UP)) y += -scrollSpeed;
+        if (getApplet().isKeyPressed(SudokuApplet.RIGHT)) x += scrollSpeed;
+        if (getApplet().isKeyPressed(SudokuApplet.DOWN)) y += scrollSpeed;
+        if (getApplet().isKeyPressed(SudokuApplet.LEFT)) x += -scrollSpeed;
 
         scroll(x, y);
     }
 
-    public void scroll(float x, float y) {
-        horizontalScroll = Main.floor(Main.constrain(horizontalScroll + x, 0, content.width - sizex));
-        verticalScroll = Main.floor(Main.constrain(verticalScroll + y, 0, content.height - sizey));
-    }
-
-    public void mousePressed(int mx, int my) {
-        super.mousePressed(mx, my);
+    @Override
+    protected void mouseDown(int mx, int my, boolean rmb) {
         hScrollO = horizontalScroll;
         vScrollO = verticalScroll;
     }
 
-    public void mouseDragged(int mx, int my) {
-        horizontalScroll = Main.constrain(hScrollO - (mx - mousePressX), 0, content.width - sizex);
-        verticalScroll = Main.constrain(vScrollO - (my - mousePressY), 0, content.height - sizey);
+    @Override
+    public void mouseDrag(MouseEvent mouseEvent) {
+        horizontalScroll = SudokuApplet.constrain(hScrollO - (mouseEvent.getX() - mousePressX), 0, content.width - width);
+        verticalScroll = SudokuApplet.constrain(vScrollO - (mouseEvent.getY() - mousePressY), 0, content.height - height);
+    }
+
+    public void scroll(float x, float y) {
+        horizontalScroll = SudokuApplet.floor(SudokuApplet.constrain(horizontalScroll + x, 0, content.width - width));
+        verticalScroll = SudokuApplet.floor(SudokuApplet.constrain(verticalScroll + y, 0, content.height - height));
+        content.x = -horizontalScroll;
+        content.y = -verticalScroll;
     }
 }

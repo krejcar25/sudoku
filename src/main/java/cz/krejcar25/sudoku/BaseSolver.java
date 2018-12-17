@@ -1,12 +1,11 @@
 package cz.krejcar25.sudoku;
 
 import java.util.ArrayList;
-import processing.core.*;
 
 public abstract class BaseSolver {
     protected BaseGrid game;
     protected boolean used = false;
-    protected StopWatch timer;
+    protected Timer timer;
     ArrayList<ArrayList<ArrayList<Integer>>> numbers;
 
     int count;
@@ -19,7 +18,7 @@ public abstract class BaseSolver {
     public BaseSolver(BaseGrid game) {
         this.game = game.clone();
         this.game.lockAsBase(false,false);
-        timer = new StopWatch("GridSolver");
+        timer = new Timer("GridSolver");
         numbers = new ArrayList<>();
         tryNext = true;
         cycleAllowed = false;

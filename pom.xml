@@ -20,7 +20,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>cz.krejcar25.sudoku.Main</mainClass>
+                            <mainClass>cz.krejcar25.sudoku.SudokuApplet</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -40,6 +40,12 @@
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
             <version>2.9.7</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jetbrains</groupId>
+            <artifactId>annotations</artifactId>
+            <version>RELEASE</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 

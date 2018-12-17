@@ -1,67 +1,59 @@
 package cz.krejcar25.sudoku.control;
 
-import cz.krejcar25.sudoku.event.IButtonEvents;
+import cz.krejcar25.sudoku.BaseView;
+import cz.krejcar25.sudoku.event.ButtonEvents;
 import cz.krejcar25.sudoku.style.ButtonStyle;
 import processing.core.*;
+import processing.event.MouseEvent;
 
-public class Button implements IControl {
-    public final int x;
-    public final int y;
-    private int sx;
-    private int sy;
+public class Button extends Control {
     private String label;
-    private IButtonEvents click;
+    private ButtonEvents click;
 
     public ButtonStyle style;
 
-    public Button(int x, int y, int sx, int sy, int bx, int by, String label, IButtonEvents click) {
-        this.x = x;
-        this.y = y;
-        this.sx = sx;
-        this.sy = sy;
+    public Button(BaseView baseView, int centerX, int centerY, int width, int height, String label, ButtonEvents click) {
+        super(baseView, centerX - width / 2, centerY - height / 2, width, height);
         this.label = label;
         this.click = click;
 
         style = new ButtonStyle();
     }
 
-    public void show(PGraphics g) {
-        g.pushMatrix();
-        g.pushStyle();
-        g.translate(x, y);
-        g.pushMatrix();
-        g.fill(style.border.r, style.border.g, style.border.b);
-        g.pushMatrix();
-        //noinspection IntegerDivisionInFloatingPointContext
-        g.translate(-sx / 2, -sy / 2);
-        g.translate(-style.borderThickness.left, -style.borderThickness.top);
-        g.rect(0, 0, sx + style.borderThickness.totalRl(), sy + style.borderThickness.totalTb());
-        g.popMatrix();
-        g.rectMode(PApplet.CENTER);
-        g.fill(style.background.r, style.background.g, style.background.b);
-        g.rect(0, 0, sx, sy);
-        g.popMatrix();
+    @Override
+    protected void draw() {
+        push();
+        strokeWeight(0);
+        push();
+        fill(style.border.r, style.border.g, style.border.b);
+        push();
+        rect(0, 0, width, height);
+        pop();
+        fill(style.background.r, style.background.g, style.background.b);
+        rect(style.borderThickness.left, style.borderThickness.top, width - style.borderThickness.totalRl(), height - style.borderThickness.totalTb());
+        pop();
 
-        g.pushMatrix();
-        g.fill(style.foreground.r, style.foreground.g, style.foreground.b);
-        g.textSize(sy - style.borderThickness.totalTb());
-        g.textAlign(PApplet.CENTER, PApplet.CENTER);
-        g.text(label, 0, -3);
-        g.popMatrix();
-        g.popStyle();
-        g.popMatrix();
+        push();
+        fill(style.foreground.r, style.foreground.g, style.foreground.b);
+        textSize(height - style.borderThickness.totalTb());
+        textAlign(PApplet.CENTER, PApplet.CENTER);
+        //noinspection IntegerDivisionInFloatingPointContext
+        translate(width / 2, height / 2);
+        text(label, 0, -3);
+        pop();
+        pop();
     }
 
-    public boolean isClick(int x, int y) {
-        int left = (this.x - this.sx / 2);
-        int right = (this.x + this.sx / 2);
-        boolean hor = left < x && x < right;
-        int top = (this.y - this.sy / 2);
-        int bottom = (this.y + this.sy / 2);
-        boolean ver = top < y && y < bottom;
+    @Override
+    public boolean isClick(int mx, int my) {
+        int right = (this.x + width);
+        boolean hor = this.x < mx && mx < right;
+        int bottom = (this.y + this.height);
+        boolean ver = this.y < my && my < bottom;
         return hor && ver;
     }
 
+    @Override
     public void click() {
         click.click(this);
     }

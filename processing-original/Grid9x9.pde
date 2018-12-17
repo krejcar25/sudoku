@@ -3,8 +3,8 @@ public class Grid9x9 extends BaseGrid {
   boolean smallNumbers = false;
   boolean numFirst = true;
 
-  Grid9x9(IGameView parent) {
-    super(parent, 2);
+  Grid9x9(IGameView baseView) {
+    super(baseView, 2);
 
     cols = 9;
     rows = 9;
@@ -19,8 +19,8 @@ public class Grid9x9 extends BaseGrid {
   }
 
   void show() {
-    int sx = ((BaseView)parent).sizex / cols;
-    int sy = ((BaseView)parent).sizey / (rows + extraRows);
+    int sx = ((BaseView)baseView).sizex / cols;
+    int sy = ((BaseView)baseView).sizey / (rows + extraRows);
 
     if (timer.isPaused()) timer.start();
 
@@ -39,7 +39,7 @@ public class Grid9x9 extends BaseGrid {
           drawNumber(x, y, game[x][y], baseGame[x][y]);
           counts[game[x][y]]++;
         }
-        BaseSolver solver = parent.getSolver();
+        BaseSolver solver = baseView.getSolver();
         boolean solverRunning = solver != null && solver.used && solver.cycleAllowed;
         if (y < 9 && (solverRunning || game[x][y] < 0)) {
           push();
@@ -186,8 +186,8 @@ public class Grid9x9 extends BaseGrid {
 
   private void drawText(int x, int y, String text) {
     push();
-    int sx = ((BaseView)parent).sizex / cols;
-    int sy = ((BaseView)parent).sizey / (rows+extraRows);
+    int sx = ((BaseView)baseView).sizex / cols;
+    int sy = ((BaseView)baseView).sizey / (rows+extraRows);
     translate(x * sx, y * sy);
     translate(sx / 2, sy / 2);
     translate(0, -7);
@@ -247,8 +247,8 @@ public class Grid9x9 extends BaseGrid {
     } else if (y == 10) {
       switch (x) {
       case 0:
-        parent.newGenerator();
-        parent.generate();
+        baseView.newGenerator();
+        baseView.generate();
         break;
       case 1:
         int count = getSolver().countSolutions();
@@ -364,7 +364,7 @@ public class Grid9x9 extends BaseGrid {
   }
 
   public BaseGrid clone() {
-    Grid9x9 clone = new Grid9x9(parent);
+    Grid9x9 clone = new Grid9x9(baseView);
 
     clone.baseClues = baseClues;
     clone.game = new int[clone.cols][clone.rows];

@@ -1,31 +1,49 @@
 package cz.krejcar25.sudoku;
 
-import processing.core.PApplet;
+import processing.event.KeyEvent;
+import processing.event.MouseEvent;
 
 public class Sudoku16x16View extends GameView {
     private int clueCount;
 
-    Sudoku16x16View(Main applet, int targetCount) {
+    Sudoku16x16View(SudokuApplet applet, int targetCount) {
         super(applet, 880, 990);
         this.clueCount = targetCount;
         newGenerator();
     }
 
-    public void show() {
-        game.show();
-
-        if (overlay != null) applet.image(overlay.show(), overlay.x, overlay.y);
-    }
-
+    @Override
     public void newGenerator() {
         generator = new Sudoku16x16Generator(this, clueCount);
     }
 
+    @Override
     public void newSolver() {
         solver = game.getSolver();
     }
 
-    public void keyPress() {
+    @Override
+    protected void mouseDown(int mx, int my, boolean rmb) {
+
+    }
+
+    @Override
+    protected void mouseUp(int mx, int my, boolean rmb) {
+
+    }
+
+    @Override
+    public void mouseDrag(MouseEvent mouseEvent) {
+
+    }
+
+    @Override
+    public void scroll(MouseEvent event) {
+
+    }
+
+    @Override
+    public void keyUp(KeyEvent keyEvent) {
 
     }
 }

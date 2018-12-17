@@ -1,6 +1,6 @@
 package cz.krejcar25.sudoku.event;
 
 @FunctionalInterface
-public interface IControlClick {
+public interface ControlClick {
     void click();
 }

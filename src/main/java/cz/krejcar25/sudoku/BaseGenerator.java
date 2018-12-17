@@ -1,23 +1,22 @@
 package cz.krejcar25.sudoku;
 
 import processing.core.PApplet;
-import processing.core.PVector;
 
 import java.awt.*;
 import java.util.ArrayList;
 
 abstract class BaseGenerator {
-    BaseView parent;
+    BaseView baseView;
     private int targetCount;
     private ArrayList<ArrayList<ArrayList<Integer>>> numbers;
-    private StopWatch timer;
+    private Timer timer;
     private boolean used;
     BaseGrid game;
 
-    BaseGenerator(BaseView parent, int targetCount) {
-        this.parent = parent;
+    BaseGenerator(BaseView baseView, int targetCount) {
+        this.baseView = baseView;
         this.targetCount = targetCount;
-        timer = new StopWatch("GridGenerator");
+        timer = new Timer("GridGenerator");
         numbers = new ArrayList<>();
         used = false;
     }
@@ -50,7 +49,7 @@ abstract class BaseGenerator {
 
         do {
             if (available(gx, gy)) {
-                int n = PApplet.floor(parent.applet.random(numbers.get(gx).get(gy).size()));
+                int n = PApplet.floor(baseView.getApplet().random(numbers.get(gx).get(gy).size()));
                 if (game.canPlaceNumber(numbers.get(gx).get(gy).get(n), gx, gy, -1)) {
                     game.game[gx][gy] = numbers.get(gx).get(gy).get(n);
                     gx++;
@@ -80,7 +79,7 @@ abstract class BaseGenerator {
             }
         }
 
-        Main.shuffle(cells);
+        SudokuApplet.shuffle(cells);
         int removed = 0;
         int remStart = (cols * rows);
 
@@ -89,7 +88,7 @@ abstract class BaseGenerator {
             int x = PApplet.floor(v.x);
             int y = PApplet.floor(v.y);
 
-            Main.println("Trying to remove clue " + i + ", " + removed + " already removed, " + (remStart - targetCount - removed) + " remaining.");
+            SudokuApplet.println("Trying to remove clue " + i + ", " + removed + " already removed, " + (remStart - targetCount - removed) + " remaining.");
 
             if (game.game[x][y] > -1) {
                 int cell = game.game[x][y];
@@ -98,7 +97,7 @@ abstract class BaseGenerator {
                 int solutions = game.getSolver().countSolutions();
                 if (solutions > 1) {
                     game.game[x][y] = cell;
-                    Main.println("Actually I had to put it back, found multiple solutions...");
+                    SudokuApplet.println("Actually I had to put it back, found multiple solutions...");
                 } else removed++;
             }
         }
@@ -109,7 +108,7 @@ abstract class BaseGenerator {
         game.lockAsBase(true, true);
         timer.stop();
         PApplet.println("Generation finished in " + timer.getElapsedTimeSecs() + " seconds (" + timer.getElapsedTime() + " milliseconds, to be precise)");
-        game.timer.start();
+        game.gameClock.start();
         return game;
     }
 

@@ -6,8 +6,8 @@ import java.awt.Point;
 import processing.core.*;
 
 public class Grid9x9 extends BaseGrid {
-    Grid9x9(BaseView parent) {
-        super(parent, 3, 3, 2);
+    Grid9x9(GameView gameView) {
+        super(gameView, 3, 3, 2);
         newGamePos = new Point(0, 10);
         helpPos = new Point(1, 10);
         orderTogglePos = new Point(2, 10);
@@ -16,13 +16,16 @@ public class Grid9x9 extends BaseGrid {
         settingsPos = new Point(5, 10);
         exitPos = new Point(6, 10);
         timerPos = new Point(7, 10);
+        gameClock = new Clock(getApplet(), timerPos.x * sx + 10, (int) (timerPos.y * sy + (sy - Clock.getHeightFromWidth(2 * sx - 20)) / 2), "9x9 Grid");
     }
 
+    @Override
     public BaseGrid clone() {
-        BaseGrid clone = new Grid9x9(parent);
+        BaseGrid clone = new Grid9x9(view);
         return super.clone(clone);
     }
 
+    @Override
     public void keyInput(int k) {
         if (k > 0) {
             if (numFirst) {
@@ -33,6 +36,7 @@ public class Grid9x9 extends BaseGrid {
         }
     }
 
+    @Override
     public BaseSolver getSolver() {
         return new Sudoku9x9Solver(this);
     }

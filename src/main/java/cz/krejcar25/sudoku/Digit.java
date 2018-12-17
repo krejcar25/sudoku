@@ -1,47 +1,32 @@
 package cz.krejcar25.sudoku;
 
+import cz.krejcar25.sudoku.ui.Drawable;
 import processing.core.*;
 
-public class Digit {
-    int x;
-    int y;
-    float sx;
-    float sy;
-    final byte[] digits = new byte[]{0x7E, 0x30, 0x6D, 0x79, 0x33, 0x5B, 0x5F, 0x70, 0x7F, 0x7B, 0x77, 0x1F, 0x4E, 0x3D, 0x4F, 0x47};
-    PApplet applet;
+public class Digit extends Drawable {
+    private final byte[] digits = new byte[]{0x7E, 0x30, 0x6D, 0x79, 0x33, 0x5B, 0x5F, 0x70, 0x7F, 0x7B, 0x77, 0x1F, 0x4E, 0x3D, 0x4F, 0x47};
 
     final int on;
     final int off;
 
-    Digit(PApplet applet, int x, int y) {
-        this.applet = applet;
-        this.x = x;
-        this.y = y;
-        this.sx = 230;
-        this.sy = 370;
+    private byte segments;
 
-        this.on = applet.color(255, 0, 0);
-        this.off = applet.color(51, 0, 0);
+    Digit(SudokuApplet applet, int x, int y) {
+        super(applet, x, y, 230, 370);
+
+        this.on = color(255, 0, 0);
+        this.off = color(51, 0, 0);
     }
 
-    public float getx(float y) {
-        return y * (sx / sy);
+    public void setDigit(int digit, boolean decimal) {
+        segments = (decimal) ? (byte) (digits[digit] + 0x80) : digits[digit];
     }
 
-    public float gety(float x) {
-        return x * (sy / sx);
-    }
-
-    public PGraphics show(int digit, boolean decimal) {
-        return show(applet, (decimal) ? (byte) (digits[digit] + 0x80) : digits[digit]);
-    }
-
-    public PGraphics show(PApplet applet, byte segments) {
-        PGraphics g = applet.createGraphics((int) sx, (int) sy);
-        g.beginDraw();
-        g.noStroke();
-        PShape h = g.createShape();
-        PShape v = g.createShape();
+    @Override
+    protected void draw() {
+        noStroke();
+        PShape h = createShape();
+        PShape v = createShape();
 
         h.beginShape();
         h.vertex(25, 0);
@@ -50,7 +35,7 @@ public class Digit {
         h.vertex(125, 50);
         h.vertex(25, 50);
         h.vertex(0, 25);
-        h.endShape(PApplet.CLOSE);
+        h.endShape(CLOSE);
 
         v.beginShape();
         v.vertex(35, 0);
@@ -59,35 +44,32 @@ public class Digit {
         v.vertex(25, 150);
         v.vertex(0, 125);
         v.vertex(10, 25);
-        v.endShape(PApplet.CLOSE);
+        v.endShape(CLOSE);
 
-        g.fill(isBitOn(segments, 0));
-        g.ellipse(215, 355, 30, 30);
+        fill(isBitOn(segments, 0));
+        ellipse(215, 355, 30, 30);
 
         // A
         h.setFill(isBitOn(segments, 1));
-        g.shape(h, 50, 0);
+        shape(h, 50, 0);
         // B
         v.setFill(isBitOn(segments, 2));
-        g.shape(v, 170, 30);
+        shape(v, 170, 30);
         // C
         v.setFill(isBitOn(segments, 3));
-        g.shape(v, 160, 190);
+        shape(v, 160, 190);
         // D
         h.setFill(isBitOn(segments, 4));
-        g.shape(h, 30, 320);
+        shape(h, 30, 320);
         // E
         v.setFill(isBitOn(segments, 5));
-        g.shape(v, 0, 190);
+        shape(v, 0, 190);
         // F
         v.setFill(isBitOn(segments, 6));
-        g.shape(v, 10, 30);
+        shape(v, 10, 30);
         // G
         h.setFill(isBitOn(segments, 7));
-        g.shape(h, 40, 160);
-
-        g.endDraw();
-        return g;
+        shape(h, 40, 160);
     }
 
     private int isBitOn(byte segments, int segment) {

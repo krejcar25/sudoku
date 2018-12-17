@@ -1,12 +1,12 @@
 abstract class BaseGenerator {
-  IGameView parent;
+  IGameView baseView;
   int targetCount;
   ArrayList<ArrayList<ArrayList<Integer>>> numbers;
   StopWatch timer;
   protected boolean used = false;
   
-  BaseGenerator(IGameView parent, int targetCount) {
-    this.parent = parent;
+  BaseGenerator(IGameView baseView, int targetCount) {
+    this.baseView = baseView;
     this.targetCount = targetCount;
     timer = new StopWatch("GridGenerator");
     numbers = new ArrayList<ArrayList<ArrayList<Integer>>>();
@@ -16,8 +16,8 @@ abstract class BaseGenerator {
 }
 
 public class Sudoku9x9Generator extends BaseGenerator {
-  Sudoku9x9Generator(IGameView parent, int targetCount) {
-    super(parent, targetCount);
+  Sudoku9x9Generator(IGameView baseView, int targetCount) {
+    super(baseView, targetCount);
     for (int x = 0; x < 9; x++) {
       numbers.add(new ArrayList<ArrayList<Integer>>());
       for (int y = 0; y < 9; y++) {
@@ -31,7 +31,7 @@ public class Sudoku9x9Generator extends BaseGenerator {
     timer.start();
     if (used) return null;
     used = true;
-    Grid9x9 game = new Grid9x9(parent);
+    Grid9x9 game = new Grid9x9(baseView);
 
     int gx = 0;
     int gy = 0;

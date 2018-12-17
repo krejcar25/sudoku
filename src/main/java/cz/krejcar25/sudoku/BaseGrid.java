@@ -1,12 +1,13 @@
 package cz.krejcar25.sudoku;
 
-import cz.krejcar25.sudoku.event.IControlClick;
+import cz.krejcar25.sudoku.event.ControlClick;
+import cz.krejcar25.sudoku.ui.Drawable;
 import processing.core.*;
 
 import java.awt.*;
 
-public abstract class BaseGrid {
-    BaseView parent;
+public abstract class BaseGrid extends Drawable {
+    GameView view;
 
     private int sizea;
     private int sizeb;
@@ -14,7 +15,7 @@ public abstract class BaseGrid {
     private int baseClues;
 
     Point newGamePos, helpPos, orderTogglePos, deletePos, smallNumPos, settingsPos, exitPos, timerPos;
-    private IControlClick newGameClick, helpClick, orderToggleClick, deleteClick, smallNumClick, settingsClick, exitClick;
+    private ControlClick newGameClick, helpClick, orderToggleClick, deleteClick, smallNumClick, settingsClick, exitClick;
 
     int[][] game;
     boolean[][] baseGame;
@@ -45,23 +46,31 @@ public abstract class BaseGrid {
 
     private boolean finalised;
 
-    StopWatch timer;
+    private final int cols;
+    private final int rows;
+    protected final int sx;
+    protected final int sy;
 
-    BaseGrid(BaseView parent, int sizea, int sizeb, int extraRows) {
-        this.parent = parent;
+    Clock gameClock;
+
+    BaseGrid(GameView parent, int sizea, int sizeb, int extraRows) {
+        super(parent.getApplet(), 0, 0, parent.width, parent.height);
+        this.view = parent;
         this.sizea = sizea;
         this.sizeb = sizeb;
         this.extraRows = extraRows;
-        this.flashSquares = new FlashSquareList(parent.applet);
-        smallNumbers = parent.applet.settings.isDefaultNotes();
-        numFirst = parent.applet.settings.isDefaultNumberFirst();
+        this.flashSquares = new FlashSquareList(getApplet());
+        smallNumbers = getApplet().settings.isDefaultNotes();
+        numFirst = getApplet().settings.isDefaultNumberFirst();
         finalised = false;
-        timer = new StopWatch("9x9 Grid");
         setColours();
         setClicks();
 
-        int cols = cols();
-        int rows = rows();
+        this.cols = cols();
+        this.rows = rows();
+        this.sx = width / cols;
+        this.sy = height / (rows + extraRows);
+
         game = new int[cols][rows];
         baseGame = new boolean[cols][rows];
         notes = new boolean[cols][rows][numbers()];
@@ -72,26 +81,24 @@ public abstract class BaseGrid {
     }
 
     private void setColours() {
-        gameFill = parent.applet.color(255);
-        gameStroke = parent.applet.color(51);
-        baseFill = parent.applet.color(220);
-        neighbourFill = parent.applet.color(255, 255, 200);
-        thisFill = parent.applet.color(255, 255, 100);
-        buttonFill = parent.applet.color(51);
-        buttonStroke = parent.applet.color(220);
-        flashFillBad = parent.applet.color(255, 200, 200);
-        flashFillGood = parent.applet.color(200, 255, 200);
-        darkBgFore = parent.applet.color(220);
-        lightBgFore = parent.applet.color(51);
-        blue = parent.applet.color(0, 0, 255);
+        gameFill = color(255);
+        gameStroke = color(51);
+        baseFill = color(220);
+        neighbourFill = color(255, 255, 200);
+        thisFill = color(255, 255, 100);
+        buttonFill = color(51);
+        buttonStroke = color(220);
+        flashFillBad = color(255, 200, 200);
+        flashFillGood = color(200, 255, 200);
+        darkBgFore = color(220);
+        lightBgFore = color(51);
+        blue = color(0, 0, 255);
     }
 
     private void setClicks() {
         newGameClick = () -> {
-            if (parent instanceof GameView) {
-                ((GameView) parent).newGenerator();
-                ((GameView) parent).generate();
-            }
+            view.newGenerator();
+            view.generate();
         };
         helpClick = () -> {
             int count = getSolver().countSolutions();
@@ -111,10 +118,10 @@ public abstract class BaseGrid {
         };
         smallNumClick = () -> smallNumbers = !smallNumbers;
         settingsClick = () -> {
-            timer.pause();
-            parent.applet.stack.push(new SettingsView(parent.applet));
+            gameClock.pause();
+            getApplet().stack.push(new SettingsView(getApplet()));
         };
-        exitClick = () -> parent.applet.stack.pop();
+        exitClick = () -> getApplet().stack.pop();
     }
 
     int cols() {
@@ -130,20 +137,20 @@ public abstract class BaseGrid {
     }
 
     private void drawBigLines() {
-        int sx = parent.sizex / cols();
-        int sy = parent.sizey / (rows() + extraRows);
-        parent.applet.push();
-        parent.applet.stroke(0);
-        parent.applet.strokeWeight(3);
+        int sx = width / cols();
+        int sy = height / (rows() + extraRows);
+        push();
+        stroke(0);
+        strokeWeight(3);
         for (int i = 1; i < sizeb; i++) {
             int linex = i * sizea * sx;
-            parent.applet.line(linex, 0, linex, parent.applet.height - extraRows * sy);
+            line(linex, 0, linex, height - extraRows * sy);
         }
         for (int i = 1; i <= sizea; i++) {
             int liney = i * sizeb * sy;
-            parent.applet.line(0, liney, parent.applet.width, liney);
+            line(0, liney, width, liney);
         }
-        parent.applet.pop();
+        pop();
     }
 
     protected void drawNumber(Point p, int num, boolean black) {
@@ -152,12 +159,12 @@ public abstract class BaseGrid {
 
     private void drawNumber(int x, int y, int num, boolean black) {
         if (num > -1) {
-            parent.applet.push();
-            if (black) parent.applet.fill(lightBgFore);
-            else if (y >= rows()) parent.applet.fill(darkBgFore);
-            else parent.applet.fill(blue);
-            drawText(x, y, String.format("%X",num + drawNumberOffset));
-            parent.applet.pop();
+            push();
+            if (black) fill(lightBgFore);
+            else if (y >= rows()) fill(darkBgFore);
+            else fill(blue);
+            drawText(x, y, String.format("%X", num + drawNumberOffset));
+            pop();
         }
     }
 
@@ -166,18 +173,18 @@ public abstract class BaseGrid {
     }
 
     private void drawText(int x, int y, String text) {
-        parent.applet.push();
-        int sx = parent.sizex / cols();
-        int sy = parent.sizey / (rows() + extraRows);
-        parent.applet.translate(x * sx, y * sy);
+        push();
+        int sx = width / cols();
+        int sy = height / (rows() + extraRows);
+        translate(x * sx, y * sy);
         //noinspection IntegerDivisionInFloatingPointContext
-        parent.applet.translate(sx / 2, sy / 2);
-        parent.applet.translate(0, -7);
-        parent.applet.strokeWeight(0);
-        parent.applet.textAlign(PApplet.CENTER, PApplet.CENTER);
-        parent.applet.textSize(sy);
-        parent.applet.text(text, 0, 0);
-        parent.applet.pop();
+        translate(sx / 2, sy / 2);
+        translate(0, -7);
+        strokeWeight(0);
+        textAlign(PApplet.CENTER, PApplet.CENTER);
+        textSize(sy);
+        text(text, 0, 0);
+        pop();
     }
 
     private int cellBg(int x, int y) {
@@ -198,7 +205,7 @@ public abstract class BaseGrid {
     }
 
     private boolean isRowCol(int x, int y, int ofx, int ofy) {
-        return Main.xor(x == ((ofx != -1) ? ofx : selectedx), y == ((ofy != -1) ? ofy : selectedy));
+        return SudokuApplet.xor(x == ((ofx != -1) ? ofx : selectedx), y == ((ofy != -1) ? ofy : selectedy));
     }
 
     boolean isSc(int x, int y) {
@@ -276,7 +283,7 @@ public abstract class BaseGrid {
                 }
             }
         }
-        if (output) Main.println("Clues locked: " + baseClues);
+        if (output) SudokuApplet.println("Clues locked: " + baseClues);
     }
 
     BaseGrid clone(BaseGrid clone) {
@@ -302,46 +309,42 @@ public abstract class BaseGrid {
         return clone;
     }
 
-    public void show() {
-        int cols = cols();
-        int rows = rows();
-        int sx = parent.sizex / cols;
-        int sy = parent.sizey / (rows + extraRows);
-
-        if (timer.isPaused()) timer.start();
+    @Override
+    protected void draw() {
+        if (gameClock.isPaused()) gameClock.start();
 
         int[] counts = new int[numbers()];
 
         for (int y = 0; y < (rows + extraRows); y++) {
             for (int x = 0; x < cols; x++) {
-                parent.applet.push();
-                parent.applet.stroke((y >= rows) ? buttonStroke : gameStroke);
-                parent.applet.fill(cellBg(x, y));
+                push();
+                stroke((y >= rows) ? buttonStroke : gameStroke);
+                fill(cellBg(x, y));
 
-                parent.applet.rect(x * sx, y * sy, sx, sy);
-                parent.applet.pop();
+                rect(x * sx, y * sy, sx, sy);
+                pop();
 
                 if (y < rows && game[x][y] > -1) {
                     drawNumber(x, y, game[x][y], baseGame[x][y]);
                     counts[game[x][y]]++;
                 }
                 if (y < rows && game[x][y] < 0) {
-                    parent.applet.push();
-                    parent.applet.translate(x * sx, y * sy);
+                    push();
+                    translate(x * sx, y * sy);
                     int sxs = sx / sizea;
                     int sys = sy / sizeb;
                     //noinspection IntegerDivisionInFloatingPointContext
-                    parent.applet.translate(sxs / 2, sys / 2 - 3);
-                    parent.applet.textSize(sys);
-                    parent.applet.textAlign(PApplet.CENTER, PApplet.CENTER);
-                    parent.applet.fill(0);
-                    parent.applet.strokeWeight(0);
+                    translate(sxs / 2, sys / 2 - 3);
+                    textSize(sys);
+                    textAlign(PApplet.CENTER, PApplet.CENTER);
+                    fill(0);
+                    strokeWeight(0);
                     for (int i = 0; i < numbers(); i++) {
                         if (notes[x][y][i])
                             //noinspection IntegerDivisionInFloatingPointContext
-                            parent.applet.text(String.format("%X", i + drawNumberOffset), (i % sizea) * sxs, Main.floor(i / sizea) * sys);
+                            text(String.format("%X", i + drawNumberOffset), (i % sizea) * sxs, SudokuApplet.floor(i / sizea) * sys);
                     }
-                    parent.applet.pop();
+                    pop();
                 }
             }
         }
@@ -352,107 +355,108 @@ public abstract class BaseGrid {
 
         for (int i = 0; i < numbers(); i++) {
             drawNumber(i, rows, i, selectedn == i);
-            parent.applet.push();
-            parent.applet.translate(i * sx, rows * sy);
+            push();
+            translate(i * sx, rows * sy);
             int sxs = sx / 3;
             int sys = sy / 3;
             //noinspection IntegerDivisionInFloatingPointContext
-            parent.applet.translate(sxs / 2, sys / 2 - 3);
-            parent.applet.textSize(sys);
-            parent.applet.textAlign(PApplet.CENTER, PApplet.CENTER);
-            parent.applet.fill((selectedn == i) ? lightBgFore : darkBgFore);
-            parent.applet.strokeWeight(0);
-            parent.applet.text(counts[i], 2 * sxs, 0);
+            translate(sxs / 2, sys / 2 - 3);
+            textSize(sys);
+            textAlign(PApplet.CENTER, PApplet.CENTER);
+            fill((selectedn == i) ? lightBgFore : darkBgFore);
+            strokeWeight(0);
+            text(counts[i], 2 * sxs, 0);
             if (counts[i] < numbers()) allDone = false;
-            parent.applet.pop();
+            pop();
         }
 
-        if (allDone && timer.isRunning()) {
-            timer.stop();
-            Main.println("Solved");
-            parent.overlay = new WinOverlay(parent);
+        if (allDone && gameClock.isRunning()) {
+            gameClock.stop();
+            SudokuApplet.println("Solved");
+            view.overlay = new WinOverlay(view);
         }
 
-        parent.applet.push();
-        parent.applet.fill(darkBgFore);
+        push();
+        fill(darkBgFore);
         drawText(newGamePos, "*");
-        parent.applet.pop();
+        pop();
 
-        parent.applet.push();
-        parent.applet.fill((flashSquares.contains(helpPos.x, helpPos.y)) ? lightBgFore : darkBgFore);
+        push();
+        fill((flashSquares.contains(helpPos.x, helpPos.y)) ? lightBgFore : darkBgFore);
         drawText(helpPos, "?");
-        parent.applet.pop();
+        pop();
 
         if (smallNumbers) {
-            parent.applet.push();
-            parent.applet.translate(smallNumPos.x * sx, smallNumPos.y * sy);
-            parent.applet.strokeWeight(1);
-            parent.applet.stroke(220);
+            push();
+            translate(smallNumPos.x * sx, smallNumPos.y * sy);
+            strokeWeight(1);
+            stroke(220);
             int sxs = sx / sizea;
             int sys = sy / sizeb;
             for (int i = 1; i < sizea; i++) {
-                parent.applet.line(i * sxs, 0, i * sxs, sy);
+                line(i * sxs, 0, i * sxs, sy);
             }
             for (int i = 1; i < sizeb; i++) {
-                parent.applet.line(0, i * sys, sx, i * sys);
+                line(0, i * sys, sx, i * sys);
             }
-            parent.applet.pop();
+            pop();
         } else {
-            parent.applet.push();
-            parent.applet.fill(220);
-            parent.applet.strokeWeight(0);
+            push();
+            fill(220);
+            strokeWeight(0);
             drawText(smallNumPos, "#");
-            parent.applet.pop();
+            pop();
         }
 
-        parent.applet.push();
-        parent.applet.fill((selectedn == -2) ? lightBgFore : darkBgFore);
+        push();
+        fill((selectedn == -2) ? lightBgFore : darkBgFore);
         drawText(deletePos, "x");
-        parent.applet.pop();
+        pop();
 
-        parent.applet.push();
-        parent.applet.fill(220);
-        parent.applet.strokeWeight(0);
+        push();
+        fill(220);
+        strokeWeight(0);
         drawText(orderTogglePos, (numFirst) ? "N" : "C");
-        parent.applet.pop();
+        pop();
 
-        parent.applet.push();
-        parent.applet.translate(settingsPos.x * sx, settingsPos.y * sy);
+        push();
+        translate(settingsPos.x * sx, settingsPos.y * sy);
         //noinspection IntegerDivisionInFloatingPointContext
-        parent.applet.translate(sx / 2, sy / 2);
-        parent.applet.fill(darkBgFore);
+        translate(sx / 2, sy / 2);
+        fill(darkBgFore);
         //noinspection IntegerDivisionInFloatingPointContext
-        parent.applet.ellipse(0, 0, sx / 2, sy / 2);
-        parent.applet.fill(buttonFill);
+        ellipse(0, 0, sx / 2, sy / 2);
+        fill(buttonFill);
         //noinspection IntegerDivisionInFloatingPointContext
-        parent.applet.ellipse(0, 0, sx / 3, sy / 3);
-        parent.applet.rectMode(PApplet.CENTER);
-        parent.applet.fill(darkBgFore);
+        ellipse(0, 0, sx / 3, sy / 3);
+        rectMode(PApplet.CENTER);
+        fill(darkBgFore);
 
         for (int i = 0; i < 8; i++) {
-            parent.applet.push();
-            parent.applet.noStroke();
-            parent.applet.rotate(PApplet.PI * i / 4);
+            push();
+            noStroke();
+            rotate(PApplet.PI * i / 4);
             //noinspection IntegerDivisionInFloatingPointContext
-            parent.applet.translate(sx / 4, 0);
+            translate(sx / 4, 0);
             //noinspection IntegerDivisionInFloatingPointContext
-            parent.applet.rect(0, 0, sx / 8, sx / 8);
-            parent.applet.pop();
+            rect(0, 0, sx / 8, sx / 8);
+            pop();
         }
-        parent.applet.pop();
+        pop();
 
-        parent.applet.push();
-        parent.applet.translate(exitPos.x * sx, exitPos.y * sy);
-        parent.applet.image(parent.applet.door, 10, 10, sx - 20, sy - 20);
-        parent.applet.pop();
+        push();
+        translate(exitPos.x * sx, exitPos.y * sy);
+        image(getApplet().door, 10, 10, sx - 20, sy - 20);
+        pop();
 
-        parent.applet.push();
-        parent.applet.fill(buttonFill);
-        parent.applet.stroke(buttonStroke);
-        parent.applet.strokeWeight(1);
-        parent.applet.rect(timerPos.x * sx, timerPos.y * sy, 2 * sx, sy);
-        parent.applet.image(timer.show(parent.applet), timerPos.x * sx + 10, timerPos.y * sy + (sy - timer.gety(2 * sx - 20)) / 2, 2 * sx - 20, timer.gety(2 * sx - 20));
-        parent.applet.pop();
+        push();
+        fill(buttonFill);
+        stroke(buttonStroke);
+        strokeWeight(1);
+        rect(timerPos.x * sx, timerPos.y * sy, 2 * sx, sy);
+        gameClock.update();
+        image(gameClock, gameClock.x, gameClock.y, 2 * sx - 20, Clock.getHeightFromWidth(2 * sx - 20));
+        pop();
     }
 
     public void click(int x, int y, boolean right) {
@@ -491,6 +495,7 @@ public abstract class BaseGrid {
         }
     }
 
+    @Override
     public abstract BaseGrid clone();
 
     public abstract void keyInput(int k);

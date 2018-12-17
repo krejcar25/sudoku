@@ -34,6 +34,7 @@ class FlashSquareList {
         return -1;
     }
 
+    @Override
     public FlashSquareList clone() {
         FlashSquareList clone = new FlashSquareList(applet);
         for (FlashSquare s : squares) {

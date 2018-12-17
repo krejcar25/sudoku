@@ -1,5 +1,5 @@
 public abstract class BaseGrid {
-  IGameView parent;
+  IGameView baseView;
 
   int cols;
   int rows;
@@ -35,8 +35,8 @@ public abstract class BaseGrid {
 
   StopWatch timer;
 
-  public BaseGrid(IGameView parent, int extraRows) {
-    this.parent = parent;
+  public BaseGrid(IGameView baseView, int extraRows) {
+    this.baseView = baseView;
     this.extraRows = extraRows;
     this.flashSquares = new FlashSquareList();
     smallNumbers = false;

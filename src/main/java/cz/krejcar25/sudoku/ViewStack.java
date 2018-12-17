@@ -8,11 +8,14 @@ class ViewStack {
     ViewStack(BaseView base) {
         stack = new ArrayList<>();
         stack.add(base);
+        base.setViewStack(this);
     }
 
     int push(BaseView view) {
         int index = stack.size();
+        if (view.isInViewStack()) return -1;
         stack.add(view);
+        view.setViewStack(this);
         return index;
     }
 
@@ -26,5 +29,9 @@ class ViewStack {
 
     BaseView get() {
         return stack.get(stack.size() - 1);
+    }
+
+    void removeSpecific(BaseView view) {
+        stack.remove(view);
     }
 }

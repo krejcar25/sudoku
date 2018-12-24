@@ -7,7 +7,6 @@ import processing.core.*;
 import processing.event.MouseEvent;
 
 public class Button extends Control {
-    private String label;
     private ButtonEvents click;
 
     public ButtonStyle style;

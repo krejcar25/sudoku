@@ -1,11 +1,11 @@
 package cz.krejcar25.sudoku.event;
 
-import cz.krejcar25.sudoku.control.Toggle;
+import cz.krejcar25.sudoku.control.Control;
 
 public interface ToggleEvents {
-    void toggled(Toggle sender);
+    void toggled(Control sender);
 
-    void switchedOn(Toggle sender);
+    void switchedOn(Control sender);
 
-    void switchedOff(Toggle sender);
+    void switchedOff(Control sender);
 }

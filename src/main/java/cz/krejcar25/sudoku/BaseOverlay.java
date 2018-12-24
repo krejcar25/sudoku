@@ -23,8 +23,10 @@ public abstract class BaseOverlay extends Drawable {
         int bsy = 40;
         if (clicks.length != type.buttonCount) throw new IllegalArgumentException();
         switch (type.buttonCount) {
+            case 0:
+                break;
             case 1:
-                buttons.add(new Button(baseView, x / 2, this.height - 40, bsx, bsy, type.buttonLabels[0], clicks[0]));
+                buttons.add(new Button(baseView, this.width / 2, this.height - 40, bsx, bsy, type.buttonLabels[0], clicks[0]));
                 break;
             case 2:
                 buttons.add(new Button(baseView, this.width / 3, this.height - 40, bsx, bsy, type.buttonLabels[0], clicks[0]));

@@ -5,18 +5,19 @@ import processing.core.PApplet;
 import java.awt.*;
 import java.util.ArrayList;
 
-abstract class BaseGenerator {
-    BaseView baseView;
-    private int targetCount;
+class BaseGenerator implements Runnable {
+    GameView gameView;
     private ArrayList<ArrayList<ArrayList<Integer>>> numbers;
-    private Timer timer;
+    public final Clock timer;
     private boolean used;
     BaseGrid game;
+    private int clueCount;
+    private volatile boolean shouldRun = true;
 
-    BaseGenerator(BaseView baseView, int targetCount) {
-        this.baseView = baseView;
-        this.targetCount = targetCount;
-        timer = new Timer("GridGenerator");
+    BaseGenerator(BaseGrid game) {
+        this.gameView = game.view;
+        this.game = game;
+        timer = new Clock(gameView.getApplet(), 0, 0, "GridGenerator");
         numbers = new ArrayList<>();
         used = false;
     }
@@ -29,9 +30,22 @@ abstract class BaseGenerator {
         }
     }
 
-    BaseGrid generate() {
+    void generate(int clueCount, boolean async) {
+        this.clueCount = clueCount;
+        Thread thread = new Thread(this);
+        if (async) thread.start();
+        else thread.run();
+    }
+
+    void stopGeneration() {
+        shouldRun = false;
+    }
+
+    @Override
+    public void run() {
+        gameView.getApplet().frameRate(5);
         timer.start();
-        if (used) return null;
+        if (used) return;
         used = true;
 
         int gx = 0;
@@ -49,7 +63,7 @@ abstract class BaseGenerator {
 
         do {
             if (available(gx, gy)) {
-                int n = PApplet.floor(baseView.getApplet().random(numbers.get(gx).get(gy).size()));
+                int n = PApplet.floor(gameView.getApplet().random(numbers.get(gx).get(gy).size()));
                 if (game.canPlaceNumber(numbers.get(gx).get(gy).get(n), gx, gy, -1)) {
                     game.game[gx][gy] = numbers.get(gx).get(gy).get(n);
                     gx++;
@@ -69,47 +83,59 @@ abstract class BaseGenerator {
                 gx -= cols;
                 gy++;
             }
-        } while (gy >= 0 && gy < rows);
+        } while (gy >= 0 && gy < rows && shouldRun);
 
-        Point[] cells = new Point[cols * rows];
+        Point[] cells = new Point[PApplet.ceil((cols * rows) / 2f)];
 
-        for (int y = 0; y < rows; y++) {
-            for (int x = 0; x < cols; x++) {
+        for (int i = 0; i < cells.length; i++) cells[i] = new Point(i % cols, i / cols);
+/*
+        int ymax = PApplet.ceil(rows / 2f);
+        for (int y = 0; y < ymax; y++) {
+            for (int x = 0; x < ((y + 1 == ymax) ? PApplet.ceil(cols / 2f) : cols); x++) {
                 cells[cols * y + x] = new Point(x, y);
             }
-        }
+        }*/
 
         SudokuApplet.shuffle(cells);
         int removed = 0;
-        int remStart = (cols * rows);
+        int remStart = cols * rows;
 
-        for (int i = remStart - 1; removed < (remStart - targetCount) && i >= 0; i--) {
+        for (int i = 0; removed < (remStart - clueCount - 1) && i < cells.length && shouldRun; i++) {
             Point v = cells[i];
-            int x = PApplet.floor(v.x);
-            int y = PApplet.floor(v.y);
+            int x = v.x;
+            int y = v.y;
+            int ox = cols - v.x - 1;
+            int oy = cols - v.y - 1;
 
-            SudokuApplet.println("Trying to remove clue " + i + ", " + removed + " already removed, " + (remStart - targetCount - removed) + " remaining.");
+            SudokuApplet.println("Trying to remove clue " + i + ", " + removed + " already removed, " + (remStart - clueCount - removed) + " remaining.");
 
             if (game.game[x][y] > -1) {
                 int cell = game.game[x][y];
+                int mirror = game.game[ox][oy];
                 game.game[x][y] = -1;
+                game.game[ox][oy] = -1;
                 game.lockAsBase(false, false);
                 int solutions = game.getSolver().countSolutions();
                 if (solutions > 1) {
                     game.game[x][y] = cell;
+                    game.game[ox][oy] = mirror;
                     SudokuApplet.println("Actually I had to put it back, found multiple solutions...");
-                } else removed++;
+                } else removed = removed + 2;
             }
         }
 
+        if (!shouldRun) return;
+
         game.select(-1, -1);
 
-        PApplet.println("removal target: " + (((cols * rows) - 1) - targetCount) + ", removed: " + removed);
+        PApplet.println("removal target: " + (((cols * rows) - 1) - clueCount) + ", removed: " + removed);
         game.lockAsBase(true, true);
         timer.stop();
-        PApplet.println("Generation finished in " + timer.getElapsedTimeSecs() + " seconds (" + timer.getElapsedTime() + " milliseconds, to be precise)");
+        PApplet.println("Generation finished in " + timer.getTimer().getElapsedTimeSecs() + " seconds (" + timer.getTimer().getElapsedTime() + " milliseconds, to be precise)");
+        gameView.getApplet().frameRate(60);
+        gameView.generator = null;
         game.gameClock.start();
-        return game;
+
     }
 
     private boolean available(int x, int y) {

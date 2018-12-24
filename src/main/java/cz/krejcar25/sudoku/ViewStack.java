@@ -19,6 +19,10 @@ class ViewStack {
         return index;
     }
 
+    void pop(int count) {
+        for (int i = 0; i < count; i++) pop();
+    }
+
     BaseView pop() {
         int index = stack.size() - 1;
         if (index == 0) return null;

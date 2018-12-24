@@ -4,17 +4,16 @@ import processing.event.KeyEvent;
 import processing.event.MouseEvent;
 
 public class Sudoku16x16View extends GameView {
-    private int clueCount;
-
-    Sudoku16x16View(SudokuApplet applet, int targetCount) {
-        super(applet, 880, 990);
-        this.clueCount = targetCount;
+    Sudoku16x16View(SudokuApplet applet) {
+        super(applet, 880, 990, 200, 180, 170, 150);
+        game = new Grid16x16(this);
         newGenerator();
     }
 
     @Override
     public void newGenerator() {
-        generator = new Sudoku16x16Generator(this, clueCount);
+        generator = new BaseGenerator(game);
+        game.generator = generator;
     }
 
     @Override

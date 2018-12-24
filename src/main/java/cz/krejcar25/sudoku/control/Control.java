@@ -8,10 +8,19 @@ import processing.event.MouseEvent;
 public abstract class Control extends Drawable {
     protected BaseView baseView;
     protected String tooltip;
+    protected String label;
 
     protected Control(BaseView baseView, int x, int y, int width, int height) {
         super(baseView.getApplet(), x, y, width, height);
         this.baseView = baseView;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
     }
 
     public String getTooltip() {

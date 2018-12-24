@@ -50,6 +50,10 @@ public class Clock extends Drawable {
         return x * baseHeight / baseWidth;
     }
 
+    public Timer getTimer() {
+        return timer;
+    }
+
     @Override
     protected void draw() {
         long time = timer.getElapsedTimeSecs();

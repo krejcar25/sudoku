@@ -4,18 +4,17 @@ import processing.event.KeyEvent;
 import processing.event.MouseEvent;
 
 public class Sudoku4x4View extends GameView {
-    private int clueCount;
 
-    Sudoku4x4View(SudokuApplet applet, int targetCount) {
-        super(applet, 360, 720);
-        this.clueCount = targetCount;
+    Sudoku4x4View(SudokuApplet applet) {
+        super(applet, 360, 720, 11, 9, 7, 6);
+        game = new Grid4x4(this);
         newGenerator();
-        //overlay = new WinOverlay();
     }
 
     @Override
     public void newGenerator() {
-        generator = new Sudoku4x4Generator(this, clueCount);
+        generator = new BaseGenerator(game);
+        game.generator = generator;
     }
 
     @Override

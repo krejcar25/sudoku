@@ -4,23 +4,24 @@ import cz.krejcar25.sudoku.control.Button;
 import cz.krejcar25.sudoku.style.ButtonStyle;
 import cz.krejcar25.sudoku.style.Color;
 import processing.core.PApplet;
-import processing.core.PConstants;
 import processing.event.KeyEvent;
 import processing.event.MouseEvent;
 
 import java.util.ArrayList;
 
 public class MainMenuView extends BaseView {
+    private ArrayList<Button> buttons;
+
     MainMenuView(SudokuApplet applet) {
         super(applet, 800, 600);
         buttons = new ArrayList<>();
         int bsx = 280;
         int bsy = 40;
-        buttons.add(new Button(this, width / 4, 200, bsx, bsy, "Sudoku 9x9", this::buttonClick9x9));
-        buttons.add(new Button(this, 3 * width / 4, 200, bsx, bsy, "Sudoku 6x6", this::buttonClick6x6));
-        buttons.add(new Button(this, width / 4, 280, bsx, bsy, "Sudoku 4x4", this::buttonClick4x4));
-        buttons.add(new Button(this, 3 * width / 4, 280, bsx, bsy, "Sudoku 16x16", this::buttonClick16x16));
-        Button settingButton = new Button(this, width / 4, 360, bsx, bsy, "Settings", this::buttonClickSettings);
+        buttons.add(new Button(this, width / 4, 200, bsx, bsy, "Sudoku 9x9", sender -> viewStack.push(new DifficultySelectView(getApplet(), new Sudoku9x9View(getApplet())))));
+        buttons.add(new Button(this, 3 * width / 4, 200, bsx, bsy, "Sudoku 6x6", sender -> viewStack.push(new DifficultySelectView(getApplet(), new Sudoku6x6View(getApplet())))));
+        buttons.add(new Button(this, width / 4, 280, bsx, bsy, "Sudoku 4x4", sender -> viewStack.push(new DifficultySelectView(getApplet(), new Sudoku4x4View(getApplet())))));
+        buttons.add(new Button(this, 3 * width / 4, 280, bsx, bsy, "Sudoku 16x16", sender -> viewStack.push(new DifficultySelectView(getApplet(), new Sudoku16x16View(getApplet())))));
+        Button settingButton = new Button(this, width / 4, 360, bsx, bsy, "Settings", sender -> viewStack.push(new SettingsView(getApplet())));
         Button scoreboardButton = new Button(this, 3 * width / 4, 360, bsx, bsy, "Scoreboard", this::buttonClickScoreboard);
 
         ButtonStyle nyiStyle = new ButtonStyle();
@@ -42,8 +43,6 @@ public class MainMenuView extends BaseView {
     protected void mouseUp(int mx, int my, boolean rmb) {
 
     }
-
-    private ArrayList<Button> buttons;
 
     @Override
     protected void draw() {
@@ -81,35 +80,6 @@ public class MainMenuView extends BaseView {
     @Override
     public void scroll(MouseEvent event) {
 
-    }
-
-    private void buttonClick9x9(Button sender) {
-        Sudoku9x9View view = new Sudoku9x9View(getApplet(), 30);
-        view.generate();
-        viewStack.push(view);
-    }
-
-    private void buttonClick6x6(Button sender) {
-        Sudoku6x6View view = new Sudoku6x6View(getApplet(), 12);
-        view.generate();
-        viewStack.push(view);
-    }
-
-    private void buttonClick4x4(Button sender) {
-        Sudoku4x4View view = new Sudoku4x4View(getApplet(), 6);
-        view.generate();
-        viewStack.push(view);
-    }
-
-    private void buttonClick16x16(Button sender) {
-        Sudoku16x16View view = new Sudoku16x16View(getApplet(), 150);
-        view.generate();
-        viewStack.push(view);
-    }
-
-    private void buttonClickSettings(Button sender) {
-        SettingsView view = new SettingsView(getApplet());
-        viewStack.push(view);
     }
 
     private void buttonClickScoreboard(Button sender) {

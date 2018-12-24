@@ -20,18 +20,18 @@ public class SettingsViewContent extends Drawable {
 
         Toggle numFirst = new Toggle(parentView, 300, 100, 40, 20, new ToggleEvents() {
             @Override
-            public void toggled(Toggle sender) {
-                getApplet().settings.setDefaultNumberFirst(sender.state);
+            public void toggled(Control sender) {
+                getApplet().settings.setDefaultNumberFirst(((Toggle) sender).state);
                 getApplet().settings.save();
             }
 
             @Override
-            public void switchedOn(Toggle sender) {
+            public void switchedOn(Control sender) {
 
             }
 
             @Override
-            public void switchedOff(Toggle sender) {
+            public void switchedOff(Control sender) {
 
             }
         });
@@ -39,18 +39,18 @@ public class SettingsViewContent extends Drawable {
         controls.add(numFirst);
         Toggle notes = new Toggle(parentView, 300, 130, 40, 20, new ToggleEvents() {
             @Override
-            public void toggled(Toggle sender) {
-                getApplet().settings.setDefaultNotes(sender.state);
+            public void toggled(Control sender) {
+                getApplet().settings.setDefaultNotes(((Toggle) sender).state);
                 getApplet().settings.save();
             }
 
             @Override
-            public void switchedOn(Toggle sender) {
+            public void switchedOn(Control sender) {
 
             }
 
             @Override
-            public void switchedOff(Toggle sender) {
+            public void switchedOff(Control sender) {
 
             }
         });

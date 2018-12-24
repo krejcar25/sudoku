@@ -53,6 +53,8 @@ public abstract class BaseGrid extends Drawable {
 
     Clock gameClock;
 
+    BaseGenerator generator;
+
     BaseGrid(GameView parent, int sizea, int sizeb, int extraRows) {
         super(parent.getApplet(), 0, 0, parent.width, parent.height);
         this.view = parent;
@@ -98,7 +100,7 @@ public abstract class BaseGrid extends Drawable {
     private void setClicks() {
         newGameClick = () -> {
             view.newGenerator();
-            view.generate();
+            view.generate(baseClues, getApplet().isKeyPressed(SHIFT));
         };
         helpClick = () -> {
             int count = getSolver().countSolutions();
@@ -121,7 +123,10 @@ public abstract class BaseGrid extends Drawable {
             gameClock.pause();
             getApplet().stack.push(new SettingsView(getApplet()));
         };
-        exitClick = () -> getApplet().stack.pop();
+        exitClick = () -> {
+            getApplet().stack.pop(2);
+            generator.stopGeneration();
+        };
     }
 
     int cols() {
@@ -324,27 +329,31 @@ public abstract class BaseGrid extends Drawable {
                 rect(x * sx, y * sy, sx, sy);
                 pop();
 
-                if (y < rows && game[x][y] > -1) {
-                    drawNumber(x, y, game[x][y], baseGame[x][y]);
-                    counts[game[x][y]]++;
-                }
-                if (y < rows && game[x][y] < 0) {
-                    push();
-                    translate(x * sx, y * sy);
-                    int sxs = sx / sizea;
-                    int sys = sy / sizeb;
-                    //noinspection IntegerDivisionInFloatingPointContext
-                    translate(sxs / 2, sys / 2 - 3);
-                    textSize(sys);
-                    textAlign(PApplet.CENTER, PApplet.CENTER);
-                    fill(0);
-                    strokeWeight(0);
-                    for (int i = 0; i < numbers(); i++) {
-                        if (notes[x][y][i])
-                            //noinspection IntegerDivisionInFloatingPointContext
-                            text(String.format("%X", i + drawNumberOffset), (i % sizea) * sxs, SudokuApplet.floor(i / sizea) * sys);
+
+                if (y < rows) {
+                    int thisNum = game[x][y];
+                    if (thisNum > -1) {
+                        drawNumber(x, y, thisNum, baseGame[x][y]);
+                        counts[thisNum]++;
+                    } else {
+                        push();
+                        translate(x * sx, y * sy);
+                        int sxs = sx / sizea;
+                        int sys = sy / sizeb;
+                        //noinspection IntegerDivisionInFloatingPointContext
+                        translate(sxs / 2, sys / 2 - 3);
+                        textSize(sys);
+                        textAlign(PApplet.CENTER, PApplet.CENTER);
+                        fill(0);
+                        strokeWeight(0);
+                        for (int i = 0; i < numbers(); i++) {
+                            if (notes[x][y][i])
+                                //noinspection IntegerDivisionInFloatingPointContext
+                                text(String.format("%X", i + drawNumberOffset), (i % sizea) * sxs, SudokuApplet.floor(i / sizea) * sys);
+                        }
+                        pop();
                     }
-                    pop();
+
                 }
             }
         }
@@ -353,7 +362,7 @@ public abstract class BaseGrid extends Drawable {
 
         boolean allDone = true;
 
-        for (int i = 0; i < numbers(); i++) {
+        for (int i = 0; generator == null && i < numbers(); i++) {
             drawNumber(i, rows, i, selectedn == i);
             push();
             translate(i * sx, rows * sy);

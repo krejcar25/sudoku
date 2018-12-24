@@ -2,15 +2,23 @@ package cz.krejcar25.sudoku;
 
 import processing.core.PApplet;
 import processing.event.KeyEvent;
-import processing.event.MouseEvent;
 
 public abstract class GameView extends BaseView {
     protected BaseSolver solver;
     protected BaseGenerator generator;
     protected BaseGrid game;
+    public final int EasyClueCount;
+    public final int MediumClueCount;
+    public final int HardClueCount;
+    public final int ExtremeClueCount;
+    protected int clueCount;
 
-    GameView(SudokuApplet applet, int width, int height) {
+    GameView(SudokuApplet applet, int width, int height, int easyClueCount, int mediumClueCount, int hardClueCount, int extremeClueCount) {
         super(applet, width, height);
+        EasyClueCount = easyClueCount;
+        MediumClueCount = mediumClueCount;
+        HardClueCount = hardClueCount;
+        ExtremeClueCount = extremeClueCount;
     }
 
     @Override
@@ -57,8 +65,8 @@ public abstract class GameView extends BaseView {
         return game;
     }
 
-    public void generate() {
-        game = generator.generate();
+    public void generate(int clueCount, boolean async) {
+        generator.generate(clueCount, async);
     }
 
     public abstract void newGenerator();

@@ -27,6 +27,8 @@ public abstract class Drawable extends PGraphicsJava2D {
     }
 
     public final void update() {
+        beforeDraw();
+
         beginDraw();
         fill(-1);
         stroke(0);
@@ -34,6 +36,10 @@ public abstract class Drawable extends PGraphicsJava2D {
         draw();
 
         endDraw();
+    }
+
+    protected void beforeDraw() {
+
     }
 
     protected abstract void draw();

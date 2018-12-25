@@ -1,12 +1,16 @@
 package cz.krejcar25.sudoku;
 
+import cz.krejcar25.sudoku.control.Control;
 import cz.krejcar25.sudoku.style.Color;
-import cz.krejcar25.sudoku.ui.Drawable;
 import processing.event.KeyEvent;
 import processing.event.MouseEvent;
 
+import java.util.ArrayList;
+
 public abstract class ScrollView extends BaseView {
-    protected Drawable content;
+    protected ScrollViewContent content;
+
+    protected ArrayList<Control> additionalControls;
 
     public int horizontalScrollBarWidth = 5;
     public ScrollBarVisibility horizontalScrollBarVisibility = ScrollBarVisibility.Automatic;
@@ -26,6 +30,7 @@ public abstract class ScrollView extends BaseView {
 
     public ScrollView(SudokuApplet applet, int width, int height) {
         super(applet, width, height);
+        additionalControls = new ArrayList<>();
     }
 
     @Override
@@ -58,6 +63,12 @@ public abstract class ScrollView extends BaseView {
         }
 
         pop();
+        push();
+        for (Control control : additionalControls) {
+            control.update();
+            image(control, control.x, control.y);
+        }
+        pop();
         if (overlay != null) {
             overlay.update();
             image(overlay, overlay.x, overlay.y);
@@ -75,6 +86,18 @@ public abstract class ScrollView extends BaseView {
         if (getApplet().isKeyPressed(SudokuApplet.LEFT)) x += -scrollSpeed;
 
         scroll(x, y);
+    }
+
+    @Override
+    protected void click(int mx, int my, boolean rmb) {
+        if (rmb) {
+            viewStack.removeSpecific(this);
+            return;
+        }
+        content.click(mx - x, my - y, false);
+        for (Control control : additionalControls) {
+            if (control.isClick(mx, my)) control.click();
+        }
     }
 
     @Override

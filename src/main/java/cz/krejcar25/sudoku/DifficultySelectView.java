@@ -48,6 +48,9 @@ public class DifficultySelectView extends BaseView {
                 sudokuApplet.stack.push(gameView);
             }).start();
         }));
+        controls.add(new Button(this, 25, 10, 50, 20, "Back", sender->{
+            sudokuApplet.stack.removeSpecific(this);
+        }));
         animateCheckbox = new Checkbox(this, 300, 400, 20, 20, new ToggleEvents() {
             @Override
             public void toggled(Control sender) {

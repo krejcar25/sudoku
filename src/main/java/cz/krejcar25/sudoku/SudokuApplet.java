@@ -19,7 +19,7 @@ public class SudokuApplet extends PApplet {
 
     @Override
     public void settings() {
-        size(10, 10);
+        size(100, 100);
     }
 
     ViewStack stack;
@@ -66,6 +66,7 @@ public class SudokuApplet extends PApplet {
 
     @Override
     public void draw() {
+        int density = displayDensity();
         BaseView view = stack.get();
         boolean isResizable = view.isResizable();
         surface.setResizable(isResizable);
@@ -76,30 +77,36 @@ public class SudokuApplet extends PApplet {
             surface.setSize(w, h);
             view.setSize(w, h);
         } else {
-            surface.setSize(view.width, view.height);
+            surface.setSize(view.width / density, view.height / density);
         }
+        scale(1f / density);
         view.update();
         image(view, 0, 0);
     }
 
+    private MouseEvent scaleMouseEvent(MouseEvent mouseEvent) {
+        int scale = displayDensity();
+        return new MouseEvent(mouseEvent.getNative(), mouseEvent.getMillis(), mouseEvent.getAction(), mouseEvent.getModifiers(), scale * mouseEvent.getX(), scale * mouseEvent.getY(), mouseEvent.getButton(), mouseEvent.getCount());
+    }
+
     @Override
     public void mouseClicked(MouseEvent mouseEvent) {
-        stack.get().mouseClicked(mouseEvent);
+        stack.get().mouseClicked(scaleMouseEvent(mouseEvent));
     }
 
     @Override
     public void mousePressed(MouseEvent mouseEvent) {
-        stack.get().mousePressed(mouseEvent);
+        stack.get().mousePressed(scaleMouseEvent(mouseEvent));
     }
 
     @Override
     public void mouseReleased(MouseEvent mouseEvent) {
-        stack.get().mouseReleased(mouseEvent);
+        stack.get().mouseReleased(scaleMouseEvent(mouseEvent));
     }
 
     @Override
     public void mouseDragged(MouseEvent mouseEvent) {
-        stack.get().mouseDrag(mouseEvent);
+        stack.get().mouseDrag(scaleMouseEvent(mouseEvent));
     }
 
     @Override

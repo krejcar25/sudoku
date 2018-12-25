@@ -9,7 +9,7 @@ public class WinOverlay extends BaseOverlay {
     WinOverlay(BaseView baseView) {
         super(baseView, 105, 300, 600, 200, OverlayType.OK, (sender) -> {
             System.out.println("WinOverlay OK button has received click event, popping");
-            baseView.viewStack.pop();
+            baseView.viewStack.pop(2);
         });
     }
 

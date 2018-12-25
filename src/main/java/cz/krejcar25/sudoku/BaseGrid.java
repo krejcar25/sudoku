@@ -362,7 +362,7 @@ public abstract class BaseGrid extends Drawable {
 
         boolean allDone = true;
 
-        for (int i = 0; generator == null && i < numbers(); i++) {
+        for (int i = 0; i < numbers(); i++) {
             drawNumber(i, rows, i, selectedn == i);
             push();
             translate(i * sx, rows * sy);

@@ -6,7 +6,7 @@ import processing.core.*;
 
 import java.awt.*;
 
-public abstract class BaseGrid extends Drawable {
+public class BaseGrid extends Drawable {
     GameView view;
 
     private int sizea;
@@ -14,7 +14,9 @@ public abstract class BaseGrid extends Drawable {
     int extraRows;
     private int baseClues;
 
-    Point newGamePos, helpPos, orderTogglePos, deletePos, smallNumPos, settingsPos, exitPos, timerPos;
+    private Point newGamePos, helpPos, orderTogglePos, deletePos, smallNumPos, settingsPos, exitPos, timerPos;
+    private int drawNumberOffset;
+    private GridProperties gridProperties;
     private ControlClick newGameClick, helpClick, orderToggleClick, deleteClick, smallNumClick, settingsClick, exitClick;
 
     int[][] game;
@@ -24,8 +26,6 @@ public abstract class BaseGrid extends Drawable {
     int selectedx = -1;
     int selectedy = -1;
     int selectedn = -1;
-
-    protected int drawNumberOffset = 1;
 
     private int gameFill;
     private int gameStroke;
@@ -55,12 +55,12 @@ public abstract class BaseGrid extends Drawable {
 
     BaseGenerator generator;
 
-    BaseGrid(GameView parent, int sizea, int sizeb, int extraRows) {
+    BaseGrid(GameView parent, GridProperties gridProperties) {
         super(parent.getApplet(), 0, 0, parent.width, parent.height);
         this.view = parent;
-        this.sizea = sizea;
-        this.sizeb = sizeb;
-        this.extraRows = extraRows;
+        this.sizea = gridProperties.getSizea();
+        this.sizeb = gridProperties.getSizeb();
+        this.extraRows = gridProperties.getControlRows() + 1;
         this.flashSquares = new FlashSquareList(getApplet());
         smallNumbers = getApplet().settings.isDefaultNotes();
         numFirst = getApplet().settings.isDefaultNumberFirst();
@@ -80,6 +80,21 @@ public abstract class BaseGrid extends Drawable {
         for (int y = 0; y < rows; y++)
             for (int x = 0; x < cols; x++)
                 game[x][y] = -1;
+
+        newGamePos = gridProperties.getNewGamePos();
+        helpPos = gridProperties.getHelpPos();
+        orderTogglePos = gridProperties.getOrderTogglePos();
+        deletePos = gridProperties.getDeletePos();
+        smallNumPos = gridProperties.getSmallNumPos();
+        settingsPos = gridProperties.getSettingsPos();
+        exitPos = gridProperties.getExitPos();
+        timerPos = gridProperties.getTimerPos();
+
+        drawNumberOffset = gridProperties.getDrawNumberOffset();
+
+        this.gridProperties = gridProperties;
+
+        gameClock = new Clock(getApplet(), timerPos.x * sx + 10, (int) (timerPos.y * sy + (sy - Clock.getHeightFromWidth(2 * sx - 20)) / 2), "6x6 Grid");
     }
 
     private void setColours() {
@@ -100,6 +115,7 @@ public abstract class BaseGrid extends Drawable {
     private void setClicks() {
         newGameClick = () -> {
             view.newGenerator();
+            gameClock = new Clock(getApplet(), gameClock.x, gameClock.y, gridProperties.getName());
             view.generate(baseClues, getApplet().isKeyPressed(SHIFT));
         };
         helpClick = () -> {
@@ -291,7 +307,9 @@ public abstract class BaseGrid extends Drawable {
         if (output) SudokuApplet.println("Clues locked: " + baseClues);
     }
 
-    BaseGrid clone(BaseGrid clone) {
+    @Override
+    public BaseGrid clone() {
+        BaseGrid clone = new BaseGrid(view, gridProperties);
         clone.baseClues = baseClues;
         clone.game = new int[clone.cols()][clone.rows()];
         for (int y = 0; y < clone.rows(); y++) {
@@ -504,10 +522,17 @@ public abstract class BaseGrid extends Drawable {
         }
     }
 
-    @Override
-    public abstract BaseGrid clone();
+    public BaseSolver getSolver() {
+        return new BaseSolver(this);
+    }
 
-    public abstract void keyInput(int k);
-
-    public abstract BaseSolver getSolver();
+    public void keyInput(int k) {
+        if (k > 0) {
+            if (numFirst) {
+                selectedn = (selectedn == (k - 1)) ? -1 : (k - 1);
+            } else {
+                placeNumber(k, selectedx, selectedy);
+            }
+        }
+    }
 }

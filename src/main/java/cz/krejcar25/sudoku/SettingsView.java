@@ -9,7 +9,7 @@ public class SettingsView extends ScrollView {
     SettingsView(SudokuApplet applet) {
         super(applet, 800, 600);
         content = new SettingsViewContent(this, 800, 1200);
-        setResizable(content.width, content.height);
+        //setResizable(content.width, content.height);
         additionalControls.add(new Button(this, 25, 10, 50, 20, "Back", sender -> {
             applet.stack.removeSpecific(this);
         }));

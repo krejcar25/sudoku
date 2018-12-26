@@ -7,7 +7,7 @@ public class Sudoku4x4View extends GameView {
 
     Sudoku4x4View(SudokuApplet applet) {
         super(applet, 360, 720, 11, 9, 7, 6);
-        game = new Grid4x4(this);
+        game = new BaseGrid(this, GridProperties.Grid4x4);
         newGenerator();
     }
 

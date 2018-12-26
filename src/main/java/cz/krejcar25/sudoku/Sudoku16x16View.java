@@ -6,7 +6,7 @@ import processing.event.MouseEvent;
 public class Sudoku16x16View extends GameView {
     Sudoku16x16View(SudokuApplet applet) {
         super(applet, 880, 990, 200, 180, 170, 150);
-        game = new Grid16x16(this);
+        game = new BaseGrid(this, GridProperties.Grid16x16);
         newGenerator();
     }
 

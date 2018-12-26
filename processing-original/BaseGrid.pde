@@ -3,7 +3,7 @@ public abstract class BaseGrid {
 
   int cols;
   int rows;
-  int extraRows;
+  int controlRows;
   int baseClues;
 
   int[][] game;
@@ -35,9 +35,9 @@ public abstract class BaseGrid {
 
   StopWatch timer;
 
-  public BaseGrid(IGameView baseView, int extraRows) {
+  public BaseGrid(IGameView baseView, int controlRows) {
     this.baseView = baseView;
-    this.extraRows = extraRows;
+    this.controlRows = controlRows;
     this.flashSquares = new FlashSquareList();
     smallNumbers = false;
     numFirst = true;

@@ -2,7 +2,7 @@ package cz.krejcar25.sudoku;
 
 import java.util.ArrayList;
 
-public abstract class BaseSolver {
+public class BaseSolver {
     protected BaseGrid game;
     protected boolean used = false;
     protected Timer timer;

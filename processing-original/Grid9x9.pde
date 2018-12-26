@@ -20,13 +20,13 @@ public class Grid9x9 extends BaseGrid {
 
   void show() {
     int sx = ((BaseView)baseView).sizex / cols;
-    int sy = ((BaseView)baseView).sizey / (rows + extraRows);
+    int sy = ((BaseView)baseView).sizey / (rows + controlRows);
 
     if (timer.isPaused()) timer.start();
 
     int[] counts = new int[9];
 
-    for (int y = 0; y < (rows + extraRows); y++) {
+    for (int y = 0; y < (rows + controlRows); y++) {
       for (int x = 0; x < cols; x++) {
         push();
         stroke((y > 8) ? buttonStroke : gameStroke);
@@ -62,8 +62,8 @@ public class Grid9x9 extends BaseGrid {
     push();
     stroke(0);
     strokeWeight(3);
-    line(3 * sx, 0, 3 * sx, height - extraRows * sy);
-    line(6 * sx, 0, 6 * sx, height - extraRows * sy);
+    line(3 * sx, 0, 3 * sx, height - controlRows * sy);
+    line(6 * sx, 0, 6 * sx, height - controlRows * sy);
     line(0, 3 * sy, width, 3 * sy);
     line(0, 6 * sy, width, 6 * sy);
     line(0, 9 * sy, width, 9 * sy);
@@ -187,7 +187,7 @@ public class Grid9x9 extends BaseGrid {
   private void drawText(int x, int y, String text) {
     push();
     int sx = ((BaseView)baseView).sizex / cols;
-    int sy = ((BaseView)baseView).sizey / (rows+extraRows);
+    int sy = ((BaseView)baseView).sizey / (rows+controlRows);
     translate(x * sx, y * sy);
     translate(sx / 2, sy / 2);
     translate(0, -7);

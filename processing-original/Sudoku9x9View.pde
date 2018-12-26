@@ -19,7 +19,7 @@ public class Sudoku9x9View extends BaseView implements IGameView {
 
   public void click(int mx, int my) {
     int sx = floor(this.sizex / game.cols);
-    int sy = floor(this.sizey / (game.rows + game.extraRows));
+    int sy = floor(this.sizey / (game.rows + game.controlRows));
 
     int x = floor(mx / sx);
     int y = floor(my / sy);

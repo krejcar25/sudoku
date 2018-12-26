@@ -6,7 +6,7 @@ import processing.event.MouseEvent;
 public class Sudoku9x9View extends GameView {
     Sudoku9x9View(SudokuApplet applet) {
         super(applet, 810, 990, 30, 27, 24, 21);
-        game = new Grid9x9(this);
+        game = new BaseGrid(this, GridProperties.Grid9x9);
         newGenerator();
     }
 

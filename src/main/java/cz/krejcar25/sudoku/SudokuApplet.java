@@ -24,6 +24,7 @@ public class SudokuApplet extends PApplet {
 
     ViewStack stack;
     PImage door;
+    PImage icon;
 
     @Override
     public void setup() {
@@ -60,6 +61,7 @@ public class SudokuApplet extends PApplet {
         stack = new ViewStack(new MainMenuView(this));
         BaseView v = stack.get();
         loadImages();
+        surface.setIcon(icon);
         keysPressed = new ArrayList<>();
         keyCodesPressed = new ArrayList<>();
     }
@@ -71,8 +73,8 @@ public class SudokuApplet extends PApplet {
         boolean isResizable = view.isResizable();
         surface.setResizable(isResizable);
         if (isResizable) {
-            int w = constrain(width, 50, view.getWidthLimit());
-            int h = constrain(height, 50, view.getHeightLimit());
+            int w = constrain(width, 50, view.getWidthLimit() * density);
+            int h = constrain(height, 50, view.getHeightLimit() * density);
 
             surface.setSize(w, h);
             view.setSize(w, h);
@@ -145,6 +147,8 @@ public class SudokuApplet extends PApplet {
     private void loadImages() {
         try {
             door = getImage("/image/door.png");
+            //TODO Add icon citation
+            icon = getImage("/image/icon.png");
         } catch (Exception ex) {
             return;
         }

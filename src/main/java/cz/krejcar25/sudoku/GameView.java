@@ -3,6 +3,8 @@ package cz.krejcar25.sudoku;
 import processing.core.PApplet;
 import processing.event.KeyEvent;
 
+import java.text.ParseException;
+
 public abstract class GameView extends BaseView {
     protected BaseSolver solver;
     protected BaseGenerator generator;
@@ -50,7 +52,12 @@ public abstract class GameView extends BaseView {
 
     @Override
     public void keyDown(KeyEvent keyEvent) {
-        game.keyInput(keyEvent.getKeyCode());
+        try {
+            int key = Integer.parseInt(String.valueOf(keyEvent.getKey()));
+            game.keyInput(key);
+        } catch (NumberFormatException ex) {
+            // We dont care, it may be another key...
+        }
     }
 
     public BaseSolver getSolver() {

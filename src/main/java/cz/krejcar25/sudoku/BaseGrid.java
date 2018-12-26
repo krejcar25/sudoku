@@ -527,11 +527,11 @@ public class BaseGrid extends Drawable {
     }
 
     public void keyInput(int k) {
-        if (k > 0) {
+        if (k > (1 - drawNumberOffset) && k < (numbers() + drawNumberOffset)) {
             if (numFirst) {
-                selectedn = (selectedn == (k - 1)) ? -1 : (k - 1);
+                selectedn = (selectedn == (k - drawNumberOffset)) ? -1 : (k - drawNumberOffset);
             } else {
-                placeNumber(k, selectedx, selectedy);
+                placeNumber(k - drawNumberOffset, selectedx, selectedy);
             }
         }
     }

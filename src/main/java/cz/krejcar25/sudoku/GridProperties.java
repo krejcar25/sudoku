@@ -3,18 +3,20 @@ package cz.krejcar25.sudoku;
 import java.awt.*;
 
 public enum GridProperties {
-    Grid4x4(2, 2, 3, 0, 5, 1, 5, 2, 5, 3, 5, 0, 6, 1, 6, 2, 6, 1, 7, 1, "Sudoku 4x4"),
-    Grid6x6(3, 2, 2, 0, 7, 1, 7, 2, 7, 3, 7, 0, 8, 1, 8, 2, 8, 4, 7, 1, "Sudoku 6x6"),
-    Grid9x9(3, 3, 1, 0, 10, 1, 10, 2, 10, 3, 10, 4, 10, 5, 10, 6, 10, 7, 10, 1, "Sudoku9x9"),
-    Grid16x16(4, 4, 1, 0, 17, 1, 17, 2, 17, 3, 17, 4, 17, 5, 17, 6, 17, 14, 17, 0, "Sudoku 16x16");
+    Grid4x4(2, 2, 3, 0, 5, 1, 5, 2, 5, 3, 5, 0, 6, 1, 6, 2, 6, 1, 7, 1, "Sudoku 4x4", 360, 720, 11, 9, 7, 6),
+    Grid6x6(3, 2, 2, 0, 7, 1, 7, 2, 7, 3, 7, 0, 8, 1, 8, 2, 8, 4, 7, 1, "Sudoku 6x6", 540, 810, 18, 16, 14, 12),
+    Grid9x9(3, 3, 1, 0, 10, 1, 10, 2, 10, 3, 10, 4, 10, 5, 10, 6, 10, 7, 10, 1, "Sudoku9x9", 810, 990, 30, 27, 24, 21),
+    Grid16x16(4, 4, 1, 0, 17, 1, 17, 2, 17, 3, 17, 4, 17, 5, 17, 6, 17, 14, 17, 0, "Sudoku 16x16", 880, 990, 200, 180, 170, 150);
 
     private final int sizea, sizeb;
     private final int controlRows;
     private final Point newGamePos, helpPos, orderTogglePos, deletePos, smallNumPos, settingsPos, exitPos, timerPos;
     private final String name;
     private final int drawNumberOffset;
+    private final int width, height;
+    private final int[] clueCounts;
 
-    GridProperties(int sizea, int sizeb, int controlRows, int newGameX, int newGameY, int helpX, int helpY, int orderToggleX, int orderToggleY, int deleteX, int deleteY, int smallNumX, int smallNumY, int settingsX, int settingsY, int exitX, int exitY, int timerX, int timerY, int drawNumberOffset, String name) {
+    GridProperties(int sizea, int sizeb, int controlRows, int newGameX, int newGameY, int helpX, int helpY, int orderToggleX, int orderToggleY, int deleteX, int deleteY, int smallNumX, int smallNumY, int settingsX, int settingsY, int exitX, int exitY, int timerX, int timerY, int drawNumberOffset, String name, int width, int height, int easyClueCount, int mediumClueCount, int HardClueCount, int extremeClueCount) {
         this.sizea = sizea;
         this.sizeb = sizeb;
         this.controlRows = controlRows;
@@ -28,6 +30,9 @@ public enum GridProperties {
         this.timerPos = new Point(timerX, timerY);
         this.drawNumberOffset = drawNumberOffset;
         this.name = name;
+        this.width = width;
+        this.height = height;
+        this.clueCounts = new int[]{easyClueCount, mediumClueCount, HardClueCount, extremeClueCount};
     }
 
     public int getSizea() {
@@ -80,5 +85,17 @@ public enum GridProperties {
 
     public String getName() {
         return name;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public int getClueCount(GridDifficulty gridDifficulty) {
+        return clueCounts[gridDifficulty.getLevel()];
     }
 }

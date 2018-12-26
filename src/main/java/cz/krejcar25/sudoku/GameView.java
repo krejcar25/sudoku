@@ -2,10 +2,11 @@ package cz.krejcar25.sudoku;
 
 import processing.core.PApplet;
 import processing.event.KeyEvent;
+import processing.event.MouseEvent;
 
 import java.text.ParseException;
 
-public abstract class GameView extends BaseView {
+public class GameView extends BaseView {
     protected BaseSolver solver;
     protected BaseGenerator generator;
     protected BaseGrid game;
@@ -13,14 +14,15 @@ public abstract class GameView extends BaseView {
     public final int MediumClueCount;
     public final int HardClueCount;
     public final int ExtremeClueCount;
-    protected int clueCount;
 
-    GameView(SudokuApplet applet, int width, int height, int easyClueCount, int mediumClueCount, int hardClueCount, int extremeClueCount) {
-        super(applet, width, height);
-        EasyClueCount = easyClueCount;
-        MediumClueCount = mediumClueCount;
-        HardClueCount = hardClueCount;
-        ExtremeClueCount = extremeClueCount;
+    GameView(SudokuApplet sudokuApplet, GridProperties gridProperties) {
+        super(sudokuApplet, gridProperties.getWidth(), gridProperties.getHeight());
+        EasyClueCount = gridProperties.getClueCount(GridDifficulty.Easy);
+        MediumClueCount = gridProperties.getClueCount(GridDifficulty.Medium);
+        HardClueCount = gridProperties.getClueCount(GridDifficulty.Hard);
+        ExtremeClueCount = gridProperties.getClueCount(GridDifficulty.Extreme);
+        game = new BaseGrid(this, gridProperties);
+        newGenerator();
     }
 
     @Override
@@ -76,7 +78,37 @@ public abstract class GameView extends BaseView {
         generator.generate(clueCount, async);
     }
 
-    public abstract void newGenerator();
+    public void newGenerator() {
+        generator = new BaseGenerator(game);
+        game.generator = generator;
+    }
 
-    public abstract void newSolver();
+    public void newSolver() {
+        solver = game.getSolver();
+    }
+
+    @Override
+    protected void mouseDown(int mx, int my, boolean rmb) {
+
+    }
+
+    @Override
+    protected void mouseUp(int mx, int my, boolean rmb) {
+
+    }
+
+    @Override
+    public void mouseDrag(MouseEvent mouseEvent) {
+
+    }
+
+    @Override
+    public void scroll(MouseEvent event) {
+
+    }
+
+    @Override
+    public void keyUp(KeyEvent keyEvent) {
+
+    }
 }

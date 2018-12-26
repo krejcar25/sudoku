@@ -17,10 +17,10 @@ public class MainMenuView extends BaseView {
         buttons = new ArrayList<>();
         int bsx = 280;
         int bsy = 40;
-        buttons.add(new Button(this, width / 4, 200, bsx, bsy, "Sudoku 9x9", sender -> viewStack.push(new DifficultySelectView(getApplet(), new Sudoku9x9View(getApplet())))));
-        buttons.add(new Button(this, 3 * width / 4, 200, bsx, bsy, "Sudoku 6x6", sender -> viewStack.push(new DifficultySelectView(getApplet(), new Sudoku6x6View(getApplet())))));
-        buttons.add(new Button(this, width / 4, 280, bsx, bsy, "Sudoku 4x4", sender -> viewStack.push(new DifficultySelectView(getApplet(), new Sudoku4x4View(getApplet())))));
-        buttons.add(new Button(this, 3 * width / 4, 280, bsx, bsy, "Sudoku 16x16", sender -> viewStack.push(new DifficultySelectView(getApplet(), new Sudoku16x16View(getApplet())))));
+        buttons.add(new Button(this, width / 4, 200, bsx, bsy, "Sudoku 9x9", sender -> viewStack.push(new DifficultySelectView(getApplet(), new GameView(getApplet(), GridProperties.Grid9x9)))));
+        buttons.add(new Button(this, 3 * width / 4, 200, bsx, bsy, "Sudoku 6x6", sender -> viewStack.push(new DifficultySelectView(getApplet(), new GameView(getApplet(), GridProperties.Grid6x6)))));
+        buttons.add(new Button(this, width / 4, 280, bsx, bsy, "Sudoku 4x4", sender -> viewStack.push(new DifficultySelectView(getApplet(), new GameView(getApplet(), GridProperties.Grid4x4)))));
+        buttons.add(new Button(this, 3 * width / 4, 280, bsx, bsy, "Sudoku 16x16", sender -> viewStack.push(new DifficultySelectView(getApplet(), new GameView(getApplet(), GridProperties.Grid16x16)))));
         Button settingButton = new Button(this, width / 4, 360, bsx, bsy, "Settings", sender -> viewStack.push(new SettingsView(getApplet())));
         Button scoreboardButton = new Button(this, 3 * width / 4, 360, bsx, bsy, "Scoreboard", this::buttonClickScoreboard);
 

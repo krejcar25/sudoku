@@ -147,7 +147,6 @@ public class SudokuApplet extends PApplet {
     private void loadImages() {
         try {
             door = getImage("/image/door.png");
-            //TODO Add icon citation
             icon = getImage("/image/icon.png");
         } catch (Exception ex) {
             return;

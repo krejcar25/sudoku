@@ -5,4 +5,4 @@
 ## Game modes
 
 ## Credits
-Door icon made by Freepic from [www.flaticon.com](https://www.flaticon.com)
+Door and Sudoku icons made by Freepic from [www.flaticon.com](https://www.flaticon.com)

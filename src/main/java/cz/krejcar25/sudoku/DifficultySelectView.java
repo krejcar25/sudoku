@@ -3,6 +3,7 @@ package cz.krejcar25.sudoku;
 import cz.krejcar25.sudoku.control.Button;
 import cz.krejcar25.sudoku.control.Checkbox;
 import cz.krejcar25.sudoku.control.Control;
+import cz.krejcar25.sudoku.control.ControlLabel;
 import cz.krejcar25.sudoku.event.ToggleEvents;
 import processing.event.KeyEvent;
 import processing.event.MouseEvent;
@@ -51,7 +52,7 @@ public class DifficultySelectView extends BaseView {
         controls.add(new Button(this, 25, 10, 50, 20, "Back", sender->{
             sudokuApplet.stack.removeSpecific(this);
         }));
-        animateCheckbox = new Checkbox(this, 300, 400, 20, 20, new ToggleEvents() {
+        animateCheckbox = new Checkbox(this, 300, 400, 30, 30, new ToggleEvents() {
             @Override
             public void toggled(Control sender) {
 
@@ -67,9 +68,9 @@ public class DifficultySelectView extends BaseView {
 
             }
         });
-        animateCheckbox.setLabel("Animate game generation");
-        animateCheckbox.centerOnX(300);
-        controls.add(animateCheckbox);
+        ControlLabel animateLabel = new ControlLabel(animateCheckbox, ControlLabel.CONTROL_LEFT, "Animate game generation");
+        animateLabel.centerOnX(400);
+        controls.add(animateLabel);
     }
 
     @Override

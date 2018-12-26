@@ -1,15 +1,13 @@
 package cz.krejcar25.sudoku;
 
 import cz.krejcar25.sudoku.control.Button;
-import cz.krejcar25.sudoku.control.Control;
 import processing.event.KeyEvent;
 import processing.event.MouseEvent;
 
-public class SettingsView extends ScrollView {
-    SettingsView(SudokuApplet applet) {
-        super(applet, 800, 600);
-        content = new SettingsViewContent(this);
-        //setResizable(content.width, content.height);
+public class HelpView extends ScrollView {
+    public HelpView(SudokuApplet sudokuApplet) {
+        super(sudokuApplet, 800, 600);
+        content = new HelpViewContent(this);
         additionalControls.add(Button.getStandardBackButton(this));
     }
 
@@ -27,9 +25,4 @@ public class SettingsView extends ScrollView {
     public void keyUp(KeyEvent keyEvent) {
 
     }
-
-    private void saveConfig() {
-
-    }
 }
-

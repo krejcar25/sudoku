@@ -43,7 +43,7 @@ class BaseGenerator implements Runnable {
 
     @Override
     public void run() {
-        gameView.getApplet().frameRate(5);
+        gameView.getApplet().frameRate(3);
         timer.start();
         if (used) return;
         used = true;

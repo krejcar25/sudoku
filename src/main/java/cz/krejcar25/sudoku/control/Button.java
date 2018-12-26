@@ -3,6 +3,8 @@ package cz.krejcar25.sudoku.control;
 import cz.krejcar25.sudoku.BaseView;
 import cz.krejcar25.sudoku.event.ButtonEvents;
 import cz.krejcar25.sudoku.style.ButtonStyle;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import processing.core.*;
 import processing.event.MouseEvent;
 
@@ -55,6 +57,12 @@ public class Button extends Control {
     @Override
     public void click() {
         click.click(this);
+    }
+
+    @NotNull
+    @Contract("_ -> new")
+    public static Button getStandardBackButton(BaseView baseView) {
+        return new Button(baseView, 30, 15, 60, 30, "Back", sender -> sender.baseView.removeFromViewStack());
     }
 }
 

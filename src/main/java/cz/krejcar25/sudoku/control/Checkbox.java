@@ -29,19 +29,6 @@ public class Checkbox extends Control {
         else toggleEvents.switchedOff(this);
     }
 
-    public void centerOnX(int centerX) {
-        x = centerX - width / 2;
-    }
-
-    @Override
-    protected void beforeDraw() {
-        push();
-        textSize(height - 3);
-        float labelSize = (label.equals("")) ? 0 : textWidth(label);
-        setSize(SudokuApplet.floor(checkboxWidth + labelSize + 10), height);
-        pop();
-    }
-
     @Override
     protected void draw() {
         push();
@@ -67,10 +54,6 @@ public class Checkbox extends Control {
         }
 
         fill(51);
-
-        textAlign(LEFT, TOP);
-        textSize(height - 3);
-        text(label, 30, 0);
 
         pop();
     }

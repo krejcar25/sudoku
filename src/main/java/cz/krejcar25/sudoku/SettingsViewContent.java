@@ -1,6 +1,7 @@
 package cz.krejcar25.sudoku;
 
 import cz.krejcar25.sudoku.control.Control;
+import cz.krejcar25.sudoku.control.ControlLabel;
 import cz.krejcar25.sudoku.control.Toggle;
 import cz.krejcar25.sudoku.event.ToggleEvents;
 import processing.core.PGraphics;
@@ -9,14 +10,12 @@ import java.util.ArrayList;
 
 public class SettingsViewContent extends ScrollViewContent {
     ArrayList<Control> controls;
-    private final SettingsView parentView;
 
-    public SettingsViewContent(SettingsView settingsView, int width, int height) {
-        super(settingsView.getApplet(), width, height);
-        parentView = settingsView;
+    public SettingsViewContent(SettingsView settingsView) {
+        super(settingsView, 800, 1200);
         controls = new ArrayList<>();
 
-        Toggle numFirst = new Toggle(parentView, 300, 100, 40, 20, new ToggleEvents() {
+        Toggle numFirst = new Toggle(settingsView, 600, 150, 80, 40, new ToggleEvents() {
             @Override
             public void toggled(Control sender) {
                 getApplet().settings.setDefaultNumberFirst(((Toggle) sender).state);
@@ -34,8 +33,10 @@ public class SettingsViewContent extends ScrollViewContent {
             }
         });
         numFirst.state = getApplet().settings.isDefaultNumberFirst();
-        controls.add(numFirst);
-        Toggle notes = new Toggle(parentView, 300, 130, 40, 20, new ToggleEvents() {
+        ControlLabel numFirstLabel = new ControlLabel(numFirst, ControlLabel.CONTROL_RIGHT, "Number first by default");
+        numFirstLabel.fixLabelOnX(50);
+        controls.add(numFirstLabel);
+        Toggle notes = new Toggle(settingsView, 600, 200, 80, 40, new ToggleEvents() {
             @Override
             public void toggled(Control sender) {
                 getApplet().settings.setDefaultNotes(((Toggle) sender).state);
@@ -53,7 +54,9 @@ public class SettingsViewContent extends ScrollViewContent {
             }
         });
         notes.state = getApplet().settings.isDefaultNotes();
-        controls.add(notes);
+        ControlLabel notesLabel = new ControlLabel(notes, ControlLabel.CONTROL_RIGHT, "Write notes by default");
+        notesLabel.fixLabelOnX(50);
+        controls.add(notesLabel);
     }
 
     @Override
@@ -64,13 +67,11 @@ public class SettingsViewContent extends ScrollViewContent {
             c.update();
             image(c, c.x, c.y);
         }
-        textSize(40);
+        textSize(80);
         textAlign(PGraphics.LEFT, PGraphics.TOP);
         fill(220);
         text("Settings", 50, 50);
-        textSize(20);
-        text("Number first by default", 50, 100);
-        text("Write notes by default", 50, 130);
+        textSize(40);
         text("End of scrollable section", 280, 900);
         pop();
     }

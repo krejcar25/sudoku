@@ -22,7 +22,7 @@ public class SudokuApplet extends PApplet {
         size(100, 100);
     }
 
-    ViewStack stack;
+    public ViewStack stack;
     PImage door;
     PImage icon;
 

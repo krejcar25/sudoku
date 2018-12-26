@@ -32,6 +32,8 @@ public class MainMenuView extends BaseView {
         scoreboardButton.style = nyiStyle;
         buttons.add(settingButton);
         buttons.add(scoreboardButton);
+
+        buttons.add(new Button(this, width/4, 440, bsx, bsy, "Help", sender->viewStack.push(new HelpView(getApplet()))));
     }
 
     @Override

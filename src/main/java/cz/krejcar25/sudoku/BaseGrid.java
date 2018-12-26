@@ -400,6 +400,7 @@ public class BaseGrid extends Drawable {
         if (allDone && gameClock.isRunning()) {
             gameClock.stop();
             SudokuApplet.println("Solved");
+            //TODO automatic overlay positioning in center of window
             view.overlay = new WinOverlay(view);
         }
 

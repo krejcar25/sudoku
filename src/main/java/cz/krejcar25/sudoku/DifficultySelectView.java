@@ -21,37 +21,11 @@ public class DifficultySelectView extends BaseView {
         int bsx = 280;
         int bsy = 40;
         controls = new ArrayList<>();
-        controls.add(new Button(this, width / 4, 200, bsx, bsy, "Easy", sender -> {
-            overlay = new GeneratingOverlay(this);
-            new Thread(() -> {
-                gameView.generate(gameView.EasyClueCount, animateCheckbox.state);
-                sudokuApplet.stack.push(gameView);
-            }).start();
-        }));
-        controls.add(new Button(this, 3 * width / 4, 200, bsx, bsy, "Medium", sender -> {
-            overlay = new GeneratingOverlay(this);
-            new Thread(() -> {
-                gameView.generate(gameView.MediumClueCount, animateCheckbox.state);
-                sudokuApplet.stack.push(gameView);
-            }).start();
-        }));
-        controls.add(new Button(this, width / 4, 280, bsx, bsy, "Hard", sender -> {
-            overlay = new GeneratingOverlay(this);
-            new Thread(() -> {
-                gameView.generate(gameView.HardClueCount, animateCheckbox.state);
-                sudokuApplet.stack.push(gameView);
-            }).start();
-        }));
-        controls.add(new Button(this, 3 * width / 4, 280, bsx, bsy, "Extreme", sender -> {
-            overlay = new GeneratingOverlay(this);
-            new Thread(() -> {
-                gameView.generate(gameView.ExtremeClueCount, animateCheckbox.state);
-                sudokuApplet.stack.push(gameView);
-            }).start();
-        }));
-        controls.add(new Button(this, 25, 10, 50, 20, "Back", sender->{
-            sudokuApplet.stack.removeSpecific(this);
-        }));
+        controls.add(new Button(this, width / 4, 200, bsx, bsy, "Easy", sender -> startGeneration(getApplet().isKeyPressed(SHIFT) ? GridDifficulty.Debug : GridDifficulty.Easy)));
+        controls.add(new Button(this, 3 * width / 4, 200, bsx, bsy, "Medium", sender -> startGeneration(GridDifficulty.Medium)));
+        controls.add(new Button(this, width / 4, 280, bsx, bsy, "Hard", sender -> startGeneration(GridDifficulty.Hard)));
+        controls.add(new Button(this, 3 * width / 4, 280, bsx, bsy, "Extreme", sender -> startGeneration(GridDifficulty.Extreme)));
+        controls.add(new Button(this, 25, 10, 50, 20, "Back", sender -> sudokuApplet.stack.removeSpecific(this)));
         animateCheckbox = new Checkbox(this, 300, 400, 30, 30, new ToggleEvents() {
             @Override
             public void toggled(Control sender) {
@@ -71,6 +45,14 @@ public class DifficultySelectView extends BaseView {
         ControlLabel animateLabel = new ControlLabel(animateCheckbox, ControlLabel.CONTROL_LEFT, "Animate game generation");
         animateLabel.centerOnX(400);
         controls.add(animateLabel);
+    }
+
+    private void startGeneration(GridDifficulty gridDifficulty) {
+        overlay = new GeneratingOverlay(this, gridDifficulty);
+        new Thread(() -> {
+            gameView.generate(gridDifficulty, animateCheckbox.state);
+            getApplet().stack.push(gameView);
+        }).start();
     }
 
     @Override

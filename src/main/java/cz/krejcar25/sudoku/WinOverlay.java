@@ -6,8 +6,8 @@ import processing.core.*;
 import processing.event.MouseEvent;
 
 public class WinOverlay extends BaseOverlay {
-    WinOverlay(BaseView baseView) {
-        super(baseView, 105, 300, 600, 200, OverlayType.OK, (sender) -> {
+    WinOverlay(GameView baseView) {
+        super(baseView, PApplet.constrain((baseView.width - 540) / 2, 0, baseView.width - 540), (baseView.game.rows() * baseView.game.sy / 2) - 100, PApplet.constrain(baseView.width, 0, 540), 200, OverlayType.OK, (sender) -> {
             System.out.println("WinOverlay OK button has received click event, popping");
             baseView.viewStack.pop(2);
         });

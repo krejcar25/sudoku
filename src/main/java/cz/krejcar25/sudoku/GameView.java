@@ -4,23 +4,15 @@ import processing.core.PApplet;
 import processing.event.KeyEvent;
 import processing.event.MouseEvent;
 
-import java.text.ParseException;
-
 public class GameView extends BaseView {
     protected BaseSolver solver;
     protected BaseGenerator generator;
     protected BaseGrid game;
-    public final int EasyClueCount;
-    public final int MediumClueCount;
-    public final int HardClueCount;
-    public final int ExtremeClueCount;
+    protected GridProperties gridProperties;
 
     GameView(SudokuApplet sudokuApplet, GridProperties gridProperties) {
         super(sudokuApplet, gridProperties.getWidth(), gridProperties.getHeight());
-        EasyClueCount = gridProperties.getClueCount(GridDifficulty.Easy);
-        MediumClueCount = gridProperties.getClueCount(GridDifficulty.Medium);
-        HardClueCount = gridProperties.getClueCount(GridDifficulty.Hard);
-        ExtremeClueCount = gridProperties.getClueCount(GridDifficulty.Extreme);
+        this.gridProperties = gridProperties;
         game = new BaseGrid(this, gridProperties);
         newGenerator();
     }
@@ -74,8 +66,9 @@ public class GameView extends BaseView {
         return game;
     }
 
-    public void generate(int clueCount, boolean async) {
-        generator.generate(clueCount, async);
+    public void generate(GridDifficulty gridDifficulty, boolean async) {
+        game.gridDifficulty = gridDifficulty;
+        generator.generate(gridProperties.getClueCount(gridDifficulty), async);
     }
 
     public void newGenerator() {

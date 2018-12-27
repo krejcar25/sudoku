@@ -55,6 +55,8 @@ public class BaseGrid extends Drawable {
 
     BaseGenerator generator;
 
+    GridDifficulty gridDifficulty;
+
     BaseGrid(GameView parent, GridProperties gridProperties) {
         super(parent.getApplet(), 0, 0, parent.width, parent.height);
         this.view = parent;
@@ -94,7 +96,7 @@ public class BaseGrid extends Drawable {
 
         this.gridProperties = gridProperties;
 
-        gameClock = new Clock(getApplet(), timerPos.x * sx + 10, (int) (timerPos.y * sy + (sy - Clock.getHeightFromWidth(2 * sx - 20)) / 2), "6x6 Grid");
+        gameClock = new Clock(getApplet(), timerPos.x * sx + 10, (int) (timerPos.y * sy + (sy - Clock.getHeightFromWidth(2 * sx - 20)) / 2), gridProperties.getName());
     }
 
     private void setColours() {
@@ -116,7 +118,7 @@ public class BaseGrid extends Drawable {
         newGameClick = () -> {
             view.newGenerator();
             gameClock = new Clock(getApplet(), gameClock.x, gameClock.y, gridProperties.getName());
-            view.generate(baseClues, getApplet().isKeyPressed(SHIFT));
+            view.generate(gridDifficulty, getApplet().isKeyPressed(SHIFT));
         };
         helpClick = () -> {
             int count = getSolver().countSolutions();
@@ -400,7 +402,6 @@ public class BaseGrid extends Drawable {
         if (allDone && gameClock.isRunning()) {
             gameClock.stop();
             SudokuApplet.println("Solved");
-            //TODO automatic overlay positioning in center of window
             view.overlay = new WinOverlay(view);
         }
 

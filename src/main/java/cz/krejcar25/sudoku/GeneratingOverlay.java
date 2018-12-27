@@ -1,15 +1,15 @@
 package cz.krejcar25.sudoku;
 
-import cz.krejcar25.sudoku.control.Button;
-import processing.core.PApplet;
-import sun.security.pkcs11.wrapper.CK_LOCKMUTEX;
-
 public class GeneratingOverlay extends BaseOverlay {
     private Clock clock;
+    private int clueCount;
+    private GridDifficulty gridDifficulty;
 
-    GeneratingOverlay(DifficultySelectView baseView) {
+    GeneratingOverlay(DifficultySelectView baseView, GridDifficulty gridDifficulty) {
         super(baseView, 105, 350, 600, 200, OverlayType.Info);
-        clock = baseView.gameView.getGenerator().timer;
+        this.clock = baseView.gameView.getGenerator().timer;
+        this.gridDifficulty = gridDifficulty;
+        this.clueCount = baseView.gameView.gridProperties.getClueCount(gridDifficulty);
     }
 
     @Override
@@ -21,8 +21,11 @@ public class GeneratingOverlay extends BaseOverlay {
         pop();
         textSize(40);
         textAlign(CENTER, CENTER);
-        //noinspection IntegerDivisionInFloatingPointContext
-        text("Generation is in progress", width / 2, 60);
+        text("Generation is in progress", width / 2f, 60);
+        textSize(20);
+        //TODO Remove ClueCount text and clueCount and gridDifficulty variables and constructor parameters in the final version
+        // Used just as a debugging display, at times when I need to see how many clues I should be left with
+        text("ClueCount: " + clueCount + " (" + gridDifficulty + ")", width / 2f, 100);
         clock.update();
         float clockWidth = Clock.getWidthFromHeight(60);
         image(clock, (width - clockWidth) / 2, 120, clockWidth, 60);

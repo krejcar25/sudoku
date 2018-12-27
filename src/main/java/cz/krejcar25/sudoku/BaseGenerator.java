@@ -88,13 +88,6 @@ class BaseGenerator implements Runnable {
         Point[] cells = new Point[PApplet.ceil((cols * rows) / 2f)];
 
         for (int i = 0; i < cells.length; i++) cells[i] = new Point(i % cols, i / cols);
-/*
-        int ymax = PApplet.ceil(rows / 2f);
-        for (int y = 0; y < ymax; y++) {
-            for (int x = 0; x < ((y + 1 == ymax) ? PApplet.ceil(cols / 2f) : cols); x++) {
-                cells[cols * y + x] = new Point(x, y);
-            }
-        }*/
 
         SudokuApplet.shuffle(cells);
         int removed = 0;

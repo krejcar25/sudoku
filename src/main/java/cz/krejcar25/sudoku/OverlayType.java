@@ -2,26 +2,26 @@ package cz.krejcar25.sudoku;
 
 public enum OverlayType {
     Info(new String[0]),
-    OK(new String[] {
+    OK(new String[]{
             "OK"
     }
     ),
-    OKCancel(new String[] {
+    OKCancel(new String[]{
             "OK", "Cancel"
     }
     ),
-    YesNo(new String[] {
+    YesNo(new String[]{
             "Yes", "No"
     }
     ),
-    YesNoCancel(new String[] {
+    YesNoCancel(new String[]{
             "Yes", "No", "Cancel"
     }
     );
     final int buttonCount;
     final String[] buttonLabels;
 
-    private OverlayType(String[] buttonLabels) {
+    OverlayType(String[] buttonLabels) {
         this.buttonCount = buttonLabels.length;
         this.buttonLabels = buttonLabels;
     }

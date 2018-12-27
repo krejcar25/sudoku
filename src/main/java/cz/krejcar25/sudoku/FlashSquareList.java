@@ -8,7 +8,7 @@ class FlashSquareList {
     PApplet applet;
 
     FlashSquareList(PApplet applet) {
-        squares = new ArrayList<FlashSquare>();
+        squares = new ArrayList<>();
         this.applet = applet;
     }
 
@@ -37,9 +37,7 @@ class FlashSquareList {
     @Override
     public FlashSquareList clone() {
         FlashSquareList clone = new FlashSquareList(applet);
-        for (FlashSquare s : squares) {
-            clone.squares.add(s);
-        }
+        clone.squares.addAll(squares);
         return clone;
     }
 }

@@ -1,9 +1,5 @@
 package cz.krejcar25.sudoku;
 
-import processing.core.*;
-
-import java.util.ArrayList;
-
 class FlashSquare {
     int x, y;
     private int timestamp, lifespan;

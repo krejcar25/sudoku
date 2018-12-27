@@ -1,7 +1,6 @@
 package cz.krejcar25.sudoku.control;
 
 import cz.krejcar25.sudoku.BaseView;
-import cz.krejcar25.sudoku.SudokuApplet;
 import cz.krejcar25.sudoku.event.ToggleEvents;
 
 public class Checkbox extends Control {
@@ -46,8 +45,8 @@ public class Checkbox extends Control {
 
         int margin = 6;
         if (state) {
-            line(margin, height / 2, checkboxWidth / 2, height - margin);
-            line(checkboxWidth / 2, height - margin, checkboxWidth - margin, margin);
+            line(margin, height / 2f, checkboxWidth / 2f, height - margin);
+            line(checkboxWidth / 2f, height - margin, checkboxWidth - margin, margin);
         } else {
             line(margin, margin, checkboxWidth - margin, height - margin);
             line(margin, height - margin, checkboxWidth - margin, margin);

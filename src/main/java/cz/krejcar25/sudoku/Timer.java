@@ -1,8 +1,5 @@
 package cz.krejcar25.sudoku;
 
-import cz.krejcar25.sudoku.ui.Drawable;
-import processing.core.*;
-
 public class Timer {
 
     private long startTime = 0;

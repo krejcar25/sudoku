@@ -200,8 +200,7 @@ public class BaseGrid extends Drawable {
         int sx = width / cols();
         int sy = height / (rows() + extraRows);
         translate(x * sx, y * sy);
-        //noinspection IntegerDivisionInFloatingPointContext
-        translate(sx / 2, sy / 2);
+        translate(sx / 2f, sy / 2f);
         translate(0, -7);
         strokeWeight(0);
         textAlign(PApplet.CENTER, PApplet.CENTER);
@@ -235,8 +234,7 @@ public class BaseGrid extends Drawable {
         return isSc(x, y, -1, -1);
     }
 
-    @SuppressWarnings("IntegerDivisionInFloatingPointContext")
-    private boolean isSc(int x, int y, int ofx, int ofy) {
+    private boolean isSc(float x, float y, float ofx, float ofy) {
         boolean isScX = PApplet.floor(x / sizea) == PApplet.floor(((ofx != -1) ? ofx : selectedx) / sizea);
         boolean isScY = PApplet.floor(y / sizeb) == PApplet.floor(((ofy != -1) ? ofy : selectedy) / sizeb);
 
@@ -360,16 +358,14 @@ public class BaseGrid extends Drawable {
                         translate(x * sx, y * sy);
                         int sxs = sx / sizea;
                         int sys = sy / sizeb;
-                        //noinspection IntegerDivisionInFloatingPointContext
-                        translate(sxs / 2, sys / 2 - 3);
+                        translate(sxs / 2f, sys / 2f - 3);
                         textSize(sys);
                         textAlign(PApplet.CENTER, PApplet.CENTER);
                         fill(0);
                         strokeWeight(0);
                         for (int i = 0; i < numbers(); i++) {
                             if (notes[x][y][i])
-                                //noinspection IntegerDivisionInFloatingPointContext
-                                text(String.format("%X", i + drawNumberOffset), (i % sizea) * sxs, SudokuApplet.floor(i / sizea) * sys);
+                                text(String.format("%X", i + drawNumberOffset), (i % sizea) * sxs, SudokuApplet.floor(((float) i) / sizea) * sys);
                         }
                         pop();
                     }
@@ -388,8 +384,7 @@ public class BaseGrid extends Drawable {
             translate(i * sx, rows * sy);
             int sxs = sx / 3;
             int sys = sy / 3;
-            //noinspection IntegerDivisionInFloatingPointContext
-            translate(sxs / 2, sys / 2 - 3);
+            translate(sxs / 2f, sys / 2f - 3);
             textSize(sys);
             textAlign(PApplet.CENTER, PApplet.CENTER);
             fill((selectedn == i) ? lightBgFore : darkBgFore);
@@ -450,14 +445,11 @@ public class BaseGrid extends Drawable {
 
         push();
         translate(settingsPos.x * sx, settingsPos.y * sy);
-        //noinspection IntegerDivisionInFloatingPointContext
-        translate(sx / 2, sy / 2);
+        translate(sx / 2f, sy / 2f);
         fill(darkBgFore);
-        //noinspection IntegerDivisionInFloatingPointContext
-        ellipse(0, 0, sx / 2, sy / 2);
+        ellipse(0, 0, sx / 2f, sy / 2f);
         fill(buttonFill);
-        //noinspection IntegerDivisionInFloatingPointContext
-        ellipse(0, 0, sx / 3, sy / 3);
+        ellipse(0, 0, sx / 3f, sy / 3f);
         rectMode(PApplet.CENTER);
         fill(darkBgFore);
 
@@ -465,10 +457,8 @@ public class BaseGrid extends Drawable {
             push();
             noStroke();
             rotate(PApplet.PI * i / 4);
-            //noinspection IntegerDivisionInFloatingPointContext
-            translate(sx / 4, 0);
-            //noinspection IntegerDivisionInFloatingPointContext
-            rect(0, 0, sx / 8, sx / 8);
+            translate(sx / 4f, 0);
+            rect(0, 0, sx / 8f, sx / 8f);
             pop();
         }
         pop();

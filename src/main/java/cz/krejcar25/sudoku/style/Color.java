@@ -1,7 +1,5 @@
 package cz.krejcar25.sudoku.style;
 
-import processing.core.PGraphics;
-
 public class Color {
     public int r;
     public int g;

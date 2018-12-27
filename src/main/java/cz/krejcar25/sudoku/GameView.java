@@ -18,11 +18,10 @@ public class GameView extends BaseView {
     }
 
     @Override
-    @SuppressWarnings("IntegerDivisionInFloatingPointContext")
     public void click(int mx, int my, boolean rmb) {
         if (overlay == null) {
-            int sx = PApplet.floor(this.width / game.cols());
-            int sy = PApplet.floor(this.height / (game.rows() + game.extraRows));
+            float sx = PApplet.floor((float) this.width / game.cols());
+            float sy = PApplet.floor((float) this.height / (game.rows() + game.extraRows));
 
             int x = PApplet.floor(mx / sx);
             int y = PApplet.floor(my / sy);

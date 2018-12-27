@@ -5,8 +5,7 @@ import cz.krejcar25.sudoku.event.ButtonEvents;
 import cz.krejcar25.sudoku.style.ButtonStyle;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import processing.core.*;
-import processing.event.MouseEvent;
+import processing.core.PApplet;
 
 public class Button extends Control {
     private ButtonEvents click;
@@ -38,8 +37,7 @@ public class Button extends Control {
         fill(style.foreground.r, style.foreground.g, style.foreground.b);
         textSize(height - style.borderThickness.totalTb());
         textAlign(PApplet.CENTER, PApplet.CENTER);
-        //noinspection IntegerDivisionInFloatingPointContext
-        translate(width / 2, height / 2);
+        translate(width / 2f, height / 2f);
         text(label, 0, -3);
         pop();
         pop();

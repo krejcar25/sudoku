@@ -1,17 +1,13 @@
 package cz.krejcar25.sudoku;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.security.InvalidParameterException;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.core.JsonGenerationException;
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.exc.InvalidFormatException;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
 public class Settings {
     public static final String DEF_PATH = "config.yml";
@@ -25,10 +21,6 @@ public class Settings {
             Settings settings = mapper.readValue(file, Settings.class);
             settings.path = path;
             return settings;
-        } catch (JsonParseException e) {
-            e.printStackTrace();
-        } catch (JsonMappingException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -40,7 +32,7 @@ public class Settings {
         return settings.save();
     }
 
-    public static void isValidConfig(String path) throws InvalidFormatException, IllegalArgumentException, IOException {
+    public static void isValidConfig(String path) throws IllegalArgumentException, IOException {
         File file = new File(path);
         if (!file.exists()) throw new FileNotFoundException("The path specified does not exist. You can use the prepare method to create the config file.");
         if (file.isDirectory()) throw new IllegalArgumentException("The path specified is a directory. isValidConfig requires a file to be specified.");
@@ -66,10 +58,6 @@ public class Settings {
         try {
             mapper.writeValue(file, this);
             return true;
-        } catch (JsonGenerationException e) {
-            e.printStackTrace();
-        } catch (JsonMappingException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -57,11 +57,11 @@ public class Clock extends Drawable {
     @Override
     protected void draw() {
         long time = timer.getElapsedTimeSecs();
-        minD.setDigit(PApplet.abs(PApplet.floor(PApplet.floor(time / 60) / 10)), false);
+        minD.setDigit(PApplet.abs(PApplet.floor(PApplet.floor(time / 60f) / 10f)), false);
         minD.update();
-        minU.setDigit(PApplet.abs(PApplet.floor(time / 60) % 10), false);
+        minU.setDigit(PApplet.abs(PApplet.floor(time / 60f) % 10), false);
         minU.update();
-        secD.setDigit(PApplet.abs(PApplet.floor(PApplet.floor(time % 60) / 10)), false);
+        secD.setDigit(PApplet.abs(PApplet.floor(PApplet.floor(time % 60) / 10f)), false);
         secD.update();
         secU.setDigit(PApplet.abs(PApplet.floor(time % 60) % 10), false);
         secU.update();

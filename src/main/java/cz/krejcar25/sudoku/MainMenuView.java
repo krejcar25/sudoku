@@ -1,8 +1,7 @@
 package cz.krejcar25.sudoku;
 
 import cz.krejcar25.sudoku.control.Button;
-import cz.krejcar25.sudoku.style.ButtonStyle;
-import cz.krejcar25.sudoku.style.Color;
+import cz.krejcar25.sudoku.event.ButtonEvents;
 import processing.core.PApplet;
 import processing.event.KeyEvent;
 import processing.event.MouseEvent;
@@ -17,23 +16,43 @@ public class MainMenuView extends BaseView {
         buttons = new ArrayList<>();
         int bsx = 280;
         int bsy = 40;
-        buttons.add(new Button(this, width / 4, 200, bsx, bsy, "Sudoku 9x9", sender -> viewStack.push(new DifficultySelectView(getApplet(), new GameView(getApplet(), GridProperties.Grid9x9)))));
-        buttons.add(new Button(this, 3 * width / 4, 200, bsx, bsy, "Sudoku 6x6", sender -> viewStack.push(new DifficultySelectView(getApplet(), new GameView(getApplet(), GridProperties.Grid6x6)))));
-        buttons.add(new Button(this, width / 4, 280, bsx, bsy, "Sudoku 4x4", sender -> viewStack.push(new DifficultySelectView(getApplet(), new GameView(getApplet(), GridProperties.Grid4x4)))));
-        buttons.add(new Button(this, 3 * width / 4, 280, bsx, bsy, "Sudoku 16x16", sender -> viewStack.push(new DifficultySelectView(getApplet(), new GameView(getApplet(), GridProperties.Grid16x16)))));
-        Button settingButton = new Button(this, width / 4, 360, bsx, bsy, "Settings", sender -> viewStack.push(new SettingsView(getApplet())));
-        Button scoreboardButton = new Button(this, 3 * width / 4, 360, bsx, bsy, "Scoreboard", this::buttonClickScoreboard);
+        int baseY = 200;
+        int yDelta = 80;
+        int index = 0;
+        for (GridProperties gridProperties : GridProperties.values()) {
+            int bx = (2 * (index % 2) + 1) * width / 4;
+            int by = baseY + ((index / 2) * yDelta);
+            Button button = new Button(this, bx, by, bsx, bsy, gridProperties.getName(), sender -> viewStack.push(new DifficultySelectView(getApplet(), gridProperties)));
+            buttons.add(button);
+            index++;
+        }
 
-        ButtonStyle nyiStyle = new ButtonStyle();
-        nyiStyle.border = new Color(255, 0, 0);
-        nyiStyle.background = new Color(255);
-        nyiStyle.foreground = new Color(255, 0, 0);
-
-        scoreboardButton.style = nyiStyle;
-        buttons.add(settingButton);
-        buttons.add(scoreboardButton);
-
-        buttons.add(new Button(this, width/4, 440, bsx, bsy, "Help", sender->viewStack.push(new HelpView(getApplet()))));
+        String[] labels = {"Settings", "Scoreboard", "Help"};
+        ButtonEvents[] buttonEvents = {
+                sender -> viewStack.push(new SettingsView(getApplet())),
+                this::buttonClickScoreboard,
+                sender -> viewStack.push(new HelpView(getApplet()))
+        };
+        for (int i = 0; i < labels.length && labels.length == buttonEvents.length; i++) {
+            int bx = (2 * (index % 2) + 1) * width / 4;
+            int by = baseY + ((index / 2) * yDelta);
+            Button button = new Button(this, bx, by, bsx, bsy, labels[i], buttonEvents[i]);
+            buttons.add(button);
+            index++;
+        }
+//        Button settingButton = new Button(this, (2 * (index % 2) + 1) * width / 4, ((index / 2) * yDelta), bsx, bsy, "Settings", );
+//        Button scoreboardButton = new Button(this, (2 * ((index + 1) % 2) + 1) * width / 4, (((index + 1) / 2) * yDelta), bsx, bsy, "Scoreboard", this::buttonClickScoreboard);
+//
+//        ButtonStyle nyiStyle = new ButtonStyle();
+//        nyiStyle.border = new Color(255, 0, 0);
+//        nyiStyle.background = new Color(255);
+//        nyiStyle.foreground = new Color(255, 0, 0);
+//
+//        scoreboardButton.style = nyiStyle;
+//        buttons.add(settingButton);
+//        buttons.add(scoreboardButton);
+//
+//        buttons.add(new Button(this, (2 * ((index + 2) % 2) + 1) * width / 4, (((index + 2) / 2) * yDelta), bsx, bsy, "Help", sender -> viewStack.push(new HelpView(getApplet()))));
     }
 
     @Override

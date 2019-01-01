@@ -15,9 +15,9 @@ public class DifficultySelectView extends BaseView {
     private final ArrayList<Control> controls;
     private Checkbox animateCheckbox;
 
-    public DifficultySelectView(SudokuApplet sudokuApplet, GameView gameView) {
-        super(sudokuApplet, 800, 600);
-        this.gameView = gameView;
+    public DifficultySelectView(SudokuApplet sudokuApplet, GridProperties gridProperties) {
+        super(sudokuApplet, 800,600);
+        this.gameView = new GameView(sudokuApplet, gridProperties);
         int bsx = 280;
         int bsy = 40;
         controls = new ArrayList<>();

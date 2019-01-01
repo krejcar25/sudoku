@@ -2,15 +2,12 @@ package cz.krejcar25.sudoku;
 
 import cz.krejcar25.sudoku.ui.Drawable;
 import cz.krejcar25.sudoku.ui.MouseButton;
-import processing.core.PApplet;
 import processing.event.KeyEvent;
 import processing.event.MouseEvent;
 
 public abstract class BaseView extends Drawable {
     protected ViewStack viewStack;
     BaseOverlay overlay;
-    protected int mousePressX = -1;
-    protected int mousePressY = -1;
     protected MouseButton mouseButton = MouseButton.None;
 
     public BaseView(SudokuApplet applet) {
@@ -22,8 +19,6 @@ public abstract class BaseView extends Drawable {
     }
 
     public final void mousePressed(MouseEvent mouseEvent) {
-        mousePressX = mouseEvent.getX();
-        mousePressY = mouseEvent.getY();
         mouseButton = mouseEvent.getButton() == RIGHT ? MouseButton.Right : MouseButton.Left;
         mouseDown(mouseEvent.getX() - x, mouseEvent.getY() - y, mouseEvent.getButton() == RIGHT);
     }
@@ -31,8 +26,6 @@ public abstract class BaseView extends Drawable {
     protected abstract void mouseDown(int mx, int my, boolean rmb);
 
     public final void mouseReleased(MouseEvent mouseEvent) {
-        mousePressX = -1;
-        mousePressY = -1;
         mouseButton = MouseButton.None;
         mouseUp(mouseEvent.getX() - x, mouseEvent.getY() - y, mouseEvent.getButton() == RIGHT);
     }
@@ -46,7 +39,9 @@ public abstract class BaseView extends Drawable {
     protected abstract void click(int mx, int my, boolean rmb);
 
     public final void setViewStack(ViewStack viewStack) {
-        this.viewStack = viewStack;
+        if (this.viewStack == null) {
+            this.viewStack = viewStack;
+        }
     }
 
     public final boolean isInViewStack() {
@@ -56,6 +51,10 @@ public abstract class BaseView extends Drawable {
     public final void removeFromViewStack() {
         viewStack.removeSpecific(this);
         viewStack = null;
+    }
+
+    public final ViewStack getViewStack() {
+        return viewStack;
     }
 
     public abstract void mouseDrag(MouseEvent mouseEvent);

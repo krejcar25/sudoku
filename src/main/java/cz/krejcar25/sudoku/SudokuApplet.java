@@ -2,7 +2,8 @@ package cz.krejcar25.sudoku;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
-import processing.core.*;
+import processing.core.PApplet;
+import processing.core.PImage;
 import processing.event.KeyEvent;
 import processing.event.MouseEvent;
 
@@ -10,44 +11,30 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
 
 public class SudokuApplet extends PApplet {
     private List<Character> keysPressed;
     private List<Integer> keyCodesPressed;
+    private ViewStack stack;
     Settings settings;
+    Scoreboard scoreboard;
 
     @Override
     public void settings() {
         size(100, 100);
     }
 
-    public ViewStack stack;
     PImage door;
     PImage icon;
 
     @Override
     public void setup() {
-        try {
-            Settings.isValidConfig(Settings.DEF_PATH);
-            settings = Settings.loadSettings(Settings.DEF_PATH);
-        } catch (FileNotFoundException e) {
-            Settings.prepare(Settings.DEF_PATH);
-            setup();
-            return;
-        } catch (InvalidFormatException | JsonParseException e) {
-            println("An error occurred during parsing the configuration file. More details below...");
-            e.printStackTrace();
-            e.getMessage();
-            println("The program will now exit...");
-            exit();
-        } catch (IOException e) {
-            e.printStackTrace();
-            exit();
-        } catch (IllegalArgumentException e) {
-            println("The specified path is a dictionary. This is not allowed.");
-            exit();
-        }
+        loadSettings();
+        loadScoreboard();
 
         push();
         background(51);
@@ -86,6 +73,58 @@ public class SudokuApplet extends PApplet {
         image(view, 0, 0);
     }
 
+    private void loadSettings() {
+        try {
+            Settings.isValidConfig(Settings.DEF_PATH);
+            settings = Settings.loadSettings(Settings.DEF_PATH);
+        } catch (FileNotFoundException e) {
+            Settings.prepare(Settings.DEF_PATH);
+            loadSettings();
+        } catch (InvalidFormatException | JsonParseException e) {
+            println("An error occurred during parsing the configuration file. More details below...");
+            e.printStackTrace();
+            e.getMessage();
+            println("The program will now exit...");
+            exit();
+        } catch (IOException e) {
+            e.printStackTrace();
+            exit();
+        } catch (IllegalArgumentException e) {
+            println("The specified path is a dictionary. This is not allowed.");
+            exit();
+        } catch (StackOverflowError error) {
+            // Tried to prepare the settings on and on and it didn`t work somehow... Check the file system
+            println("Wow, something evil happened! 🤬 Much confised. Such unlucky. Goodbye 😭");
+            exit();
+        }
+    }
+
+    private void loadScoreboard() {
+        try {
+            Scoreboard.isValidScoreboard(Scoreboard.DEF_PATH);
+            scoreboard = Scoreboard.loadScoreboard(Scoreboard.DEF_PATH);
+        } catch (FileNotFoundException e) {
+            Scoreboard.prepare(Scoreboard.DEF_PATH);
+            loadScoreboard();
+        } catch (InvalidFormatException | JsonParseException e) {
+            println("An error occurred during parsing the scoreboard file. More details below...");
+            e.printStackTrace();
+            e.getMessage();
+            println("The program will now exit...");
+            exit();
+        } catch (IOException e) {
+            e.printStackTrace();
+            exit();
+        } catch (IllegalArgumentException e) {
+            println("The specified path is a dictionary. This is not allowed.");
+            exit();
+        } catch (StackOverflowError error) {
+            // Tried to prepare the settings on and on and it didn`t work somehow... Check the file system
+            println("Wow, something evil happened! 🤬 Much confised. Such unlucky. Goodbye 😭");
+            exit();
+        }
+    }
+
     private MouseEvent scaleMouseEvent(MouseEvent mouseEvent) {
         int scale = displayDensity();
         return new MouseEvent(mouseEvent.getNative(), mouseEvent.getMillis(), mouseEvent.getAction(), mouseEvent.getModifiers(), scale * mouseEvent.getX(), scale * mouseEvent.getY(), mouseEvent.getButton(), mouseEvent.getCount());
@@ -112,11 +151,12 @@ public class SudokuApplet extends PApplet {
     }
 
     @Override
-    public void mouseWheel(MouseEvent event) {
+    public void mouseWheel(MouseEvent mouseEvent) {
+        stack.get().scroll(mouseEvent);
         if (stack.get() instanceof ScrollView) {
             ScrollView view = (ScrollView) stack.get();
             boolean hor = isKeyPressed(SHIFT);
-            view.scroll(hor ? view.scrollSpeed * event.getCount() : 0, hor ? 0 : view.scrollSpeed * event.getCount());
+            view.scroll(hor ? view.scrollSpeed * mouseEvent.getCount() : 0, hor ? 0 : view.scrollSpeed * mouseEvent.getCount());
         }
     }
 
@@ -181,7 +221,7 @@ public class SudokuApplet extends PApplet {
         popMatrix();
     }
 
-    static <T> void shuffle(T[] input) {
+    public static <T> void shuffle(T[] input) {
         int m = input.length;
         int i;
         T t;
@@ -192,6 +232,10 @@ public class SudokuApplet extends PApplet {
             input[m] = input[i];
             input[i] = t;
         }
+    }
+
+    public static <T extends Comparable> boolean isBetween(T min, T val, T max) {
+        return max.compareTo(val) > 0 && val.compareTo(min) > 0;
     }
 
     private static PImage getImage(String url) throws Exception {

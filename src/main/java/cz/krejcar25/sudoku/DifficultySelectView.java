@@ -16,16 +16,16 @@ public class DifficultySelectView extends BaseView {
     private Checkbox animateCheckbox;
 
     public DifficultySelectView(SudokuApplet sudokuApplet, GridProperties gridProperties) {
-        super(sudokuApplet, 800,600);
+        super(sudokuApplet, 800, 600);
         this.gameView = new GameView(sudokuApplet, gridProperties);
-        int bsx = 280;
+        int bsx = 340;
         int bsy = 40;
         controls = new ArrayList<>();
         controls.add(new Button(this, width / 4, 200, bsx, bsy, "Easy", sender -> startGeneration(getApplet().isKeyPressed(SHIFT) ? GridDifficulty.Debug : GridDifficulty.Easy)));
         controls.add(new Button(this, 3 * width / 4, 200, bsx, bsy, "Medium", sender -> startGeneration(GridDifficulty.Medium)));
         controls.add(new Button(this, width / 4, 280, bsx, bsy, "Hard", sender -> startGeneration(GridDifficulty.Hard)));
         controls.add(new Button(this, 3 * width / 4, 280, bsx, bsy, "Extreme", sender -> startGeneration(GridDifficulty.Extreme)));
-        controls.add(new Button(this, 25, 10, 50, 20, "Back", sender -> sudokuApplet.stack.removeSpecific(this)));
+        controls.add(Button.getStandardBackButton(this));
         animateCheckbox = new Checkbox(this, 300, 400, 30, 30, new ToggleEvents() {
             @Override
             public void toggled(Control sender) {
@@ -51,7 +51,7 @@ public class DifficultySelectView extends BaseView {
         overlay = new GeneratingOverlay(this, gridDifficulty);
         new Thread(() -> {
             gameView.generate(gridDifficulty, animateCheckbox.state);
-            getApplet().stack.push(gameView);
+            viewStack.push(gameView);
         }).start();
     }
 
@@ -67,9 +67,8 @@ public class DifficultySelectView extends BaseView {
 
     @Override
     protected void click(int mx, int my, boolean rmb) {
-        if (!rmb) {
-            for (Control control : controls) if (control.isClick(mx - x, my - y)) control.click();
-        }
+        if (rmb) removeFromViewStack();
+        else for (Control control : controls) if (control.isClick(mx - x, my - y)) control.click();
     }
 
     @Override
@@ -94,13 +93,12 @@ public class DifficultySelectView extends BaseView {
 
     @Override
     protected void draw() {
-
         push();
         background(220);
         textSize(40);
         fill(51);
         textAlign(CENTER, CENTER);
-        text("Select difficulty", 400, 100);
+        text("Select difficulty for " + gameView.gridProperties.getName(), 400, 100);
 
         for (Control control : controls) {
             control.update();

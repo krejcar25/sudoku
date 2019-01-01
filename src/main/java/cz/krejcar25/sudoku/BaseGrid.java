@@ -14,10 +14,23 @@ public class BaseGrid extends Drawable {
     int extraRows;
     private int baseClues;
 
-    private Point newGamePos, helpPos, orderTogglePos, deletePos, smallNumPos, settingsPos, exitPos, timerPos;
+    private Point newGamePos;
+    private Point helpPos;
+    private Point orderTogglePos;
+    private Point deletePos;
+    private Point smallNumPos;
+    private Point settingsPos;
+    private Point exitPos;
+    private Point timerPos;
     private int drawNumberOffset;
     private GridProperties gridProperties;
-    private ControlClick newGameClick, helpClick, orderToggleClick, deleteClick, smallNumClick, settingsClick, exitClick;
+    private ControlClick newGameClick;
+    private ControlClick helpClick;
+    private ControlClick orderToggleClick;
+    private ControlClick deleteClick;
+    private ControlClick smallNumClick;
+    private ControlClick settingsClick;
+    private ControlClick exitClick;
 
     int[][] game;
     boolean[][] baseGame;
@@ -139,10 +152,10 @@ public class BaseGrid extends Drawable {
         smallNumClick = () -> smallNumbers = !smallNumbers;
         settingsClick = () -> {
             gameClock.pause();
-            getApplet().stack.push(new SettingsView(getApplet()));
+            view.getViewStack().push(new SettingsView(getApplet()));
         };
         exitClick = () -> {
-            getApplet().stack.pop(2);
+            view.getViewStack().pop(2);
             generator.stopGeneration();
         };
     }

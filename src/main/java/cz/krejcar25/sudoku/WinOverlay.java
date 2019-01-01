@@ -1,16 +1,19 @@
 package cz.krejcar25.sudoku;
 
 import cz.krejcar25.sudoku.control.Button;
-import processing.core.*;
-
-import processing.event.MouseEvent;
+import processing.core.PApplet;
 
 public class WinOverlay extends BaseOverlay {
+    private Clock clock;
+
     WinOverlay(GameView baseView) {
         super(baseView, PApplet.constrain((baseView.width - 540) / 2, 0, baseView.width - 540), (baseView.game.rows() * baseView.game.sy / 2) - 100, PApplet.constrain(baseView.width, 0, 540), 200, OverlayType.OK, (sender) -> {
             System.out.println("WinOverlay OK button has received click event, popping");
             baseView.viewStack.pop(2);
         });
+        clock = baseView.game.gameClock;
+
+        getApplet().scoreboard.addEntry(baseView.gridProperties, baseView.game.gridDifficulty, clock.getTimer().getStartDate(), clock.getTimer().getElapsedTime());
     }
 
     @Override
@@ -22,8 +25,10 @@ public class WinOverlay extends BaseOverlay {
         pop();
         textSize(40);
         textAlign(PApplet.CENTER, PApplet.CENTER);
-        //noinspection IntegerDivisionInFloatingPointContext
-        text("You have won!", width / 2, 60);
+        text("You have won!", width / 2f, 60);
+        textSize(20);
+        textAlign(LEFT, TOP);
+        text(String.format("It took you %d minutes and %d seconds to complete this grid.", clock.getTimer().getMinutes(), clock.getTimer().getSeconds()), 20, 90, width - 40, 190);
         drawButtons();
     }
 

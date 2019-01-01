@@ -27,6 +27,8 @@ public abstract class ScrollView extends BaseView {
 
     private int hScrollO = -1;
     private int vScrollO = -1;
+    private int mousePressX = -1;
+    private int mousePressY = -1;
 
     public ScrollView(SudokuApplet applet, int width, int height) {
         super(applet, width, height);
@@ -91,7 +93,7 @@ public abstract class ScrollView extends BaseView {
     @Override
     protected void click(int mx, int my, boolean rmb) {
         if (rmb) {
-            viewStack.removeSpecific(this);
+            removeFromViewStack();
             return;
         }
         content.click(mx - x, my - y, false);
@@ -104,12 +106,26 @@ public abstract class ScrollView extends BaseView {
     protected void mouseDown(int mx, int my, boolean rmb) {
         hScrollO = horizontalScroll;
         vScrollO = verticalScroll;
+        mousePressX = mx;
+        mousePressY = my;
+    }
+
+    @Override
+    protected void mouseUp(int mx, int my, boolean rmb) {
+        mousePressX = -1;
+        mousePressY = -1;
     }
 
     @Override
     public void mouseDrag(MouseEvent mouseEvent) {
         horizontalScroll = SudokuApplet.constrain(hScrollO - (mouseEvent.getX() - mousePressX), 0, content.width - width);
         verticalScroll = SudokuApplet.constrain(vScrollO - (mouseEvent.getY() - mousePressY), 0, content.height - height);
+    }
+
+    @Override
+    public void scroll(MouseEvent mouseEvent) {
+        boolean hor = getApplet().isKeyPressed(SHIFT);
+        scroll(hor ? scrollSpeed * mouseEvent.getCount() : 0, hor ? 0 : scrollSpeed * mouseEvent.getCount());
     }
 
     public void scroll(float x, float y) {

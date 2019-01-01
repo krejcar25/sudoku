@@ -14,7 +14,7 @@ public class MainMenuView extends BaseView {
     MainMenuView(SudokuApplet applet) {
         super(applet, 800, 600);
         buttons = new ArrayList<>();
-        int bsx = 280;
+        int bsx = 340;
         int bsy = 40;
         int baseY = 200;
         int yDelta = 80;
@@ -30,7 +30,7 @@ public class MainMenuView extends BaseView {
         String[] labels = {"Settings", "Scoreboard", "Help"};
         ButtonEvents[] buttonEvents = {
                 sender -> viewStack.push(new SettingsView(getApplet())),
-                this::buttonClickScoreboard,
+                sender -> viewStack.push(new ScoreboardView(getApplet())),
                 sender -> viewStack.push(new HelpView(getApplet()))
         };
         for (int i = 0; i < labels.length && labels.length == buttonEvents.length; i++) {
@@ -100,10 +100,6 @@ public class MainMenuView extends BaseView {
 
     @Override
     public void scroll(MouseEvent event) {
-
-    }
-
-    private void buttonClickScoreboard(Button sender) {
 
     }
 

@@ -27,7 +27,7 @@ class ViewStack {
         int index = stack.size() - 1;
         if (index == 0) return null;
         BaseView view = stack.get(index);
-        stack.remove(index);
+        view.removeFromViewStack();
         return view;
     }
 
@@ -37,5 +37,9 @@ class ViewStack {
 
     public void removeSpecific(BaseView view) {
         stack.remove(view);
+    }
+
+    public boolean isbase() {
+        return stack.size() == 1;
     }
 }

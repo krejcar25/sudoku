@@ -96,6 +96,6 @@ public enum GridProperties {
     }
 
     public int getClueCount(GridDifficulty gridDifficulty) {
-        return gridDifficulty == GridDifficulty.Debug ? (((sizea * sizeb) ^ 2) - 1) : clueCounts[gridDifficulty.getLevel()];
+        return gridDifficulty == GridDifficulty.Debug ? (((sizea * sizeb) * (sizea * sizeb)) - 2) : clueCounts[gridDifficulty.getLevel()];
     }
 }

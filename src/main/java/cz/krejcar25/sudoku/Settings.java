@@ -28,7 +28,7 @@ public class Settings {
     }
 
     public static boolean prepare(String path) {
-        Settings settings = new Settings();
+        Settings settings = new Settings(path);
         return settings.save();
     }
 
@@ -47,6 +47,12 @@ public class Settings {
 
     private Settings() {
         this.path = DEF_PATH;
+        this.defaultNumberFirst = true;
+        this.defaultNotes = false;
+    }
+
+    private Settings(String path) {
+        this.path = path;
         this.defaultNumberFirst = true;
         this.defaultNotes = false;
     }

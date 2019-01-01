@@ -1,5 +1,7 @@
 package cz.krejcar25.sudoku;
 
+import java.util.Date;
+
 public class Timer {
 
     private long startTime = 0;
@@ -52,7 +54,6 @@ public class Timer {
         this.finished = true;
     }
 
-
     //elaspsed time in milliseconds
     public long getElapsedTime() {
         long elapsed = -pauseTotal;
@@ -63,7 +64,6 @@ public class Timer {
         }
         return elapsed;
     }
-
 
     //elaspsed time in seconds
     public long getElapsedTimeSecs() {
@@ -76,5 +76,40 @@ public class Timer {
 
     public boolean isRunning() {
         return running;
+    }
+
+    public long getMinutes() {
+        return getElapsedTimeSecs() / 60;
+    }
+
+    public long getSeconds() {
+        return getElapsedTime() % 60;
+    }
+
+    public Date getStartDate() {
+        return new Date(startTime);
+    }
+
+    public static String formatMillis(long val) {
+        StringBuilder builder = new StringBuilder(20);
+        String sgn = "";
+
+        if (val < 0) {
+            sgn = "-";
+            val = Math.abs(val);
+        }
+
+        builder.append(sgn);
+        builder.append(val / 3600000);
+        val %= 3600000;
+        builder.append(":");
+        builder.append(val / 60000);
+        val %= 60000;
+        builder.append(":");
+        builder.append(val / 1000);
+        val %= 1000;
+        builder.append(".");
+        builder.append(val);
+        return builder.toString();
     }
 }

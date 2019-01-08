@@ -61,14 +61,16 @@ public class BaseGrid extends Drawable {
 
     private final int cols;
     private final int rows;
-    protected final int sx;
-    protected final int sy;
+    protected float sx;
+    protected float sy;
 
     Clock gameClock;
 
     BaseGenerator generator;
 
     GridDifficulty gridDifficulty;
+
+    Drawable gear;
 
     BaseGrid(GameView parent, GridProperties gridProperties) {
         super(parent.getApplet(), 0, 0, parent.width, parent.height);
@@ -109,7 +111,30 @@ public class BaseGrid extends Drawable {
 
         this.gridProperties = gridProperties;
 
-        gameClock = new Clock(getApplet(), timerPos.x * sx + 10, (int) (timerPos.y * sy + (sy - Clock.getHeightFromWidth(2 * sx - 20)) / 2), gridProperties.getName());
+        gameClock = new Clock(getApplet(), (int) (timerPos.x * sx + 10), (int) (timerPos.y * sy + (sy - Clock.getHeightFromWidth(2 * sx - 20)) / 2), gridProperties.getName());
+
+        gear = new Drawable(getApplet(), 0, 0, 80, 80) {
+            @Override
+            protected void draw() {
+                translate(width / 2f, height / 2f);
+                fill(darkBgFore);
+                ellipse(0, 0, width / 2f, height / 2f);
+                fill(buttonFill);
+                ellipse(0, 0, width / 3f, height / 3f);
+                rectMode(PApplet.CENTER);
+                fill(darkBgFore);
+
+                for (int i = 0; i < 8; i++) {
+                    push();
+                    noStroke();
+                    rotate(PApplet.PI * i / 4);
+                    translate(width / 4f, 0);
+                    rect(0, 0, width / 8f, height / 8f);
+                    pop();
+                }
+            }
+        };
+        gear.update();
     }
 
     private void setColours() {
@@ -346,6 +371,13 @@ public class BaseGrid extends Drawable {
     }
 
     @Override
+    protected void beforeDraw() {
+        setSize(view.width, view.height);
+        this.sx = width / cols;
+        this.sy = height / (rows + extraRows);
+    }
+
+    @Override
     protected void draw() {
         if (gameClock.isPaused()) gameClock.start();
 
@@ -369,8 +401,8 @@ public class BaseGrid extends Drawable {
                     } else {
                         push();
                         translate(x * sx, y * sy);
-                        int sxs = sx / sizea;
-                        int sys = sy / sizeb;
+                        int sxs = (int) (sx / sizea);
+                        int sys = (int) (sy / sizeb);
                         translate(sxs / 2f, sys / 2f - 3);
                         textSize(sys);
                         textAlign(PApplet.CENTER, PApplet.CENTER);
@@ -395,8 +427,8 @@ public class BaseGrid extends Drawable {
             drawNumber(i, rows, i, selectedn == i);
             push();
             translate(i * sx, rows * sy);
-            int sxs = sx / 3;
-            int sys = sy / 3;
+            int sxs = (int) (sx / 3);
+            int sys = (int) (sy / 3);
             translate(sxs / 2f, sys / 2f - 3);
             textSize(sys);
             textAlign(PApplet.CENTER, PApplet.CENTER);
@@ -428,8 +460,8 @@ public class BaseGrid extends Drawable {
             translate(smallNumPos.x * sx, smallNumPos.y * sy);
             strokeWeight(1);
             stroke(220);
-            int sxs = sx / sizea;
-            int sys = sy / sizeb;
+            int sxs = (int) (sx / sizea);
+            int sys = (int) (sy / sizeb);
             for (int i = 1; i < sizea; i++) {
                 line(i * sxs, 0, i * sxs, sy);
             }
@@ -458,22 +490,8 @@ public class BaseGrid extends Drawable {
 
         push();
         translate(settingsPos.x * sx, settingsPos.y * sy);
-        translate(sx / 2f, sy / 2f);
-        fill(darkBgFore);
-        ellipse(0, 0, sx / 2f, sy / 2f);
-        fill(buttonFill);
-        ellipse(0, 0, sx / 3f, sy / 3f);
-        rectMode(PApplet.CENTER);
-        fill(darkBgFore);
+        image(gear, 0, 0, sx, sy);
 
-        for (int i = 0; i < 8; i++) {
-            push();
-            noStroke();
-            rotate(PApplet.PI * i / 4);
-            translate(sx / 4f, 0);
-            rect(0, 0, sx / 8f, sx / 8f);
-            pop();
-        }
         pop();
 
         push();

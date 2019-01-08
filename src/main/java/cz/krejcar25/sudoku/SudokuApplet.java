@@ -2,24 +2,15 @@ package cz.krejcar25.sudoku;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
-import processing.core.PApplet;
 import processing.core.PImage;
-import processing.event.KeyEvent;
 import processing.event.MouseEvent;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
 
-public class SudokuApplet extends PApplet {
-    private List<Character> keysPressed;
-    private List<Integer> keyCodesPressed;
-    private ViewStack stack;
+public class SudokuApplet extends Applet {
+    public NetworkControlApplet networkControlApplet;
+
     Settings settings;
     Scoreboard scoreboard;
 
@@ -49,26 +40,23 @@ public class SudokuApplet extends PApplet {
         BaseView v = stack.get();
         loadImages();
         surface.setIcon(icon);
-        keysPressed = new ArrayList<>();
-        keyCodesPressed = new ArrayList<>();
     }
 
     @Override
     public void draw() {
-        int density = displayDensity();
         BaseView view = stack.get();
         boolean isResizable = view.isResizable();
-        surface.setResizable(isResizable);
+        surface.setResizable(true);
         if (isResizable) {
-            int w = constrain(width, 50, view.getWidthLimit() * density);
-            int h = constrain(height, 50, view.getHeightLimit() * density);
+            int w = constrain(width, 50, view.getWidthLimit() * pixelDensity);
+            int h = constrain(height, 50, view.getHeightLimit() * pixelDensity);
 
             surface.setSize(w, h);
             view.setSize(w, h);
         } else {
-            surface.setSize(view.width / density, view.height / density);
+            surface.setSize(view.width / pixelDensity, view.height / pixelDensity);
         }
-        scale(1f / density);
+        scale(1f / pixelDensity);
         view.update();
         image(view, 0, 0);
     }
@@ -125,11 +113,6 @@ public class SudokuApplet extends PApplet {
         }
     }
 
-    private MouseEvent scaleMouseEvent(MouseEvent mouseEvent) {
-        int scale = displayDensity();
-        return new MouseEvent(mouseEvent.getNative(), mouseEvent.getMillis(), mouseEvent.getAction(), mouseEvent.getModifiers(), scale * mouseEvent.getX(), scale * mouseEvent.getY(), mouseEvent.getButton(), mouseEvent.getCount());
-    }
-
     @Override
     public void mouseClicked(MouseEvent mouseEvent) {
         stack.get().mouseClicked(scaleMouseEvent(mouseEvent));
@@ -160,30 +143,6 @@ public class SudokuApplet extends PApplet {
         }
     }
 
-    @Override
-    public void keyPressed(KeyEvent keyEvent) {
-        if (!keyEvent.isAutoRepeat()) {
-            keysPressed.add(keyEvent.getKey());
-            keyCodesPressed.add(keyEvent.getKeyCode());
-        }
-        stack.get().keyDown(keyEvent);
-    }
-
-    @Override
-    public void keyReleased(KeyEvent keyEvent) {
-        keysPressed.removeAll(Collections.singletonList(keyEvent.getKey()));
-        keyCodesPressed.removeAll(Collections.singletonList(keyEvent.getKeyCode()));
-        stack.get().keyUp(keyEvent);
-    }
-
-    public boolean isKeyPressed(char key) {
-        return keysPressed.contains(key);
-    }
-
-    public boolean isKeyPressed(int keyCode) {
-        return keyCodesPressed.contains(keyCode);
-    }
-
     private void loadImages() {
         try {
             door = getImage("/image/door.png");
@@ -198,10 +157,6 @@ public class SudokuApplet extends PApplet {
         door.updatePixels();
     }
 
-    static boolean xor(boolean a, boolean b) {
-        return (a && !b) || (!a && b);
-    }
-
     private static boolean tryParseInt(String value) {
         try {
             Integer.parseInt(value);
@@ -209,37 +164,5 @@ public class SudokuApplet extends PApplet {
         } catch (NumberFormatException e) {
             return false;
         }
-    }
-
-    void push() {
-        pushMatrix();
-        pushStyle();
-    }
-
-    void pop() {
-        popStyle();
-        popMatrix();
-    }
-
-    public static <T> void shuffle(T[] input) {
-        int m = input.length;
-        int i;
-        T t;
-
-        while (m > 0) {
-            i = PApplet.floor(new Random().nextInt(m--));
-            t = input[m];
-            input[m] = input[i];
-            input[i] = t;
-        }
-    }
-
-    public static <T extends Comparable> boolean isBetween(T min, T val, T max) {
-        return max.compareTo(val) > 0 && val.compareTo(min) > 0;
-    }
-
-    private static PImage getImage(String url) throws Exception {
-        BufferedImage image = ImageIO.read(SudokuApplet.class.getResourceAsStream(url));
-        return new PImage(image);
     }
 }

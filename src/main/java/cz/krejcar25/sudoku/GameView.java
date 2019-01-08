@@ -14,6 +14,7 @@ public class GameView extends BaseView {
         super(sudokuApplet, gridProperties.getWidth(), gridProperties.getHeight());
         this.gridProperties = gridProperties;
         game = new BaseGrid(this, gridProperties);
+        setResizable(sudokuApplet.displayWidth, sudokuApplet.displayHeight);
         newGenerator();
     }
 

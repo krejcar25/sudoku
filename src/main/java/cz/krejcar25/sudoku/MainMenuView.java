@@ -27,11 +27,12 @@ public class MainMenuView extends BaseView {
             index++;
         }
 
-        String[] labels = {"Settings", "Scoreboard", "Help"};
+        String[] labels = {"Settings", "Scoreboard", "Help", "Network Control"};
         ButtonEvents[] buttonEvents = {
                 sender -> viewStack.push(new SettingsView(getApplet())),
                 sender -> viewStack.push(new ScoreboardView(getApplet())),
-                sender -> viewStack.push(new HelpView(getApplet()))
+                sender -> viewStack.push(new HelpView(getApplet())),
+                this::openNetworkControlApplet
         };
         for (int i = 0; i < labels.length && labels.length == buttonEvents.length; i++) {
             int bx = (2 * (index % 2) + 1) * width / 4;
@@ -53,6 +54,14 @@ public class MainMenuView extends BaseView {
 //        buttons.add(scoreboardButton);
 //
 //        buttons.add(new Button(this, (2 * ((index + 2) % 2) + 1) * width / 4, (((index + 2) / 2) * yDelta), bsx, bsy, "Help", sender -> viewStack.push(new HelpView(getApplet()))));
+    }
+
+    private void openNetworkControlApplet(Button button) {
+        SudokuApplet applet = getApplet();
+        if (applet.networkControlApplet == null) {
+            applet.networkControlApplet = new NetworkControlApplet(applet);
+            SudokuApplet.runSketch(new String[]{"NetworkControlApplet"}, applet.networkControlApplet);
+        }
     }
 
     @Override

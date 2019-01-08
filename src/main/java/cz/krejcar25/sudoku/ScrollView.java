@@ -2,7 +2,6 @@ package cz.krejcar25.sudoku;
 
 import cz.krejcar25.sudoku.control.Control;
 import cz.krejcar25.sudoku.style.Color;
-import processing.core.PImage;
 import processing.event.KeyEvent;
 import processing.event.MouseEvent;
 
@@ -43,14 +42,8 @@ public abstract class ScrollView extends BaseView {
 
         background(220);
         content.update();
-        int w = width - (showV ? verticalScrollBarWidth : 0);
-        int h = height - (showH ? horizontalScrollBarWidth : 0);
-        //SudokuApplet.println(String.format("Canvas: [%d;%d]", w, h));
-        //SudokuApplet.println(String.format("Content: [%d;%d]", content.width, content.height));
-        //SudokuApplet.println(String.format("Scroll: [%d;%d]", horizontalScroll, verticalScroll));
         try {
-            PImage part = content.get(horizontalScroll, verticalScroll, w, h);
-            image(part, 0, 0);
+            image(content, -horizontalScroll, -verticalScroll);
         } catch (ArrayIndexOutOfBoundsException ex) {
             SudokuApplet.println("Whoops, get outta here!");
             removeFromViewStack();
@@ -108,7 +101,7 @@ public abstract class ScrollView extends BaseView {
             removeFromViewStack();
             return;
         }
-        content.click(mx - x, my - y, false);
+        content.click(mx - x + horizontalScroll, my - y + verticalScroll, false);
         for (Control control : additionalControls) {
             if (control.isClick(mx, my)) control.click();
         }

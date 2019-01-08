@@ -1,5 +1,6 @@
 package cz.krejcar25.sudoku;
 
+import processing.awt.PSurfaceAWT;
 import processing.core.PApplet;
 import processing.core.PImage;
 import processing.event.KeyEvent;
@@ -85,5 +86,9 @@ public abstract class Applet extends PApplet {
     void pop() {
         popStyle();
         popMatrix();
+    }
+
+    public PSurfaceAWT.SmoothCanvas getCanvas() {
+        return (PSurfaceAWT.SmoothCanvas) initSurface().getNative();
     }
 }

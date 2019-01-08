@@ -17,6 +17,7 @@ public class SudokuApplet extends Applet {
     @Override
     public void settings() {
         size(100, 100);
+        pixelDensity(displayDensity());
     }
 
     PImage door;

@@ -2,6 +2,7 @@ package cz.krejcar25.sudoku;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
+import cz.krejcar25.sudoku.networkControl.NetworkControlApplet;
 import cz.krejcar25.sudoku.scoreboard.Scoreboard;
 import cz.krejcar25.sudoku.ui.Applet;
 import cz.krejcar25.sudoku.ui.BaseView;
@@ -16,6 +17,7 @@ import java.io.IOException;
 public class SudokuApplet extends Applet {
     public Settings settings;
     public Scoreboard scoreboard;
+    public NetworkControlApplet networkControlApplet;
 
     @Override
     public void settings() {

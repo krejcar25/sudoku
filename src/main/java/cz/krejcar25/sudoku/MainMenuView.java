@@ -6,6 +6,7 @@ import cz.krejcar25.sudoku.scoreboard.ScoreboardView;
 import cz.krejcar25.sudoku.ui.BaseView;
 import cz.krejcar25.sudoku.ui.control.Button;
 import cz.krejcar25.sudoku.event.ButtonEvents;
+import cz.krejcar25.sudoku.networkControl.NetworkControlApplet;
 import processing.core.PApplet;
 import processing.event.KeyEvent;
 import processing.event.MouseEvent;
@@ -31,11 +32,12 @@ public class MainMenuView extends BaseView {
             index++;
         }
 
-        String[] labels = {"Settings", "Scoreboard", "Help"};
+        String[] labels = {"Settings", "Scoreboard", "Help", "Network Control"};
         ButtonEvents[] buttonEvents = {
                 sender -> viewStack.push(new SettingsView(getApplet())),
                 sender -> viewStack.push(new ScoreboardView(getApplet())),
-                sender -> viewStack.push(new HelpView(getApplet()))
+                sender -> viewStack.push(new HelpView(getApplet())),
+                this::openNetworkControlApplet
         };
         for (int i = 0; i < labels.length && labels.length == buttonEvents.length; i++) {
             int bx = (2 * (index % 2) + 1) * width / 4;
@@ -44,19 +46,14 @@ public class MainMenuView extends BaseView {
             buttons.add(button);
             index++;
         }
-//        Button settingButton = new Button(this, (2 * (index % 2) + 1) * width / 4, ((index / 2) * yDelta), bsx, bsy, "Settings", );
-//        Button scoreboardButton = new Button(this, (2 * ((index + 1) % 2) + 1) * width / 4, (((index + 1) / 2) * yDelta), bsx, bsy, "Scoreboard", this::buttonClickScoreboard);
-//
-//        ButtonStyle nyiStyle = new ButtonStyle();
-//        nyiStyle.border = new Color(255, 0, 0);
-//        nyiStyle.background = new Color(255);
-//        nyiStyle.foreground = new Color(255, 0, 0);
-//
-//        scoreboardButton.style = nyiStyle;
-//        buttons.add(settingButton);
-//        buttons.add(scoreboardButton);
-//
-//        buttons.add(new Button(this, (2 * ((index + 2) % 2) + 1) * width / 4, (((index + 2) / 2) * yDelta), bsx, bsy, "Help", sender -> viewStack.push(new HelpView(getApplet()))));
+    }
+
+    private void openNetworkControlApplet(Button button) {
+        SudokuApplet applet = getRootApplet();
+        if (applet.networkControlApplet == null) {
+            applet.networkControlApplet = new NetworkControlApplet(applet, closedApplet -> ((NetworkControlApplet) closedApplet).getOwner().networkControlApplet = null);
+            SudokuApplet.runSketch(new String[]{"NetworkControlApplet"}, applet.networkControlApplet);
+        }
     }
 
     @Override

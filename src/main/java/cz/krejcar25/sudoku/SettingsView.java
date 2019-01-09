@@ -1,11 +1,13 @@
 package cz.krejcar25.sudoku;
 
-import cz.krejcar25.sudoku.control.Button;
-import cz.krejcar25.sudoku.style.Color;
+import cz.krejcar25.sudoku.ui.Applet;
+import cz.krejcar25.sudoku.ui.ScrollView;
+import cz.krejcar25.sudoku.ui.control.Button;
+import cz.krejcar25.sudoku.ui.style.Color;
 import processing.event.KeyEvent;
 
 public class SettingsView extends ScrollView {
-    SettingsView(SudokuApplet applet) {
+    public SettingsView(Applet applet) {
         super(applet, 800, 600);
         content = new SettingsViewContent(this);
         additionalControls.add(Button.getStandardBackButton(this));

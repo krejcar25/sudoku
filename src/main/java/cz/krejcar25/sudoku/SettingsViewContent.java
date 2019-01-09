@@ -1,8 +1,9 @@
 package cz.krejcar25.sudoku;
 
-import cz.krejcar25.sudoku.control.Control;
-import cz.krejcar25.sudoku.control.ControlLabel;
-import cz.krejcar25.sudoku.control.Toggle;
+import cz.krejcar25.sudoku.ui.ScrollViewContent;
+import cz.krejcar25.sudoku.ui.control.Control;
+import cz.krejcar25.sudoku.ui.control.ControlLabel;
+import cz.krejcar25.sudoku.ui.control.Toggle;
 import cz.krejcar25.sudoku.event.ToggleEvents;
 import processing.core.PGraphics;
 
@@ -18,8 +19,8 @@ public class SettingsViewContent extends ScrollViewContent {
         Toggle numFirst = new Toggle(settingsView, 600, 150, 80, 40, new ToggleEvents() {
             @Override
             public void toggled(Control sender) {
-                getApplet().settings.setDefaultNumberFirst(((Toggle) sender).state);
-                getApplet().settings.save();
+                getRootApplet().settings.setDefaultNumberFirst(((Toggle) sender).state);
+                getRootApplet().settings.save();
             }
 
             @Override
@@ -32,15 +33,15 @@ public class SettingsViewContent extends ScrollViewContent {
 
             }
         });
-        numFirst.state = getApplet().settings.isDefaultNumberFirst();
+        numFirst.state = getRootApplet().settings.isDefaultNumberFirst();
         ControlLabel numFirstLabel = new ControlLabel(numFirst, ControlLabel.CONTROL_RIGHT, "Number first by default");
         numFirstLabel.fixLabelOnX(50);
         controls.add(numFirstLabel);
         Toggle notes = new Toggle(settingsView, 600, 200, 80, 40, new ToggleEvents() {
             @Override
             public void toggled(Control sender) {
-                getApplet().settings.setDefaultNotes(((Toggle) sender).state);
-                getApplet().settings.save();
+                getRootApplet().settings.setDefaultNotes(((Toggle) sender).state);
+                getRootApplet().settings.save();
             }
 
             @Override
@@ -53,7 +54,7 @@ public class SettingsViewContent extends ScrollViewContent {
 
             }
         });
-        notes.state = getApplet().settings.isDefaultNotes();
+        notes.state = getRootApplet().settings.isDefaultNotes();
         ControlLabel notesLabel = new ControlLabel(notes, ControlLabel.CONTROL_RIGHT, "Write notes by default");
         notesLabel.fixLabelOnX(50);
         controls.add(notesLabel);

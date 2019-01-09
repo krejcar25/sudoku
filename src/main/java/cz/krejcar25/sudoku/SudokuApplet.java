@@ -2,6 +2,11 @@ package cz.krejcar25.sudoku;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
+import cz.krejcar25.sudoku.scoreboard.Scoreboard;
+import cz.krejcar25.sudoku.ui.Applet;
+import cz.krejcar25.sudoku.ui.BaseView;
+import cz.krejcar25.sudoku.ui.ScrollView;
+import cz.krejcar25.sudoku.ui.ViewStack;
 import processing.core.PImage;
 import processing.event.MouseEvent;
 
@@ -9,10 +14,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public class SudokuApplet extends Applet {
-    public NetworkControlApplet networkControlApplet;
-
-    Settings settings;
-    Scoreboard scoreboard;
+    public Settings settings;
+    public Scoreboard scoreboard;
 
     @Override
     public void settings() {
@@ -20,8 +23,8 @@ public class SudokuApplet extends Applet {
         pixelDensity(displayDensity());
     }
 
-    PImage door;
-    PImage icon;
+    public PImage door;
+    public PImage icon;
 
     @Override
     public void setup() {
@@ -49,11 +52,11 @@ public class SudokuApplet extends Applet {
         boolean isResizable = view.isResizable();
         surface.setResizable(true);
         if (isResizable) {
-            int w = constrain(width, 50, view.getWidthLimit() * pixelDensity);
-            int h = constrain(height, 50, view.getHeightLimit() * pixelDensity);
+            int w = constrain(width, 50, view.getWidthLimit());
+            int h = constrain(height, 50, view.getHeightLimit());
 
             surface.setSize(w, h);
-            view.setSize(w, h);
+            view.setSize(w * pixelDensity, h * pixelDensity);
         } else {
             surface.setSize(view.width / pixelDensity, view.height / pixelDensity);
         }

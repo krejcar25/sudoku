@@ -1,5 +1,7 @@
 package cz.krejcar25.sudoku;
 
+import cz.krejcar25.sudoku.ui.ScrollViewContent;
+
 public class HelpViewContent extends ScrollViewContent {
     public HelpViewContent(HelpView helpView) {
         super(helpView, 800, 1200);

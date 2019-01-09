@@ -1,6 +1,10 @@
 package cz.krejcar25.sudoku;
 
-import cz.krejcar25.sudoku.control.Button;
+import cz.krejcar25.sudoku.game.DifficultySelectView;
+import cz.krejcar25.sudoku.game.GridProperties;
+import cz.krejcar25.sudoku.scoreboard.ScoreboardView;
+import cz.krejcar25.sudoku.ui.BaseView;
+import cz.krejcar25.sudoku.ui.control.Button;
 import cz.krejcar25.sudoku.event.ButtonEvents;
 import processing.core.PApplet;
 import processing.event.KeyEvent;
@@ -22,17 +26,16 @@ public class MainMenuView extends BaseView {
         for (GridProperties gridProperties : GridProperties.values()) {
             int bx = (2 * (index % 2) + 1) * width / 4;
             int by = baseY + ((index / 2) * yDelta);
-            Button button = new Button(this, bx, by, bsx, bsy, gridProperties.getName(), sender -> viewStack.push(new DifficultySelectView(getApplet(), gridProperties)));
+            Button button = new Button(this, bx, by, bsx, bsy, gridProperties.getName(), sender -> viewStack.push(new DifficultySelectView(getRootApplet(), gridProperties)));
             buttons.add(button);
             index++;
         }
 
-        String[] labels = {"Settings", "Scoreboard", "Help", "Network Control"};
+        String[] labels = {"Settings", "Scoreboard", "Help"};
         ButtonEvents[] buttonEvents = {
                 sender -> viewStack.push(new SettingsView(getApplet())),
                 sender -> viewStack.push(new ScoreboardView(getApplet())),
-                sender -> viewStack.push(new HelpView(getApplet())),
-                this::openNetworkControlApplet
+                sender -> viewStack.push(new HelpView(getApplet()))
         };
         for (int i = 0; i < labels.length && labels.length == buttonEvents.length; i++) {
             int bx = (2 * (index % 2) + 1) * width / 4;
@@ -56,21 +59,13 @@ public class MainMenuView extends BaseView {
 //        buttons.add(new Button(this, (2 * ((index + 2) % 2) + 1) * width / 4, (((index + 2) / 2) * yDelta), bsx, bsy, "Help", sender -> viewStack.push(new HelpView(getApplet()))));
     }
 
-    private void openNetworkControlApplet(Button button) {
-        SudokuApplet applet = getApplet();
-        if (applet.networkControlApplet == null) {
-            applet.networkControlApplet = new NetworkControlApplet(applet);
-            SudokuApplet.runSketch(new String[]{"NetworkControlApplet"}, applet.networkControlApplet);
-        }
-    }
-
     @Override
-    protected void mouseDown(int mx, int my, boolean rmb) {
+    public void mouseDown(int mx, int my, boolean rmb) {
 
     }
 
     @Override
-    protected void mouseUp(int mx, int my, boolean rmb) {
+    public void mouseUp(int mx, int my, boolean rmb) {
 
     }
 

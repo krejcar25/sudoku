@@ -11,7 +11,7 @@ public abstract class Drawable extends PGraphicsJava2D {
     private int heightLimit = -1;
 
 
-    public Drawable(SudokuApplet applet, int x, int y, int width, int height) {
+    public Drawable(Applet applet, int x, int y, int width, int height) {
         this.x = x;
         this.y = y;
         setParent(applet);
@@ -44,8 +44,14 @@ public abstract class Drawable extends PGraphicsJava2D {
 
     protected abstract void draw();
 
-    public SudokuApplet getApplet() {
-        return (SudokuApplet) parent;
+    public Applet getApplet() {
+        return (Applet) parent;
+    }
+
+    public SudokuApplet getRootApplet() {
+        if (parent instanceof SudokuApplet) return (SudokuApplet) parent;
+        else if (parent instanceof ChildApplet) return ((ChildApplet) parent).getRootOwner();
+        else return null;
     }
 
     protected void setResizable(int limitx, int limity) {

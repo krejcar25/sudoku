@@ -18,7 +18,7 @@ public class DoubleMatrix {
 
     public DoubleMatrix copy() {
         DoubleMatrix dm = new DoubleMatrix(rows, cols);
-        dm.map((value, i, j) -> value);
+        dm.map((value, i, j) -> values[i][j]);
         return dm;
     }
 

@@ -2,12 +2,17 @@ package cz.krejcar25.sudoku.networkControl;
 
 import cz.krejcar25.sudoku.ui.Applet;
 import cz.krejcar25.sudoku.ui.BaseView;
+import cz.krejcar25.sudoku.ui.control.Control;
 import processing.event.KeyEvent;
 import processing.event.MouseEvent;
 
+import java.util.ArrayList;
+
 public class MainMenuView extends BaseView {
+    ArrayList<Control> controls;
     public MainMenuView(Applet applet) {
         super(applet);
+        controls = new ArrayList<>();
     }
 
     @Override

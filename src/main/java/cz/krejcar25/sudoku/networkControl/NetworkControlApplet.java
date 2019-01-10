@@ -1,21 +1,19 @@
 package cz.krejcar25.sudoku.networkControl;
 
-import cz.krejcar25.sudoku.ui.Applet;
-import cz.krejcar25.sudoku.ui.ChildApplet;
 import cz.krejcar25.sudoku.SudokuApplet;
-import cz.krejcar25.sudoku.ui.control.Control;
 import cz.krejcar25.sudoku.event.AppletCloseEvent;
-
-import java.util.ArrayList;
+import cz.krejcar25.sudoku.neuralNetwork.NeuralNetwork;
+import cz.krejcar25.sudoku.ui.*;
+import processing.event.MouseEvent;
 
 public class NetworkControlApplet extends Applet implements ChildApplet {
     private final SudokuApplet owner;
     private final AppletCloseEvent closeEvent;
-    private ArrayList<Control> controls;
 
     public NetworkControlApplet(SudokuApplet owner, AppletCloseEvent closeEvent) {
         this.owner = owner;
         this.closeEvent = closeEvent;
+        this.stack = new ViewStack(new NetworkChartView(this, new NeuralNetwork(20, 50, 30, 40)));
     }
 
     public SudokuApplet getOwner() {
@@ -29,7 +27,7 @@ public class NetworkControlApplet extends Applet implements ChildApplet {
 
     @Override
     public void settings() {
-        size(800,600);
+        size(800, 600);
         pixelDensity(displayDensity());
     }
 
@@ -41,10 +39,9 @@ public class NetworkControlApplet extends Applet implements ChildApplet {
 
     @Override
     public void draw() {
-        background(51);
-        textSize(50);
-        textAlign(LEFT, TOP);
-        text("Hello World", 50,50);
+        BaseView view = stack.get();
+        view.update();
+        image(view, 0, 0);
     }
 
     @Override
@@ -52,5 +49,30 @@ public class NetworkControlApplet extends Applet implements ChildApplet {
         super.exitActual();
 
         closeEvent.appletClosed(this);
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent mouseEvent) {
+        stack.get().mouseClicked(scaleMouseEvent(mouseEvent));
+    }
+
+    @Override
+    public void mousePressed(MouseEvent mouseEvent) {
+        stack.get().mousePressed(scaleMouseEvent(mouseEvent));
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent mouseEvent) {
+        stack.get().mouseReleased(scaleMouseEvent(mouseEvent));
+    }
+
+    @Override
+    public void mouseDragged(MouseEvent mouseEvent) {
+        stack.get().mouseDrag(scaleMouseEvent(mouseEvent));
+    }
+
+    @Override
+    public void mouseWheel(MouseEvent mouseEvent) {
+        stack.get().scroll(mouseEvent);
     }
 }

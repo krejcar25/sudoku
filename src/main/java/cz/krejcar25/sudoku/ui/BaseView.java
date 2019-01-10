@@ -1,5 +1,7 @@
 package cz.krejcar25.sudoku.ui;
 
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import processing.event.KeyEvent;
 import processing.event.MouseEvent;
 
@@ -16,21 +18,21 @@ public abstract class BaseView extends Drawable {
         super(applet, 0, 0, sizex, sizey);
     }
 
-    public final void mousePressed(MouseEvent mouseEvent) {
+    public final void mousePressed(@NotNull MouseEvent mouseEvent) {
         mouseButton = mouseEvent.getButton() == RIGHT ? MouseButton.Right : MouseButton.Left;
         mouseDown(mouseEvent.getX() - x, mouseEvent.getY() - y, mouseEvent.getButton() == RIGHT);
     }
 
     public abstract void mouseDown(int mx, int my, boolean rmb);
 
-    public final void mouseReleased(MouseEvent mouseEvent) {
+    public final void mouseReleased(@NotNull MouseEvent mouseEvent) {
         mouseButton = MouseButton.None;
         mouseUp(mouseEvent.getX() - x, mouseEvent.getY() - y, mouseEvent.getButton() == RIGHT);
     }
 
     public abstract void mouseUp(int mx, int my, boolean rmb);
 
-    public final void mouseClicked(MouseEvent mouseEvent) {
+    public final void mouseClicked(@NotNull MouseEvent mouseEvent) {
         click(mouseEvent.getX() - x, mouseEvent.getY() - y, mouseEvent.getButton() == RIGHT);
     }
 
@@ -42,6 +44,7 @@ public abstract class BaseView extends Drawable {
         }
     }
 
+    @Contract(pure = true)
     public final boolean isInViewStack() {
         return viewStack != null;
     }
@@ -51,6 +54,7 @@ public abstract class BaseView extends Drawable {
         viewStack = null;
     }
 
+    @Contract(pure = true)
     public final ViewStack getViewStack() {
         return viewStack;
     }

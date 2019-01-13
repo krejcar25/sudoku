@@ -76,8 +76,9 @@ public class DoubleMatrix {
         return values[i][j];
     }
 
-    public void set(int i, int j, double val) {
+    public DoubleMatrix set(int i, int j, double val) {
         values[i][j] = val;
+        return this;
     }
 
     public DoubleMatrix map(MapFunction<Double> function) {

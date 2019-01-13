@@ -8,8 +8,8 @@ public class DeepLayer extends NeuralNetworkLayer {
     public DeepLayer(int inCount, int nodes, ActivationFunction activationFunction) {
         super(inCount, nodes);
 
-        this.weights = new DoubleMatrix(nodes, inCount).randomise(-1,1);
-        this.bias = new DoubleMatrix(nodes, 1).randomise(-1,1);
+        this.weights = new DoubleMatrix(nodes, inCount).randomise(-1, 1);
+        this.bias = new DoubleMatrix(nodes, 1).randomise(-1, 1);
         this.activationFunction = activationFunction;
     }
 
@@ -22,7 +22,7 @@ public class DeepLayer extends NeuralNetworkLayer {
 
         DoubleMatrix gradients = prediction.copy()
                 .map(activationFunction::derivative)
-                .mult(currentErrors)
+                .mult(currentErrors.copy())
                 .mult(network.getLearningRate());
         DoubleMatrix pt = previousPrediction.transpose();
         DoubleMatrix deltas = gradients.matmult(pt);

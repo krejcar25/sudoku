@@ -12,9 +12,13 @@ public class NetworkXORTest extends Applet implements ChildApplet {
 
     public NetworkXORTest(SudokuApplet owner) {
         this.owner = owner;
-        this.network = new NeuralNetwork(new DeepLayer(2, 4, ActivationFunction.SIGMOID));
-        this.network.addLayer(new DeepLayer(4, 2, ActivationFunction.SIGMOID));
-        this.network.addLayer(new DeepLayer(2, 1, ActivationFunction.SIGMOID));
+        DeepLayer l0 = new DeepLayer(2, 4, ActivationFunction.SIGMOID);
+        DeepLayer l1 = new DeepLayer(4, 2, ActivationFunction.SIGMOID);
+        DeepLayer l2 = new DeepLayer(2, 1, ActivationFunction.SIGMOID);
+
+        this.network = new NeuralNetwork(l0);
+        this.network.addLayer(l1);
+        this.network.addLayer(l2);
         runSketch(new String[]{"NetworkControlApplet"}, new NetworkControlApplet(owner, applet -> {
         }, network));
         setCloseOnExit(false);
@@ -72,11 +76,17 @@ public class NetworkXORTest extends Applet implements ChildApplet {
         double tilesY = height / tileSize;
 
         strokeWeight(0);
+        textSize((int) tileSize);
+        textAlign(LEFT, TOP);
 
         for (int y = 0; y < tilesY; y++) {
             for (int x = 0; x < tilesX; x++) {
-                fill(map((float) network.estimate(new double[]{x / tilesX, y / tilesY})[0], -1, 1, 0, 255));
+                double[] est = network.estimate(new double[]{x / tilesX, y / tilesY});
+                float bg = map((float) est[0], -1, 1, 0, 255);
+                fill(bg);
                 rect((float) (x * tileSize), (float) (y * tileSize), (float) (tileSize), (float) (tileSize));
+                fill(bg < 127 ? 255 : 0);
+                text(String.valueOf(floor((float) est[0] * 10)), (float) (x * tileSize), (float) (y * tileSize));
             }
         }
 

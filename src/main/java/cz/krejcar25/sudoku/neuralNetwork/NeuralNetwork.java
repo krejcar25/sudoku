@@ -6,29 +6,21 @@ import java.util.ArrayList;
 
 public class NeuralNetwork {
     private final int inputCount;
-    private final int[] hiddenCounts;
-    private final int outputCount;
+    private int outputCount;
+    private int trainCycles = 0;
 
     private ArrayList<NeuralNetworkLayer> layers;
 
     private double learningRate;
 
-    private ActivationFunction activationFunction;
-
-    public NeuralNetwork(int inputCount, int outputCount, @NotNull int... hiddenCounts) {
-        this.inputCount = inputCount;
-        this.outputCount = outputCount;
-        this.hiddenCounts = hiddenCounts;
+    public NeuralNetwork(@NotNull NeuralNetworkLayer layer) {
+        this.inputCount = layer.getInCount();
+        this.outputCount = layer.getNodes();
         this.layers = new ArrayList<>();
-
-        this.layers.add(new NeuralNetworkLayer(this, inputCount, hiddenCounts[0]));
-        for (int i = 1; i < hiddenCounts.length; i++)
-            layers.add(new NeuralNetworkLayer(this, hiddenCounts[i - 1], hiddenCounts[i]));
-        this.layers.add(new NeuralNetworkLayer(this, hiddenCounts[hiddenCounts.length - 1], outputCount));
+        layers.add(layer);
+        layer.setNetwork(this);
 
         this.learningRate = 0.1;
-
-        this.activationFunction = ActivationFunction.SIGMOID;
     }
 
     public double[] estimate(double[] input) {
@@ -45,25 +37,35 @@ public class NeuralNetwork {
 
     public void train(double[] input, double[] desiredOutput) {
         DoubleMatrix in = DoubleMatrix.fromArray(input);
-        ArrayList<DoubleMatrix> intermediates = new ArrayList<>();
-        DoubleMatrix intermediate = in;
+        ArrayList<DoubleMatrix> estimates = new ArrayList<>();
+        DoubleMatrix estimate = in.copy();
         for (NeuralNetworkLayer layer : layers) {
-            intermediate = layer.estimate(intermediate);
-            intermediates.add(intermediate.copy());
+            estimate = layer.estimate(estimate);
+            estimates.add(estimate.copy());
         }
 
-        DoubleMatrix errors = DoubleMatrix.fromArray(desiredOutput).sub(intermediate);
-        for (int i = intermediates.size() - 1; i >= 0; i--) {
-            errors = layers.get(i).train(intermediates.get(i), i == 0 ? in : intermediates.get(i - 1), errors);
+        DoubleMatrix output = estimates.get(estimates.size() - 1).copy();
+        DoubleMatrix errors = DoubleMatrix.fromArray(desiredOutput).sub(output);
+        for (int i = estimates.size() - 1; i >= 0; i--) {
+            errors = layers.get(i).train(estimates.get(i), i == 0 ? in : estimates.get(i - 1), errors);
         }
+
+        trainCycles++;
+    }
+
+    public NeuralNetwork addLayer(NeuralNetworkLayer layer) {
+        NeuralNetworkLayer last = layers.get(layers.size() - 1);
+        if (last.getNodes() == layer.getInCount()) {
+            layers.add(layer);
+            outputCount = layer.getNodes();
+            layer.setNetwork(this);
+            return this;
+        } else
+            throw new IllegalArgumentException(String.format("Input node count of the added layer (%d) must match the output node count of the last added layer (%d).", layer.getInCount(), last.getNodes()));
     }
 
     public int getInputCount() {
         return inputCount;
-    }
-
-    public int[] getHiddenCounts() {
-        return hiddenCounts;
     }
 
     public int getOutputCount() {
@@ -73,19 +75,16 @@ public class NeuralNetwork {
     public ArrayList<NeuralNetworkLayer> getLayers() {
         return layers;
     }
+
     public double getLearningRate() {
         return learningRate;
     }
 
-    public ActivationFunction getActivationFunction() {
-        return activationFunction;
+    public int getTrainCycles() {
+        return trainCycles;
     }
 
     public void setLearningRate(double learningRate) {
         this.learningRate = learningRate;
-    }
-
-    public void setActivationFunction(ActivationFunction activationFunction) {
-        this.activationFunction = activationFunction;
     }
 }

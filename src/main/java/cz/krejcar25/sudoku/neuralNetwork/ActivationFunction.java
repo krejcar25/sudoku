@@ -13,7 +13,7 @@ public interface ActivationFunction {
 
         @Override
         public double derivative(double value, int x, int y) {
-            return value * (1 - value);
+            return func(value, x, y) * (1 - func(value, x, y));
         }
     };
 
@@ -24,8 +24,11 @@ public interface ActivationFunction {
         }
 
         @Override
+        /*public double derivative(double value, int x, int y) {
+            return 1 - Math.pow(Math.tanh(value), 2);
+        }*/
         public double derivative(double value, int x, int y) {
-            return 1 - (Math.pow(value, 2));
+            return 1 - Math.pow(value, 2);
         }
     };
 }

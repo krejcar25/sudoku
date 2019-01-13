@@ -26,7 +26,7 @@ public class MatrixTest {
         b.set(2, 2, 10);
         b.set(2, 3, 11);
 
-        DoubleMatrix product = a.mult(b);
+        DoubleMatrix product = a.matmult(b);
 
         System.out.println(a);
         System.out.println(b);

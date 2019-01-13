@@ -24,14 +24,14 @@ public class DoubleMatrix {
 
     public DoubleMatrix add(DoubleMatrix dm) {
         if (rows != dm.rows || cols != dm.cols)
-            throw new IllegalArgumentException("Dimenstions of both matrices must be identical");
+            throw new IllegalArgumentException("Dimensions of both matrices must be identical");
         map((value, i, j) -> value + dm.values[i][j]);
         return this;
     }
 
     public DoubleMatrix sub(DoubleMatrix dm) {
         if (rows != dm.rows || cols != dm.cols)
-            throw new IllegalArgumentException("Dimenstions of both matrices must be identical");
+            throw new IllegalArgumentException("Dimensions of both matrices must be identical");
         map((value, i, j) -> value - dm.values[i][j]);
         return this;
     }
@@ -47,21 +47,24 @@ public class DoubleMatrix {
     }
 
     public DoubleMatrix transpose() {
-        DoubleMatrix dm = new DoubleMatrix(rows, cols);
+        DoubleMatrix dm = new DoubleMatrix(cols, rows);
         dm.map((value, i, j) -> values[j][i]);
         return dm;
     }
 
     public DoubleMatrix mult(DoubleMatrix dm) {
-        if (cols != dm.rows)
-            throw new IllegalArgumentException(String.format("This matrix's cols (%d) must be the same as the other matrix's rows (%d)!", cols, dm.rows));
+        if (cols == dm.cols && rows == dm.rows) return map(((value, i, j) -> value * dm.values[i][j]));
+        else throw new IllegalArgumentException("Dimensions of both matrices must be identical");
+    }
 
-        return new DoubleMatrix(rows, dm.cols).map((value, i, j) -> {
+    public DoubleMatrix matmult(DoubleMatrix dm) {
+        if (cols == dm.rows) return new DoubleMatrix(rows, dm.cols).map((value, i, j) -> {
             double sum = 0;
             for (int k = 0; k < cols; k++)
                 sum += values[i][k] * dm.values[k][j];
             return sum;
         });
+        else throw new IllegalArgumentException(String.format("This matrix's cols (%d) must be the same as the other matrix's rows (%d)!", cols, dm.rows));
     }
 
     @Override

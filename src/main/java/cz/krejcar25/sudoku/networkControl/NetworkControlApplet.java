@@ -10,10 +10,10 @@ public class NetworkControlApplet extends Applet implements ChildApplet {
     private final SudokuApplet owner;
     private final AppletCloseEvent closeEvent;
 
-    public NetworkControlApplet(SudokuApplet owner, AppletCloseEvent closeEvent) {
+    public NetworkControlApplet(SudokuApplet owner, AppletCloseEvent closeEvent, NeuralNetwork network) {
         this.owner = owner;
         this.closeEvent = closeEvent;
-        this.stack = new ViewStack(new NetworkChartView(this, new NeuralNetwork(20, 50, 30, 40)));
+        this.stack = new ViewStack(new NetworkChartView(this, network));
     }
 
     public SudokuApplet getOwner() {

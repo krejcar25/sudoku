@@ -84,7 +84,7 @@ public class NetworkChartViewContent extends ScrollViewContent {
                 PVector to = positions.get(l).get(i);
                 for (int p = 0; p < positions.get(l - 1).size(); p++) {
                     double w = ((DeepLayer) network.getLayers().get(l - 1)).getWeights().get(i, p);
-                    strokeWeight(Applet.map((float) Math.abs(w), 0, 1, 0, 5));
+                    strokeWeight(Applet.map((float) Math.abs(w), 0, 10, 0, 5));
                     stroke(w > 0 ? 0 : 255, 0, w > 0 ? 255 : 0);
                     PVector from = positions.get(l - 1).get(p);
                     line(from.x, from.y, to.x, to.y);

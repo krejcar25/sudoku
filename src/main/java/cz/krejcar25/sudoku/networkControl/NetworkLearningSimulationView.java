@@ -21,7 +21,9 @@ public class NetworkLearningSimulationView extends BaseView {
 
     private int drawIndex = 0;
 
-    public NetworkLearningSimulationView(Applet applet, NetworkLearningSimulatorScenario mode) {
+    private NetworkChartApplet chartApplet;
+
+    public NetworkLearningSimulationView(Applet applet, NetworkLearningSimulatorScenario mode, boolean showChart) {
         super(applet, 800, 800);
         this.network = new NeuralNetwork(new DeepLayer(2, 4, ActivationFunction.SIGMOID));
         this.network.addLayer(new DeepLayer(4, 2, ActivationFunction.SIGMOID));
@@ -38,9 +40,14 @@ public class NetworkLearningSimulationView extends BaseView {
         this.network.addLayer(new DeepLayer(100, 100, ActivationFunction.SIGMOID));
         this.network.addLayer(new DeepLayer(100, 100, ActivationFunction.SIGMOID));
         this.network.addLayer(new DeepLayer(100, 50, ActivationFunction.SIGMOID));
-        this.network.addLayer(new DeepLayer(50, 1, ActivationFunction.SIGMOID));
-        /*runSketch(new String[]{"NetworkControlApplet"}, new NetworkControlApplet(applet, applet -> {
-        }, network));*/
+        this.network.addLayer(new DeepLayer(50, 1, ActivationFunction.SIGMOID));*/
+        if (showChart) {
+            chartApplet = new NetworkChartApplet(applet, network, closedApplet -> {
+                chartApplet = null;
+                getApplet().exit();
+            });
+            Applet.runSketch(new String[]{"NetworkChartApplet"}, chartApplet);
+        }
         trainRunnable = new NetworkTrainRunnable(network, mode.getTrainingData());
         trainRunnable.startTrain();
 

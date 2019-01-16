@@ -6,6 +6,7 @@ import cz.krejcar25.sudoku.ui.BaseView;
 import cz.krejcar25.sudoku.ui.control.Button;
 import cz.krejcar25.sudoku.ui.control.Control;
 import processing.core.PApplet;
+import processing.core.PConstants;
 import processing.event.KeyEvent;
 import processing.event.MouseEvent;
 
@@ -26,8 +27,8 @@ public class MainMenuView extends BaseView {
 
         String[] labels = {"XOR Test", "OR Test", "Generate grids"};
         ButtonEvents[] buttonEvents = {
-                (sender) -> viewStack.push(new NetworkLearningSimulationView(sender.getApplet(), NetworkLearningSimulatorScenario.XOR)),
-                (sender) -> viewStack.push(new NetworkLearningSimulationView(sender.getApplet(), NetworkLearningSimulatorScenario.OR)),
+                (sender) -> viewStack.push(new NetworkLearningSimulationView(sender.getApplet(), NetworkLearningSimulatorScenario.XOR, sender.getApplet().isKeyPressed(PConstants.SHIFT))),
+                (sender) -> viewStack.push(new NetworkLearningSimulationView(sender.getApplet(), NetworkLearningSimulatorScenario.OR, sender.getApplet().isKeyPressed(PConstants.SHIFT))),
                 (sender) -> new GeneratorSelectionDialog(((gridProperties, count) -> viewStack.push(new GenerateSudokuStringView(applet, gridProperties, count)))).setVisible(true)
         };
 

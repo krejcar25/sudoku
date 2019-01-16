@@ -7,7 +7,7 @@ import processing.event.KeyEvent;
 
 public class NetworkChartView extends ScrollView {
     public NetworkChartView(Applet applet, NeuralNetwork network) {
-        super(applet, 800,800);
+        super(applet, 1000,1000);
         content = new NetworkChartViewContent(this, network);
     }
 

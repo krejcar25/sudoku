@@ -4,7 +4,7 @@ package cz.krejcar25.sudoku.neuralNetwork;
 
 public class MatrixTest {
     public static void main(String[] args) {
-        DoubleMatrix a = new DoubleMatrix(2,3);
+        DoubleMatrix a = new DoubleMatrix(2, 3);
         a.set(0, 0, 0);
         a.set(0, 1, 1);
         a.set(0, 2, 2);
@@ -12,7 +12,7 @@ public class MatrixTest {
         a.set(1, 1, 4);
         a.set(1, 2, 5);
 
-        DoubleMatrix b = new DoubleMatrix(3,4);
+        DoubleMatrix b = new DoubleMatrix(3, 4);
         b.set(0, 0, 0);
         b.set(0, 1, 1);
         b.set(0, 2, 2);
@@ -33,5 +33,17 @@ public class MatrixTest {
         System.out.println(a);
         System.out.println(b);
         System.out.println(product);
+
+        a = new DoubleMatrix(100, 100).randomise(-100, 100);
+        b = new DoubleMatrix(100, 100).randomise(-100, 100);
+        long time = System.nanoTime();
+        long i = 0;
+        while (true) {
+            a.matmult(b);
+            i++;
+            String frame = String.valueOf((System.nanoTime() - time));
+            time = System.nanoTime();
+            System.out.println(frame);
+        }
     }
 }

@@ -7,6 +7,9 @@ import cz.krejcar25.sudoku.ui.Drawable;
 import processing.core.*;
 
 import java.awt.*;
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
+import java.util.Base64;
 
 public class BaseGrid extends Drawable {
     GameView view;
@@ -575,5 +578,18 @@ public class BaseGrid extends Drawable {
                 placeNumber(k - drawNumberOffset, selectedx, selectedy);
             }
         }
+    }
+
+    public String getGridString() {
+        int num = numbers();
+
+        ByteBuffer byteBuffer = ByteBuffer.allocate(num+1);
+        IntBuffer intBuffer = byteBuffer.asIntBuffer();
+
+        intBuffer.put(num);
+
+        for (int[] row : game) for (int cell : row) intBuffer.put(cell);
+
+        return Base64.getEncoder().encodeToString(byteBuffer.array());
     }
 }

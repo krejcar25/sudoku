@@ -2,18 +2,20 @@ package cz.krejcar25.sudoku.networkControl;
 
 import cz.krejcar25.sudoku.SudokuApplet;
 import cz.krejcar25.sudoku.event.AppletCloseEvent;
-import cz.krejcar25.sudoku.neuralNetwork.NeuralNetwork;
-import cz.krejcar25.sudoku.ui.*;
+import cz.krejcar25.sudoku.ui.Applet;
+import cz.krejcar25.sudoku.ui.BaseView;
+import cz.krejcar25.sudoku.ui.ChildApplet;
+import cz.krejcar25.sudoku.ui.ViewStack;
 import processing.event.MouseEvent;
 
 public class NetworkControlApplet extends Applet implements ChildApplet {
     private final SudokuApplet owner;
     private final AppletCloseEvent closeEvent;
 
-    public NetworkControlApplet(SudokuApplet owner, AppletCloseEvent closeEvent, NeuralNetwork network) {
+    public NetworkControlApplet(SudokuApplet owner, AppletCloseEvent closeEvent) {
         this.owner = owner;
         this.closeEvent = closeEvent;
-        this.stack = new ViewStack(new NetworkChartView(this, network));
+        this.stack = new ViewStack(new MainMenuView(this));
     }
 
     public SudokuApplet getOwner() {
@@ -40,6 +42,8 @@ public class NetworkControlApplet extends Applet implements ChildApplet {
     @Override
     public void draw() {
         BaseView view = stack.get();
+        surface.setSize(view.width / pixelDensity, view.height / pixelDensity);
+        scale(1f / pixelDensity);
         view.update();
         image(view, 0, 0);
     }

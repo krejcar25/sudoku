@@ -1,16 +1,12 @@
 package cz.krejcar25.sudoku;
 
+import cz.krejcar25.sudoku.event.ButtonEvents;
 import cz.krejcar25.sudoku.game.DifficultySelectView;
 import cz.krejcar25.sudoku.game.GridProperties;
-import cz.krejcar25.sudoku.neuralNetwork.ActivationFunction;
-import cz.krejcar25.sudoku.neuralNetwork.DeepLayer;
-import cz.krejcar25.sudoku.neuralNetwork.NetworkXORTest;
-import cz.krejcar25.sudoku.neuralNetwork.NeuralNetwork;
+import cz.krejcar25.sudoku.networkControl.NetworkControlApplet;
 import cz.krejcar25.sudoku.scoreboard.ScoreboardView;
 import cz.krejcar25.sudoku.ui.BaseView;
 import cz.krejcar25.sudoku.ui.control.Button;
-import cz.krejcar25.sudoku.event.ButtonEvents;
-import cz.krejcar25.sudoku.networkControl.NetworkControlApplet;
 import processing.core.PApplet;
 import processing.event.KeyEvent;
 import processing.event.MouseEvent;
@@ -36,13 +32,12 @@ public class MainMenuView extends BaseView {
             index++;
         }
 
-        String[] labels = {"Settings", "Scoreboard", "Help", "Network Control", "XOR Test"};
+        String[] labels = {"Settings", "Scoreboard", "Help", "Network Control"};
         ButtonEvents[] buttonEvents = {
                 sender -> viewStack.push(new SettingsView(getApplet())),
                 sender -> viewStack.push(new ScoreboardView(getApplet())),
                 sender -> viewStack.push(new HelpView(getApplet())),
-                this::openNetworkControlApplet,
-                this::openXORTestApplet
+                this::openNetworkControlApplet
 
         };
         for (int i = 0; i < labels.length && labels.length == buttonEvents.length; i++) {
@@ -57,17 +52,9 @@ public class MainMenuView extends BaseView {
     private void openNetworkControlApplet(Button button) {
         SudokuApplet applet = getRootApplet();
         if (applet.networkControlApplet == null) {
-            NeuralNetwork demo = new NeuralNetwork(new DeepLayer(20, 30, ActivationFunction.TANH))
-                    .addLayer(new DeepLayer(30, 40, ActivationFunction.TANH))
-                    .addLayer(new DeepLayer(40, 50, ActivationFunction.TANH));
-            applet.networkControlApplet = new NetworkControlApplet(applet, closedApplet -> ((NetworkControlApplet) closedApplet).getOwner().networkControlApplet = null, demo);
+            applet.networkControlApplet = new NetworkControlApplet(applet, closedApplet -> ((NetworkControlApplet) closedApplet).getOwner().networkControlApplet = null);
             SudokuApplet.runSketch(new String[]{"NetworkControlApplet"}, applet.networkControlApplet);
         }
-    }
-
-    private void openXORTestApplet(Button button) {
-        SudokuApplet applet = getRootApplet();
-        SudokuApplet.runSketch(new String[]{"NetworkXORTest"}, new NetworkXORTest(applet));
     }
 
     @Override

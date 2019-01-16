@@ -1,12 +1,13 @@
-package cz.krejcar25.sudoku.neuralNetwork;
+package cz.krejcar25.sudoku.networkControl;
 
+import cz.krejcar25.sudoku.ui.Applet;
 import cz.krejcar25.sudoku.ui.BaseView;
 import processing.event.KeyEvent;
 import processing.event.MouseEvent;
 
-public class XORTestView extends BaseView {
+public class EmptyTestView extends BaseView {
 
-    public XORTestView(NetworkXORTest applet) {
+    public EmptyTestView(Applet applet) {
         super(applet);
     }
 

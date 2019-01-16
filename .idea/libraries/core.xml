@@ -5,16 +5,6 @@
       <root url="jar://$PROJECT_DIR$/core.jar!/" />
     </CLASSES>
     <JAVADOC />
-    <SOURCES>
-      <root url="file://$USER_HOME$/Downloads/Processing.app/Contents/Java/modes/java/generated" />
-      <root url="file://$USER_HOME$/Downloads/Processing.app/Contents/Java/modes/java/libraries/dxf/src" />
-      <root url="file://$USER_HOME$/Downloads/Processing.app/Contents/Java/modes/java/libraries/io/src" />
-      <root url="file://$USER_HOME$/Downloads/Processing.app/Contents/Java/modes/java/libraries/net/src" />
-      <root url="file://$USER_HOME$/Downloads/Processing.app/Contents/Java/modes/java/libraries/pdf/src" />
-      <root url="file://$USER_HOME$/Downloads/Processing.app/Contents/Java/modes/java/libraries/serial/src" />
-      <root url="file://$USER_HOME$/Downloads/Processing.app/Contents/Java/modes/java/libraries/svg/src" />
-      <root url="file://$USER_HOME$/Downloads/Processing.app/Contents/Java/modes/java/src" />
-      <root url="file://$USER_HOME$/Downloads/Processing.app/Contents/Java/tools/MovieMaker/src" />
-    </SOURCES>
+    <SOURCES />
   </library>
 </component>

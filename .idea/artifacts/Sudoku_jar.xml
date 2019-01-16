@@ -9,6 +9,7 @@
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/fasterxml/jackson/core/jackson-databind/2.9.7/jackson-databind-2.9.7.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$MAVEN_REPOSITORY$/com/fasterxml/jackson/dataformat/jackson-dataformat-yaml/2.9.7/jackson-dataformat-yaml-2.9.7.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$PROJECT_DIR$/core.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/apple.jar" path-in-jar="/" />
     </root>
   </artifact>
 </component>

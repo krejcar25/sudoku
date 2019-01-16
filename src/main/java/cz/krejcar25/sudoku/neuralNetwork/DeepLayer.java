@@ -20,9 +20,9 @@ public class DeepLayer extends NeuralNetworkLayer {
     public DoubleMatrix train(DoubleMatrix prediction, DoubleMatrix previousPrediction, DoubleMatrix currentErrors) {
         NeuralNetwork network = getNetwork();
 
-        DoubleMatrix gradients = prediction.copy()
+        DoubleMatrix gradients = prediction
                 .map(activationFunction::derivative)
-                .mult(currentErrors.copy())
+                .mult(currentErrors)
                 .mult(network.getLearningRate());
         DoubleMatrix pt = previousPrediction.transpose();
         DoubleMatrix deltas = gradients.matmult(pt);

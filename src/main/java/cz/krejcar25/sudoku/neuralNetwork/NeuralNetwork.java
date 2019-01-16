@@ -38,13 +38,13 @@ public class NeuralNetwork {
     public void train(double[] input, double[] desiredOutput) {
         DoubleMatrix in = DoubleMatrix.fromArray(input);
         ArrayList<DoubleMatrix> estimates = new ArrayList<>();
-        DoubleMatrix estimate = in.copy();
+        DoubleMatrix estimate = in;
         for (NeuralNetworkLayer layer : layers) {
             estimate = layer.estimate(estimate);
-            estimates.add(estimate.copy());
+            estimates.add(estimate);
         }
 
-        DoubleMatrix output = estimates.get(estimates.size() - 1).copy();
+        DoubleMatrix output = estimates.get(estimates.size() - 1);
         DoubleMatrix errors = DoubleMatrix.fromArray(desiredOutput).sub(output);
         for (int i = estimates.size() - 1; i >= 0; i--) {
             errors = layers.get(i).train(estimates.get(i), i == 0 ? in : estimates.get(i - 1), errors);

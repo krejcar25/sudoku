@@ -92,10 +92,11 @@ public class NetworkChartViewContent extends ScrollViewContent {
             }
         }
 
+        noStroke();
+
         for (int l = 1; l < positions.size(); l++) {
             for (int i = 0; i < positions.get(l).size(); i++) {
                 PVector to = positions.get(l).get(i);
-                strokeWeight(0);
                 fill(150);
                 ellipse(to.x, to.y, d, d);
                 fill(51);

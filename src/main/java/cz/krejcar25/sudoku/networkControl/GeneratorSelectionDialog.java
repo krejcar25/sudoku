@@ -51,14 +51,20 @@ public class GeneratorSelectionDialog extends JDialog implements ActionListener 
         setTitle("Generator selection");
         selectionPanel.setLayout(new GridLayout(GridProperties.values().length, 1));
         ButtonGroup group = new ButtonGroup();
-
+        boolean selected = false;
         for (GridProperties gp : GridProperties.values()) {
             JRadioButton radio = new JRadioButton(gp.getName());
             radio.setActionCommand(gp.getName());
             radio.addActionListener(this);
+            if (!selected) {
+                radio.setSelected(true);
+                this.selectedProp = gp;
+                selected = true;
+            }
             selectionPanel.add(radio);
             group.add(radio);
         }
+        countSpinner.setValue(10);
 
         pack();
     }

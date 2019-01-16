@@ -15,11 +15,20 @@ public class Clock extends Drawable {
 
     public Clock(Applet applet, int x, int y, String name) {
         super(applet, x, y, baseWidth, baseHeight);
-        timer = new Timer(name);
-        minD = new Digit(getApplet(), 0, 0);
-        minU = new Digit(getApplet(), minD.width, 0);
-        secD = new Digit(getApplet(), minD.width + minU.width + 50, 0);
-        secU = new Digit(getApplet(), minD.width + minU.width + 50 + secD.width, 0);
+        this.timer = new Timer(name);
+        this.minD = new Digit(getApplet(), 0, 0);
+        this.minU = new Digit(getApplet(), minD.width, 0);
+        this.secD = new Digit(getApplet(), minD.width + minU.width + 50, 0);
+        this.secU = new Digit(getApplet(), minD.width + minU.width + 50 + secD.width, 0);
+    }
+
+    public Clock(Applet applet, int x, int y, Timer timer) {
+        super(applet, x, y, baseWidth, baseHeight);
+        this.timer = timer;
+        this.minD = new Digit(getApplet(), 0, 0);
+        this.minU = new Digit(getApplet(), minD.width, 0);
+        this.secD = new Digit(getApplet(), minD.width + minU.width + 50, 0);
+        this.secU = new Digit(getApplet(), minD.width + minU.width + 50 + secD.width, 0);
     }
 
     public void start() {

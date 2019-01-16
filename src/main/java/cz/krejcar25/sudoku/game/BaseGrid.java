@@ -1,23 +1,19 @@
 package cz.krejcar25.sudoku.game;
 
-import cz.krejcar25.sudoku.*;
+import cz.krejcar25.sudoku.SettingsView;
+import cz.krejcar25.sudoku.SudokuApplet;
 import cz.krejcar25.sudoku.event.ControlClick;
+import cz.krejcar25.sudoku.ui.Applet;
 import cz.krejcar25.sudoku.ui.Clock;
 import cz.krejcar25.sudoku.ui.Drawable;
-import processing.core.*;
+import processing.core.PApplet;
 
 import java.awt.*;
-import java.nio.ByteBuffer;
-import java.nio.IntBuffer;
-import java.util.Base64;
 
 public class BaseGrid extends Drawable {
     GameView view;
 
-    private int sizea;
-    private int sizeb;
     int extraRows;
-    private int baseClues;
 
     private Point newGamePos;
     private Point helpPos;
@@ -37,37 +33,32 @@ public class BaseGrid extends Drawable {
     private ControlClick settingsClick;
     private ControlClick exitClick;
 
-    int[][] game;
-    boolean[][] baseGame;
+    private GridCore core;
     private boolean[][][] notes;
 
-    int selectedx = -1;
-    int selectedy = -1;
     int selectedn = -1;
 
-    private int gameFill;
-    private int gameStroke;
-    private int baseFill;
-    private int neighbourFill;
-    private int thisFill;
-    private int buttonFill;
-    private int buttonStroke;
-    private int flashFillBad;
-    private int flashFillGood;
-    private int darkBgFore;
-    private int lightBgFore;
-    private int blue;
+    final int gameFill;
+    final int gameStroke;
+    final int baseFill;
+    final int neighbourFill;
+    final int thisFill;
+    final int buttonFill;
+    final int buttonStroke;
+    final int flashFillBad;
+    final int flashFillGood;
+    final int darkBgFore;
+    final int lightBgFore;
+    final int blue;
 
-    private FlashSquareList flashSquares;
+    FlashSquareList flashSquares;
     private boolean smallNumbers;
     boolean numFirst;
 
     private boolean finalised;
 
-    private final int cols;
-    private final int rows;
-    protected float sx;
-    protected float sy;
+    protected final float sx;
+    protected final float sy;
 
     Clock gameClock;
 
@@ -80,28 +71,32 @@ public class BaseGrid extends Drawable {
     BaseGrid(GameView parent, GridProperties gridProperties) {
         super(parent.getApplet(), 0, 0, parent.width, parent.height);
         this.view = parent;
-        this.sizea = gridProperties.getSizea();
-        this.sizeb = gridProperties.getSizeb();
+        this.core = new GridCore(gridProperties);
         this.extraRows = gridProperties.getControlRows() + 1;
         this.flashSquares = new FlashSquareList(getApplet());
         smallNumbers = getRootApplet().settings.isDefaultNotes();
         numFirst = getRootApplet().settings.isDefaultNumberFirst();
         finalised = false;
-        setColours();
+
+        gameFill = color(255);
+        gameStroke = color(51);
+        baseFill = color(220);
+        neighbourFill = color(255, 255, 200);
+        thisFill = color(255, 255, 100);
+        buttonFill = color(51);
+        buttonStroke = color(220);
+        flashFillBad = color(255, 200, 200);
+        flashFillGood = color(200, 255, 200);
+        darkBgFore = color(220);
+        lightBgFore = color(51);
+        blue = color(0, 0, 255);
+
         setClicks();
 
-        this.cols = cols();
-        this.rows = rows();
-        this.sx = width / cols;
-        this.sy = height / (rows + extraRows);
+        this.sx = (float) width / core.ncr;
+        this.sy = (float) height / (core.ncr + extraRows);
 
-        game = new int[cols][rows];
-        baseGame = new boolean[cols][rows];
-        notes = new boolean[cols][rows][numbers()];
-
-        for (int y = 0; y < rows; y++)
-            for (int x = 0; x < cols; x++)
-                game[x][y] = -1;
+        notes = new boolean[core.ncr][core.ncr][core.ncr];
 
         newGamePos = gridProperties.getNewGamePos();
         helpPos = gridProperties.getHelpPos();
@@ -142,21 +137,6 @@ public class BaseGrid extends Drawable {
         gear.update();
     }
 
-    private void setColours() {
-        gameFill = color(255);
-        gameStroke = color(51);
-        baseFill = color(220);
-        neighbourFill = color(255, 255, 200);
-        thisFill = color(255, 255, 100);
-        buttonFill = color(51);
-        buttonStroke = color(220);
-        flashFillBad = color(255, 200, 200);
-        flashFillGood = color(200, 255, 200);
-        darkBgFore = color(220);
-        lightBgFore = color(51);
-        blue = color(0, 0, 255);
-    }
-
     private void setClicks() {
         newGameClick = () -> {
             view.newGenerator();
@@ -171,13 +151,12 @@ public class BaseGrid extends Drawable {
         };
         orderToggleClick = () -> {
             numFirst = !numFirst;
-            selectedx = -1;
-            selectedy = -1;
+            core.select(-1, -1);
             selectedn = -1;
         };
         deleteClick = () -> {
             if (numFirst) selectedn = (selectedn == -2) ? -1 : -2;
-            else placeNumber(-2, selectedx, selectedy);
+            else placeNumber(-2, core.getSelectedx(), core.getSelectedy());
         };
         smallNumClick = () -> smallNumbers = !smallNumbers;
         settingsClick = () -> {
@@ -190,30 +169,16 @@ public class BaseGrid extends Drawable {
         };
     }
 
-    public int cols() {
-        return sizea * sizeb;
-    }
-
-    public int rows() {
-        return sizea * sizeb;
-    }
-
-    int numbers() {
-        return sizea * sizeb;
-    }
-
     private void drawBigLines() {
-        int sx = width / cols();
-        int sy = height / (rows() + extraRows);
         push();
         stroke(0);
         strokeWeight(3);
-        for (int i = 1; i < sizeb; i++) {
-            int linex = i * sizea * sx;
+        for (int i = 1; i < core.sizeb; i++) {
+            int linex = Applet.floor(i * core.sizea * sx);
             line(linex, 0, linex, height - extraRows * sy);
         }
-        for (int i = 1; i <= sizea; i++) {
-            int liney = i * sizeb * sy;
+        for (int i = 1; i <= core.sizea; i++) {
+            int liney = Applet.floor(i * core.sizeb * sy);
             line(0, liney, width, liney);
         }
         pop();
@@ -227,7 +192,7 @@ public class BaseGrid extends Drawable {
         if (num > -1) {
             push();
             if (black) fill(lightBgFore);
-            else if (y >= rows()) fill(darkBgFore);
+            else if (y >= core.ncr) fill(darkBgFore);
             else fill(blue);
             drawText(x, y, String.format("%X", num + drawNumberOffset));
             pop();
@@ -240,8 +205,6 @@ public class BaseGrid extends Drawable {
 
     private void drawText(int x, int y, String text) {
         push();
-        int sx = width / cols();
-        int sy = height / (rows() + extraRows);
         translate(x * sx, y * sy);
         translate(sx / 2f, sy / 2f);
         translate(0, -7);
@@ -254,168 +217,77 @@ public class BaseGrid extends Drawable {
 
     private int cellBg(int x, int y) {
         if (flashSquares.contains(x, y)) return flashSquares.colorOf(x, y);
-        else if (x == selectedn && y == rows()) return thisFill;
+        else if (x == selectedn && y == core.ncr) return thisFill;
         else if (x == deletePos.x && y == deletePos.y && selectedn == -2) return thisFill;
-        else if (y < rows() && selectedn != -1 && selectedn != -2 && (selectedn == game[x][y] || (game[x][y] == -1 && notes[x][y][selectedn])))
+        else if (y < core.ncr && selectedn != -1 && selectedn != -2 && (selectedn == core.get(x, y) || (core.get(x, y) == -1 && notes[x][y][selectedn])))
             return neighbourFill;
-        else if (y >= rows()) return buttonFill;
-        else if (x == selectedx && y == selectedy) return thisFill;
-        else if (x < cols() && selectedx > -1 && selectedy > -1 && isRowColSc(x, y)) return neighbourFill;
-        else if (y < rows() && baseGame[x][y]) return baseFill;
+        else if (y >= core.ncr) return buttonFill;
+        else if (x == core.getSelectedx() && y == core.getSelectedy()) return thisFill;
+        else if (x < core.ncr && core.getSelectedx() > -1 && core.getSelectedy() > -1 && core.isRowColSc(x, y))
+            return neighbourFill;
+        else if (y < core.ncr && core.isBaseGame(x, y)) return baseFill;
         else return gameFill;
     }
 
-    boolean isRowCol(int x, int y) {
-        return isRowCol(x, y, -1, -1);
-    }
-
-    private boolean isRowCol(int x, int y, int ofx, int ofy) {
-        return SudokuApplet.xor(x == ((ofx != -1) ? ofx : selectedx), y == ((ofy != -1) ? ofy : selectedy));
-    }
-
-    boolean isSc(int x, int y) {
-        return isSc(x, y, -1, -1);
-    }
-
-    private boolean isSc(float x, float y, float ofx, float ofy) {
-        boolean isScX = PApplet.floor(x / sizea) == PApplet.floor(((ofx != -1) ? ofx : selectedx) / sizea);
-        boolean isScY = PApplet.floor(y / sizeb) == PApplet.floor(((ofy != -1) ? ofy : selectedy) / sizeb);
-
-        return isScX && isScY;
-    }
-
-    private boolean isRowColSc(int x, int y) {
-        return isRowColSc(x, y, -1, -1);
-    }
-
-    private boolean isRowColSc(int x, int y, int ofx, int ofy) {
-        return isRowCol(x, y, ofx, ofy) || isSc(x, y, ofx, ofy);
-    }
-
-    void select(int x, int y) {
-        selectedx = x;
-        selectedy = y;
-    }
-
     void placeNumber(int num, int x, int y) {
-        if (x > -1 && y > -1 && !baseGame[x][y]) {
-            if (num > -1 && canPlaceNumber(num, x, y, 40)) {
+        if (x > -1 && y > -1 && !core.isBaseGame(x, y)) {
+            if (num > -1 && core.canPlaceNumber(num, x, y, 40)) {
                 if (smallNumbers) {
                     notes[x][y][num] = !notes[x][y][num];
                 } else {
-                    game[x][y] = num;
-                    for (int ry = 0; ry < rows(); ry++) {
-                        for (int rx = 0; rx < cols(); rx++) {
-                            if (isRowColSc(rx, ry, x, y)) notes[rx][ry][num] = false;
+                    core.set(x, y, num);
+                    for (int ry = 0; ry < core.ncr; ry++) {
+                        for (int rx = 0; rx < core.ncr; rx++) {
+                            if (core.isRowColSc(rx, ry, x, y)) notes[rx][ry][num] = false;
                         }
                     }
                 }
             } else if (num == -2) {
                 if (smallNumbers) {
-                    for (int i = 0; i < numbers(); i++) {
+                    for (int i = 0; i < core.ncr; i++) {
                         notes[x][y][i] = false;
                     }
                 } else {
-                    game[x][y] = -1;
+                    core.set(x, y, -1);
                 }
             }
         }
-    }
-
-    boolean canPlaceNumber(int num, int atx, int aty, int flashTime) {
-        boolean can = true;
-        for (int y = 0; y < rows(); y++) {
-            for (int x = 0; x < cols(); x++) {
-                if (isRowColSc(x, y, atx, aty) && game[x][y] == num) {
-                    can = false;
-                    if (flashTime > -1) flashSquares.newNow(x, y, flashTime, flashFillBad);
-                }
-            }
-        }
-        return can;
-    }
-
-    void lockAsBase(boolean output, boolean finalise) {
-        baseClues = 0;
-        for (int y = 0; y < rows(); y++) {
-            for (int x = 0; x < cols(); x++) {
-                if (game[x][y] > -1) {
-                    baseGame[x][y] = true;
-                    baseClues++;
-                } else {
-                    baseGame[x][y] = false;
-                }
-            }
-        }
-        if (output) SudokuApplet.println("Clues locked: " + baseClues);
-    }
-
-    @Override
-    public BaseGrid clone() {
-        BaseGrid clone = new BaseGrid(view, gridProperties);
-        clone.baseClues = baseClues;
-        clone.game = new int[clone.cols()][clone.rows()];
-        for (int y = 0; y < clone.rows(); y++) {
-            for (int x = 0; x < clone.cols(); x++) {
-                clone.game[x][y] = game[x][y];
-                clone.baseGame[x][y] = baseGame[x][y];
-                if (clone.numbers() >= 0) System.arraycopy(notes[x][y], 0, clone.notes[x][y], 0, clone.numbers());
-            }
-        }
-        clone.selectedx = selectedx;
-        clone.selectedy = selectedy;
-        clone.selectedn = selectedn;
-
-        clone.flashSquares = flashSquares.clone();
-
-        clone.smallNumbers = smallNumbers;
-        clone.numFirst = numFirst;
-        clone.finalised = finalised;
-
-        return clone;
-    }
-
-    @Override
-    protected void beforeDraw() {
-        setSize(view.width, view.height);
-        this.sx = width / cols;
-        this.sy = height / (rows + extraRows);
     }
 
     @Override
     protected void draw() {
         if (gameClock.isPaused()) gameClock.start();
 
-        int[] counts = new int[numbers()];
+        int[] counts = new int[core.ncr];
 
-        for (int y = 0; y < (rows + extraRows); y++) {
-            for (int x = 0; x < cols; x++) {
+        for (int y = 0; y < (core.ncr + extraRows); y++) {
+            for (int x = 0; x < core.ncr; x++) {
                 push();
-                stroke((y >= rows) ? buttonStroke : gameStroke);
+                stroke((y >= core.ncr) ? buttonStroke : gameStroke);
                 fill(cellBg(x, y));
 
                 rect(x * sx, y * sy, sx, sy);
                 pop();
 
 
-                if (y < rows) {
-                    int thisNum = game[x][y];
+                if (y < core.ncr) {
+                    int thisNum = core.get(x, y);
                     if (thisNum > -1) {
-                        drawNumber(x, y, thisNum, baseGame[x][y]);
+                        drawNumber(x, y, thisNum, core.isBaseGame(x, y));
                         counts[thisNum]++;
                     } else {
                         push();
                         translate(x * sx, y * sy);
-                        int sxs = (int) (sx / sizea);
-                        int sys = (int) (sy / sizeb);
+                        int sxs = (int) (sx / core.sizea);
+                        int sys = (int) (sy / core.sizeb);
                         translate(sxs / 2f, sys / 2f - 3);
                         textSize(sys);
                         textAlign(PApplet.CENTER, PApplet.CENTER);
                         fill(0);
                         strokeWeight(0);
-                        for (int i = 0; i < numbers(); i++) {
+                        for (int i = 0; i < core.ncr; i++) {
                             if (notes[x][y][i])
-                                text(String.format("%X", i + drawNumberOffset), (i % sizea) * sxs, SudokuApplet.floor(((float) i) / sizea) * sys);
+                                text(String.format("%X", i + drawNumberOffset), (i % core.sizea) * sxs, SudokuApplet.floor(((float) i) / core.sizea) * sys);
                         }
                         pop();
                     }
@@ -428,10 +300,10 @@ public class BaseGrid extends Drawable {
 
         boolean allDone = true;
 
-        for (int i = 0; i < numbers(); i++) {
-            drawNumber(i, rows, i, selectedn == i);
+        for (int i = 0; i < core.ncr; i++) {
+            drawNumber(i, core.ncr, i, selectedn == i);
             push();
-            translate(i * sx, rows * sy);
+            translate(i * sx, core.ncr * sy);
             int sxs = (int) (sx / 3);
             int sys = (int) (sy / 3);
             translate(sxs / 2f, sys / 2f - 3);
@@ -440,7 +312,7 @@ public class BaseGrid extends Drawable {
             fill((selectedn == i) ? lightBgFore : darkBgFore);
             strokeWeight(0);
             text(counts[i], 2 * sxs, 0);
-            if (counts[i] < numbers()) allDone = false;
+            if (counts[i] < core.ncr) allDone = false;
             pop();
         }
 
@@ -465,12 +337,12 @@ public class BaseGrid extends Drawable {
             translate(smallNumPos.x * sx, smallNumPos.y * sy);
             strokeWeight(1);
             stroke(220);
-            int sxs = (int) (sx / sizea);
-            int sys = (int) (sy / sizeb);
-            for (int i = 1; i < sizea; i++) {
+            int sxs = (int) (sx / core.sizea);
+            int sys = (int) (sy / core.sizeb);
+            for (int i = 1; i < core.sizea; i++) {
                 line(i * sxs, 0, i * sxs, sy);
             }
-            for (int i = 1; i < sizeb; i++) {
+            for (int i = 1; i < core.sizeb; i++) {
                 line(0, i * sys, sx, i * sys);
             }
             pop();
@@ -514,20 +386,21 @@ public class BaseGrid extends Drawable {
         pop();
     }
 
-    public void click(int x, int y, boolean right) {
-        int cols = cols();
-        int rows = rows();
+    public void click(int mx, int my, boolean right) {
+        int x = PApplet.floor(mx / sx);
+        int y = PApplet.floor(my / sy);
+
         if (right) {
-            if (x < cols && y < rows) {
+            if (x < core.ncr && y < core.ncr) {
                 placeNumber(-2, x, y);
                 return;
             }
         }
 
-        if (y == rows) {
-            if (numFirst && x < rows) selectedn = (selectedn == x) ? -1 : x;
-            else if (x < rows) placeNumber(x, selectedx, selectedy);
-        } else if (y > rows) {
+        if (y == core.ncr) {
+            if (numFirst && x < core.ncr) selectedn = (selectedn == x) ? -1 : x;
+            else if (x < core.ncr) placeNumber(x, core.getSelectedx(), core.getSelectedy());
+        } else if (y > core.ncr) {
             if (x == newGamePos.x && y == newGamePos.y) newGameClick.click();
             else if (x == helpPos.x && y == helpPos.y) helpClick.click();
             else if (x == orderTogglePos.x && y == orderTogglePos.y) orderToggleClick.click();
@@ -537,21 +410,19 @@ public class BaseGrid extends Drawable {
             else if (x == exitPos.x && y == exitPos.y) exitClick.click();
         }
 
-        if (x == selectedx && y == selectedy) {
-            selectedx = -1;
-            selectedy = -1;
-        } else if (x < cols && y < rows) {
+        if (x == core.getSelectedx() && y == core.getSelectedy()) {
+            core.select(-1, -1);
+        } else if (x < core.ncr && y < core.ncr) {
             if (numFirst) {
                 if (selectedn > -1 || selectedn == -2) placeNumber(selectedn, x, y);
             } else {
-                selectedx = x;
-                selectedy = y;
+                core.select(x, y);
             }
         }
     }
 
     public BaseSolver getSolver() {
-        return new BaseSolver(this);
+        return new BaseSolver(core);
     }
 
     public GridDifficulty getGridDifficulty() {
@@ -571,25 +442,16 @@ public class BaseGrid extends Drawable {
     }
 
     public void keyInput(int k) {
-        if (k > (1 - drawNumberOffset) && k < (numbers() + drawNumberOffset)) {
+        if (k > (1 - drawNumberOffset) && k < (core.ncr + drawNumberOffset)) {
             if (numFirst) {
                 selectedn = (selectedn == (k - drawNumberOffset)) ? -1 : (k - drawNumberOffset);
             } else {
-                placeNumber(k - drawNumberOffset, selectedx, selectedy);
+                placeNumber(k - drawNumberOffset, core.getSelectedx(), core.getSelectedy());
             }
         }
     }
 
-    public String getGridString() {
-        int num = numbers();
-
-        ByteBuffer byteBuffer = ByteBuffer.allocate(num+1);
-        IntBuffer intBuffer = byteBuffer.asIntBuffer();
-
-        intBuffer.put(num);
-
-        for (int[] row : game) for (int cell : row) intBuffer.put(cell);
-
-        return Base64.getEncoder().encodeToString(byteBuffer.array());
+    public GridCore getCore() {
+        return core;
     }
 }

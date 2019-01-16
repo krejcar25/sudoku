@@ -11,7 +11,7 @@ class WinOverlay extends BaseOverlay {
     private Clock clock;
 
     WinOverlay(GameView baseView) {
-        super(baseView, PApplet.constrain((baseView.width - 540) / 2, 0, baseView.width - 540), (int) (baseView.getGrid().rows() * baseView.getGrid().getSy() / 2) - 100, PApplet.constrain(baseView.width, 0, 540), 200, OverlayType.OK, (sender) -> {
+        super(baseView, PApplet.constrain((baseView.width - 540) / 2, 0, baseView.width - 540), (int) (baseView.getGrid().getCore().ncr * baseView.getGrid().getSy() / 2) - 100, PApplet.constrain(baseView.width, 0, 540), 200, OverlayType.OK, (sender) -> {
             System.out.println("WinOverlay OK button has received click event, popping");
             baseView.getViewStack().pop(2);
         });

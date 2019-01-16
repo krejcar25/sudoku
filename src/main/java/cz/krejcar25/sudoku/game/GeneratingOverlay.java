@@ -12,7 +12,7 @@ public class GeneratingOverlay extends BaseOverlay {
 
     GeneratingOverlay(DifficultySelectView baseView, GridDifficulty gridDifficulty) {
         super(baseView, 105, 350, 600, 200, OverlayType.Info);
-        this.clock = baseView.gameView.getGenerator().timer;
+        this.clock = new Clock(getApplet(), 0, 0, baseView.gameView.getGenerator().timer);
         this.gridDifficulty = gridDifficulty;
         this.clueCount = baseView.gameView.gridProperties.getClueCount(gridDifficulty);
     }

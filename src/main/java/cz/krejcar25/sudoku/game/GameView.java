@@ -22,13 +22,7 @@ public class GameView extends BaseView {
     @Override
     public void click(int mx, int my, boolean rmb) {
         if (overlay == null) {
-            float sx = PApplet.floor((float) this.width / game.cols());
-            float sy = PApplet.floor((float) this.height / (game.rows() + game.extraRows));
-
-            int x = PApplet.floor(mx / sx);
-            int y = PApplet.floor(my / sy);
-
-            game.click(x, y, parent.mouseButton == PApplet.RIGHT);
+            game.click(mx, my, parent.mouseButton == PApplet.RIGHT);
         } else {
             overlay.click(mx, my, rmb);
         }
@@ -77,7 +71,7 @@ public class GameView extends BaseView {
     }
 
     public void newGenerator() {
-        generator = new BaseGenerator(game);
+        generator = new BaseGenerator(game.getCore());
         game.generator = generator;
     }
 

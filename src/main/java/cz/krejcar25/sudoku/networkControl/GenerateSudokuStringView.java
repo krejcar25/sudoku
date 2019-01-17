@@ -80,23 +80,24 @@ public class GenerateSudokuStringView extends BaseView implements Runnable {
 
     @Override
     public void run() {
+        ArrayList<GridCore> cores = new ArrayList<>();
         for (cycle = 0; cycle < count; cycle++) {
             GridCore core = new GridCore(gridProperties);
             new BaseGenerator(core).generate(gridProperties.getClueCount(GridDifficulty.Easy), false);
             sudokus.add(core.getGridString());
+            cores.add(core);
         }
 
         JFileChooser c = new JFileChooser();
         String extension = ".scs";
         c.addChoosableFileFilter(new FileNameExtensionFilter("Sudoku Core List", extension));
         c.setAcceptAllFileFilterUsed(false);
-        int rVal = c.showSaveDialog(parent.frame);
+        int rVal = c.showSaveDialog(new JFrame());
         if (rVal == JFileChooser.APPROVE_OPTION) {
             File file = c.getSelectedFile();
             String path = file.getAbsolutePath();
 
-            if(!path.endsWith(extension))
-            {
+            if (!path.endsWith(extension)) {
                 file = new File(path + extension);
             }
             try (FileOutputStream out = new FileOutputStream(file)) {
@@ -110,6 +111,7 @@ public class GenerateSudokuStringView extends BaseView implements Runnable {
                 e.printStackTrace();
             }
         }
+        for (GridCore core : cores) System.out.println(core);
         removeFromViewStack();
     }
 }

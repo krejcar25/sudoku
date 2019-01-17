@@ -5,6 +5,7 @@ import processing.core.PApplet;
 
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
+import java.util.Arrays;
 import java.util.Base64;
 
 public class GridCore {
@@ -36,6 +37,31 @@ public class GridCore {
                 grid[x][y] = -1;
                 solvedGrid[x][y] = -1;
             }
+    }
+
+    private GridCore(int ncr, int[][] grid, int[][] solvedGrid) {
+        this.ncr = ncr;
+        this.grid = grid;
+        this.baseGrid = new boolean[ncr][ncr];
+        this.solvedGrid = solvedGrid;
+        lockAsBase(false, true);
+
+        int sizea = -1;
+        int sizeb = -1;
+        GridProperties gridProperties = null;
+
+        for (GridProperties gp : GridProperties.values()) {
+            if (gp.getSizea() * gp.getSizeb() == ncr) {
+                sizea = gp.getSizea();
+                sizeb = gp.getSizeb();
+                gridProperties = gp;
+                break;
+            }
+        }
+
+        this.sizea = sizea;
+        this.sizeb = sizeb;
+        this.gridProperties = gridProperties;
     }
 
     public BaseGrid getOwner() {
@@ -149,6 +175,11 @@ public class GridCore {
         return clone;
     }
 
+    @Override
+    public String toString() {
+        return Arrays.deepToString(grid);
+    }
+
     public String getGridString() {
         ByteBuffer byteBuffer = ByteBuffer.allocate(4 * (2 * ncr * ncr + 1));
         IntBuffer intBuffer = byteBuffer.asIntBuffer();
@@ -159,5 +190,24 @@ public class GridCore {
         for (int[] row : solvedGrid) for (int cell : row) intBuffer.put(cell);
 
         return Base64.getEncoder().encodeToString(byteBuffer.array());
+    }
+
+    public static GridCore fromGridString(String s) {
+        byte[] bytes = Base64.getDecoder().decode(s);
+        ByteBuffer byteBuffer = ByteBuffer.wrap(bytes);
+        IntBuffer intBuffer = byteBuffer.asIntBuffer();
+        int ncr = intBuffer.get(0);
+
+        int[][] grid = new int[ncr][ncr];
+        int[][] solved = new int[ncr][ncr];
+
+        for (int x = 0; x < ncr; x++) {
+            for (int y = 0; y < ncr; y++) {
+                grid[x][y] = intBuffer.get(x * ncr + y + 1);
+                solved[x][y] = intBuffer.get(ncr * ncr + x * ncr + y + 1);
+            }
+        }
+
+        return new GridCore(ncr, grid, solved);
     }
 }

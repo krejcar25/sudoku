@@ -4,6 +4,7 @@ import cz.krejcar25.sudoku.SettingsView;
 import cz.krejcar25.sudoku.SudokuApplet;
 import cz.krejcar25.sudoku.event.ControlClick;
 import cz.krejcar25.sudoku.ui.Applet;
+import cz.krejcar25.sudoku.ui.BaseView;
 import cz.krejcar25.sudoku.ui.Clock;
 import cz.krejcar25.sudoku.ui.Drawable;
 import processing.core.PApplet;
@@ -11,9 +12,9 @@ import processing.core.PApplet;
 import java.awt.*;
 
 public class BaseGrid extends Drawable {
-    GameView view;
+    BaseView view;
 
-    int extraRows;
+    private int extraRows;
 
     private Point newGamePos;
     private Point helpPos;
@@ -36,7 +37,7 @@ public class BaseGrid extends Drawable {
     private GridCore core;
     private boolean[][][] notes;
 
-    int selectedn = -1;
+    private int selectedn = -1;
 
     final int gameFill;
     final int gameStroke;
@@ -53,12 +54,10 @@ public class BaseGrid extends Drawable {
 
     FlashSquareList flashSquares;
     private boolean smallNumbers;
-    boolean numFirst;
+    private boolean numFirst;
 
-    private boolean finalised;
-
-    protected final float sx;
-    protected final float sy;
+    private final float sx;
+    private final float sy;
 
     Clock gameClock;
 
@@ -68,7 +67,7 @@ public class BaseGrid extends Drawable {
 
     Drawable gear;
 
-    BaseGrid(GameView parent, GridProperties gridProperties) {
+    BaseGrid(BaseView parent, GridProperties gridProperties) {
         super(parent.getApplet(), 0, 0, parent.width, parent.height);
         this.view = parent;
         this.core = new GridCore(gridProperties);
@@ -76,7 +75,6 @@ public class BaseGrid extends Drawable {
         this.flashSquares = new FlashSquareList(getApplet());
         smallNumbers = getRootApplet().settings.isDefaultNotes();
         numFirst = getRootApplet().settings.isDefaultNumberFirst();
-        finalised = false;
 
         gameFill = color(255);
         gameStroke = color(51);
@@ -139,9 +137,8 @@ public class BaseGrid extends Drawable {
 
     private void setClicks() {
         newGameClick = () -> {
-            view.newGenerator();
             gameClock = new Clock(getApplet(), gameClock.x, gameClock.y, gridProperties.getName());
-            view.generate(gridDifficulty, getApplet().isKeyPressed(SHIFT));
+            new BaseGenerator(core).generate(gridProperties.getClueCount(gridDifficulty), getApplet().isKeyPressed(SHIFT));
         };
         helpClick = () -> {
             int count = getSolver().countSolutions();
@@ -319,7 +316,7 @@ public class BaseGrid extends Drawable {
         if (allDone && gameClock.isRunning()) {
             gameClock.stop();
             SudokuApplet.println("Solved");
-            view.setOverlay(new WinOverlay(view));
+            view.setOverlay(new WinOverlay(view, this));
         }
 
         push();
@@ -421,8 +418,16 @@ public class BaseGrid extends Drawable {
         }
     }
 
+    public void hideControls() {
+        extraRows = 0;
+    }
+
     public BaseSolver getSolver() {
         return new BaseSolver(core);
+    }
+
+    public GridProperties getGridProperties() {
+        return gridProperties;
     }
 
     public GridDifficulty getGridDifficulty() {

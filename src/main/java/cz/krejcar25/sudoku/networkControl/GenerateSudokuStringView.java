@@ -6,6 +6,10 @@ import cz.krejcar25.sudoku.game.GridDifficulty;
 import cz.krejcar25.sudoku.game.GridProperties;
 import cz.krejcar25.sudoku.ui.Applet;
 import cz.krejcar25.sudoku.ui.BaseView;
+import cz.krejcar25.sudoku.ui.control.Button;
+import cz.krejcar25.sudoku.ui.control.Control;
+import cz.krejcar25.sudoku.ui.style.Color;
+import cz.krejcar25.sudoku.ui.style.Thickness;
 import processing.event.KeyEvent;
 import processing.event.MouseEvent;
 
@@ -20,6 +24,7 @@ public class GenerateSudokuStringView extends BaseView implements Runnable {
     private volatile int cycle;
     private ArrayList<String> sudokus;
     private Thread thread;
+    private ArrayList<Control> controls;
 
     public GenerateSudokuStringView(Applet applet, GridProperties gridProperties, int count) {
         super(applet, 800, 600);
@@ -28,6 +33,8 @@ public class GenerateSudokuStringView extends BaseView implements Runnable {
         this.sudokus = new ArrayList<>();
         this.thread = new Thread(this);
         this.thread.start();
+        this.controls = new ArrayList<>();
+        this.controls.add(Button.getStandardBackButton(this));
     }
 
     @Override
@@ -42,7 +49,7 @@ public class GenerateSudokuStringView extends BaseView implements Runnable {
 
     @Override
     public void click(int mx, int my, boolean rmb) {
-
+        if (!rmb) for (Control control : controls) if (control.isClick(mx, my)) control.click();
     }
 
     @Override
@@ -67,15 +74,30 @@ public class GenerateSudokuStringView extends BaseView implements Runnable {
 
     @Override
     protected void draw() {
+        push();
         background(220);
-        textSize(30);
+        textSize(50);
         fill(51);
-        text("Training", 0, 30);
-        fill(150);
-        noStroke();
-        rect(100, 400, 600, 100);
-        fill(0, 200, 0);
-        rect(105, 405, Applet.map((float) cycle / count, 0, 1, 0, 590), 90);
+        textAlign(CENTER, CENTER);
+
+        if (cycle < count) {
+            text("Generating", width / 2f, 100);
+            fill(150);
+            noStroke();
+            rect(100, 400, 600, 100);
+            fill(0, 200, 0);
+            rect(105, 405, Applet.map((float) cycle / count, 0, 1, 0, 590), 90);
+            fill(51);
+            text(String.format("%d / %d", cycle, count), 400, 450);
+        } else {
+            text("Generation finished", width / 2f, 100);
+        }
+        pop();
+
+        for (Control control : controls) {
+            control.update();
+            image(control, control.x, control.y);
+        }
     }
 
     @Override
@@ -88,30 +110,39 @@ public class GenerateSudokuStringView extends BaseView implements Runnable {
             cores.add(core);
         }
 
-        JFileChooser c = new JFileChooser();
-        String extension = ".scs";
-        c.addChoosableFileFilter(new FileNameExtensionFilter("Sudoku Core List", extension));
-        c.setAcceptAllFileFilterUsed(false);
-        int rVal = c.showSaveDialog(new JFrame());
-        if (rVal == JFileChooser.APPROVE_OPTION) {
-            File file = c.getSelectedFile();
-            String path = file.getAbsolutePath();
-
-            if (!path.endsWith(extension)) {
-                file = new File(path + extension);
-            }
-            try (FileOutputStream out = new FileOutputStream(file)) {
-                BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(out));
-                for (String line : sudokus) {
-                    writer.write(line);
-                    writer.newLine();
-                }
-                writer.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
         for (GridCore core : cores) System.out.println(core);
-        removeFromViewStack();
+        System.out.println("Generation finished...");
+
+        Button button = new Button(this, width / 2, 450, 600, 100, "Save to file", sender -> {
+            JFileChooser c = new JFileChooser();
+            String extension = ".scs";
+            c.addChoosableFileFilter(new FileNameExtensionFilter("Sudoku Core List", extension));
+            c.setAcceptAllFileFilterUsed(false);
+            int rVal = c.showSaveDialog(new JFrame());
+            if (rVal == JFileChooser.APPROVE_OPTION) {
+                File file = c.getSelectedFile();
+                String path = file.getAbsolutePath();
+
+                if (!path.endsWith(extension)) {
+                    file = new File(path + extension);
+                }
+                try (FileOutputStream out = new FileOutputStream(file)) {
+                    BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(out));
+                    for (String line : sudokus) {
+                        writer.write(line);
+                        writer.newLine();
+                    }
+                    writer.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        button.style.borderThickness = new Thickness(5);
+        button.style.border = new Color(150);
+        button.style.background = new Color(0, 200, 0);
+        button.style.foreground = new Color(51);
+
+        this.controls.add(button);
     }
 }

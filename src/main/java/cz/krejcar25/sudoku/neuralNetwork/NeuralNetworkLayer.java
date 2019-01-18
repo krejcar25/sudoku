@@ -1,6 +1,8 @@
 package cz.krejcar25.sudoku.neuralNetwork;
 
-public abstract class NeuralNetworkLayer {
+import java.io.Serializable;
+
+public abstract class NeuralNetworkLayer implements Serializable {
     private NeuralNetwork network;
     private final int inCount;
     private final int nodes;

@@ -2,9 +2,10 @@ package cz.krejcar25.sudoku.neuralNetwork;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.*;
 import java.util.ArrayList;
 
-public class NeuralNetwork {
+public class NeuralNetwork implements Serializable {
     private final int inputCount;
     private int outputCount;
     private int trainCycles = 0;
@@ -86,5 +87,37 @@ public class NeuralNetwork {
 
     public void setLearningRate(double learningRate) {
         this.learningRate = learningRate;
+    }
+
+    public boolean saveToFile(@NotNull String path) {
+        try (ObjectOutputStream stream = new ObjectOutputStream(new FileOutputStream(new File(path)))) {
+            stream.writeObject(this);
+            stream.flush();
+            stream.close();
+            return true;
+        } catch (FileNotFoundException ex) {
+            System.out.println("The specified file could not be found...");
+            return false;
+        } catch (IOException ex) {
+            System.out.println("An exception occurred: " + ex.getMessage());
+            return false;
+        }
+    }
+
+    public static NeuralNetwork loadFromFile(@NotNull String path) {
+        try(ObjectInputStream stream = new ObjectInputStream(new FileInputStream(new File(path)))) {
+            NeuralNetwork neuralNetwork = (NeuralNetwork) stream.readObject();
+            stream.close();
+            return neuralNetwork;
+        } catch (FileNotFoundException ex) {
+            System.out.println("The specified file could not be found...");
+            return null;
+        } catch (IOException ex) {
+            System.out.println("An exception occurred: " + ex.getMessage());
+            return null;
+        } catch (ClassCastException | ClassNotFoundException ex) {
+            System.out.println("This is probably not a NeuralNetwork file.");
+            return null;
+        }
     }
 }

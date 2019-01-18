@@ -3,9 +3,10 @@ package cz.krejcar25.sudoku.neuralNetwork;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.Serializable;
 import java.util.Arrays;
 
-public class DoubleMatrix {
+public class DoubleMatrix implements Serializable {
     private final int rows;
     private final int cols;
     private double[][] values;

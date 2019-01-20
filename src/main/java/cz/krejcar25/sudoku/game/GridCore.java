@@ -1,6 +1,7 @@
 package cz.krejcar25.sudoku.game;
 
 import cz.krejcar25.sudoku.SudokuApplet;
+import cz.krejcar25.sudoku.neuralNetwork.TrainingDataPair;
 import processing.core.PApplet;
 
 import java.nio.ByteBuffer;
@@ -8,7 +9,7 @@ import java.nio.IntBuffer;
 import java.util.Arrays;
 import java.util.Base64;
 
-public class GridCore {
+public class GridCore implements TrainingDataPair {
     public final int sizea;
     public final int sizeb;
     public final int ncr;
@@ -209,5 +210,35 @@ public class GridCore {
         }
 
         return new GridCore(ncr, grid, solved);
+    }
+
+    @Override
+    public int getRequiredInputCount() {
+        return ncr * ncr * ncr;
+    }
+
+    @Override
+    public int getRequiredOutputCount() {
+        return ncr * ncr * ncr;
+    }
+
+    @Override
+    public double[] getInput() {
+        return getBinaryDoublesFromGrid(grid);
+    }
+
+    @Override
+    public double[] getDesiredOutput() {
+        return getBinaryDoublesFromGrid(solvedGrid);
+    }
+
+    private double[] getBinaryDoublesFromGrid(int[][] grid) {
+        double[] out = new double[getRequiredInputCount()];
+        int index = 0;
+        int temp;
+        for (int[] row : grid)
+            for (int cell : row)
+                for (temp = index; index < temp + ncr; index++) out[index] = index % ncr == cell ? 1 : -1;
+        return out;
     }
 }

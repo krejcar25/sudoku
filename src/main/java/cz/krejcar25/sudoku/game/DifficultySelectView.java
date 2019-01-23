@@ -1,14 +1,15 @@
 package cz.krejcar25.sudoku.game;
 
-import cz.krejcar25.sudoku.ui.BaseView;
 import cz.krejcar25.sudoku.SudokuApplet;
+import cz.krejcar25.sudoku.event.ToggleEvents;
+import cz.krejcar25.sudoku.ui.BaseView;
 import cz.krejcar25.sudoku.ui.control.Button;
 import cz.krejcar25.sudoku.ui.control.Checkbox;
 import cz.krejcar25.sudoku.ui.control.Control;
 import cz.krejcar25.sudoku.ui.control.ControlLabel;
-import cz.krejcar25.sudoku.event.ToggleEvents;
 import processing.event.KeyEvent;
 import processing.event.MouseEvent;
+import sun.jvm.hotspot.debugger.DebuggerException;
 
 import java.util.ArrayList;
 
@@ -69,8 +70,10 @@ public class DifficultySelectView extends BaseView {
 
     @Override
     public void click(int mx, int my, boolean rmb) {
-        if (rmb) removeFromViewStack();
-        else for (Control control : controls) if (control.isClick(mx - x, my - y)) control.click();
+        if (rmb) {
+            removeFromViewStack();
+            throw new DebuggerException("This is a test exception thrown in a DifficultySelectView");
+        } else for (Control control : controls) if (control.isClick(mx - x, my - y)) control.click();
     }
 
     @Override

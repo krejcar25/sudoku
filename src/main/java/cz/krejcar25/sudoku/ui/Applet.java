@@ -1,5 +1,9 @@
 package cz.krejcar25.sudoku.ui;
 
+import com.besaba.revonline.pastebinapi.paste.PasteBuilder;
+import com.besaba.revonline.pastebinapi.paste.PasteExpire;
+import com.besaba.revonline.pastebinapi.paste.PasteVisiblity;
+import cz.krejcar25.sudoku.Main;
 import cz.krejcar25.sudoku.SudokuApplet;
 import processing.awt.PSurfaceAWT;
 import processing.core.PApplet;
@@ -9,6 +13,8 @@ import processing.event.MouseEvent;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -40,6 +46,25 @@ public abstract class Applet extends PApplet {
         keysPressed.removeAll(Collections.singletonList(keyEvent.getKey()));
         keyCodesPressed.removeAll(Collections.singletonList(keyEvent.getKeyCode()));
         stack.get().keyUp(keyEvent);
+    }
+
+    @Override
+    public void handleDraw() {
+        try {
+            super.handleDraw();
+        } catch (Exception ex) {
+            // Some shit happened during the render. What do chief?
+            StringWriter sw = new StringWriter();
+            ex.printStackTrace(new PrintWriter(sw));
+            PasteBuilder builder = Main.pastebinFactory.createPaste()
+                    .setTitle("Sudoku exception: " + ex.getMessage())
+                    .setMachineFriendlyLanguage("text")
+                    .setExpire(PasteExpire.Never)
+                    .setVisiblity(PasteVisiblity.Public)
+                    .setRaw(sw.toString());
+            System.out.println("Pasted at: " + Main.pastebin.post(builder.build()).get());
+            exit();
+        }
     }
 
     public boolean isKeyPressed(char key) {

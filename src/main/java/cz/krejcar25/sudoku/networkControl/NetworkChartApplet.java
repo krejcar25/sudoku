@@ -11,12 +11,13 @@ import processing.event.MouseEvent;
 
 public class NetworkChartApplet extends Applet implements ChildApplet {
     private final Applet owner;
+    private final NeuralNetwork network;
     private AppletCloseEvent closeEvent;
 
     public NetworkChartApplet(Applet owner, NeuralNetwork network, AppletCloseEvent closeEvent) {
         this.owner = owner;
         this.closeEvent = closeEvent;
-        this.stack = new ViewStack(new NetworkChartView(this, network));
+        this.network = network;
     }
 
     public Applet getOwner() {
@@ -38,6 +39,7 @@ public class NetworkChartApplet extends Applet implements ChildApplet {
     public void setup() {
         surface.setTitle("Neural Network Control");
         setCloseOnExit(false);
+        this.stack = new ViewStack(new NetworkChartView(this, network));
     }
 
     @Override

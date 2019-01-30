@@ -25,10 +25,11 @@ public class MainMenuView extends BaseView {
         int yDelta = 80;
         int index = 0;
 
-        String[] labels = {"XOR Test", "OR Test", "Generate grids"};
+        String[] labels = {"XOR Test", "OR Test", "RGB Test", "Generate grids", "Train network"};
         ButtonEvents[] buttonEvents = {
                 (sender) -> viewStack.push(new NetworkLearningSimulationView(sender.getApplet(), NetworkLearningSimulatorScenario.XOR, sender.getApplet().isKeyPressed(PConstants.SHIFT))),
                 (sender) -> viewStack.push(new NetworkLearningSimulationView(sender.getApplet(), NetworkLearningSimulatorScenario.OR, sender.getApplet().isKeyPressed(PConstants.SHIFT))),
+                (sender) -> viewStack.push(new NetworkLearningSimulationView(sender.getApplet(), NetworkLearningSimulatorScenario.RGB, sender.getApplet().isKeyPressed(PConstants.SHIFT))),
                 (sender) -> new GeneratorSelectionDialog(((gridProperties, count) -> viewStack.push(new GenerateSudokuStringView(applet, gridProperties, count)))).setVisible(true)
         };
 

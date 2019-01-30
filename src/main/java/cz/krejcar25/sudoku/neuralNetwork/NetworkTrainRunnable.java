@@ -1,10 +1,5 @@
 package cz.krejcar25.sudoku.neuralNetwork;
 
-import javafx.util.Pair;
-
-import java.util.ArrayList;
-import java.util.concurrent.ThreadLocalRandom;
-
 public class NetworkTrainRunnable implements Runnable {
     private volatile boolean runAllowed;
     private volatile boolean shouldPause;
@@ -12,10 +7,10 @@ public class NetworkTrainRunnable implements Runnable {
     private volatile boolean running;
     private NeuralNetwork network;
     private Thread thread;
+    private TrainingDataSet trainingData;
+    private volatile double lastError;
 
-    ArrayList<Pair<double[], double[]>> trainingData;
-
-    public NetworkTrainRunnable(NeuralNetwork network, ArrayList<Pair<double[], double[]>> trainingData) {
+    public NetworkTrainRunnable(NeuralNetwork network, TrainingDataSet trainingData) {
         this.runAllowed = false;
         this.shouldPause = false;
         this.isPaused = false;
@@ -23,19 +18,12 @@ public class NetworkTrainRunnable implements Runnable {
         this.network = network;
         this.trainingData = trainingData;
 
-        for (int i = 0; i < trainingData.size(); i++) {
-            Pair<double[], double[]> pair = trainingData.get(i);
-            if (pair.getKey().length != network.getInputCount() || pair.getValue().length != network.getOutputCount())
-                throw new IllegalArgumentException(
-                        String.format("The input data's length (%d) and output data's length (%d) at index %d must match the network input (%d) and output (%d) node count respectively.",
-                                pair.getKey().length,
-                                pair.getValue().length,
-                                i,
-                                network.getInputCount(),
-                                network.getOutputCount()
-                        )
-                );
-        }
+        if (!trainingData.checkDataDimensions(network.getInputCount(), network.getOutputCount())) throw new IllegalArgumentException(
+                String.format("The input data's length and output data's length must match the network input (%d) and output (%d) node count respectively.",
+                        network.getInputCount(),
+                        network.getOutputCount()
+                )
+        );
 
         this.thread = new Thread(this);
         this.thread.setName("NeuralNetwork-TrainThread");
@@ -56,9 +44,7 @@ public class NetworkTrainRunnable implements Runnable {
                 isPaused = false;
                 running = true;
             } else {
-                int randomElementIndex = ThreadLocalRandom.current().nextInt(trainingData.size()) % trainingData.size();
-                Pair<double[], double[]> train = trainingData.get(randomElementIndex);
-                network.train(train.getKey(), train.getValue());
+                lastError = network.train(trainingData.getRandomPair());
             }
         }
 
@@ -110,5 +96,9 @@ public class NetworkTrainRunnable implements Runnable {
     public void stopAsync() {
         this.runAllowed = false;
         this.shouldPause = false;
+    }
+
+    public double getLastError() {
+        return lastError;
     }
 }

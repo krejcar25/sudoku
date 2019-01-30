@@ -6,6 +6,9 @@ import java.io.*;
 import java.util.ArrayList;
 
 public class NeuralNetwork implements Serializable {
+    public static final String FILETYPE = ".nn";
+    public static final String FILETYPE_DESC = "Neural Network files";
+
     private final int inputCount;
     private int outputCount;
     private int trainCycles = 0;
@@ -36,7 +39,11 @@ public class NeuralNetwork implements Serializable {
         return output;
     }
 
-    public void train(double[] input, double[] desiredOutput) {
+    public double train(TrainingDataPair pair) {
+        return train(pair.getInput(), pair.getDesiredOutput());
+    }
+
+    public double train(double[] input, double[] desiredOutput) {
         DoubleMatrix in = DoubleMatrix.fromArray(input);
         ArrayList<DoubleMatrix> estimates = new ArrayList<>();
         DoubleMatrix estimate = in;
@@ -46,12 +53,24 @@ public class NeuralNetwork implements Serializable {
         }
 
         DoubleMatrix output = estimates.get(estimates.size() - 1);
+        DoubleMatrix absMat = estimate.copy().map(((value, i, j) -> Math.abs(value)));
+
         DoubleMatrix errors = DoubleMatrix.fromArray(desiredOutput).sub(output);
         for (int i = estimates.size() - 1; i >= 0; i--) {
             errors = layers.get(i).train(estimates.get(i), i == 0 ? in : estimates.get(i - 1), errors);
         }
 
         trainCycles++;
+
+        double totalError = 0;
+
+        for (int i = 0; i < absMat.getRows(); i++) {
+            for (int j = 0; j < absMat.getCols(); j++) {
+                totalError+=absMat.get(i,j);
+            }
+        }
+
+        return totalError;
     }
 
     public NeuralNetwork addLayer(NeuralNetworkLayer layer) {

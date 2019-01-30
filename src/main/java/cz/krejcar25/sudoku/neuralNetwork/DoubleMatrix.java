@@ -104,4 +104,12 @@ public class DoubleMatrix implements Serializable {
     public static DoubleMatrix fromArray(@NotNull double... values) {
         return new DoubleMatrix(values.length, 1).map(((value, i, j) -> values[i]));
     }
+
+    public int getRows() {
+        return rows;
+    }
+
+    public int getCols() {
+        return cols;
+    }
 }

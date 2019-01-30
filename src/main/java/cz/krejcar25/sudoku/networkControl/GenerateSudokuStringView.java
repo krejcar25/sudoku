@@ -115,8 +115,8 @@ public class GenerateSudokuStringView extends BaseView implements Runnable {
 
         Button button = new Button(this, width / 2, 450, 600, 100, "Save to file", sender -> {
             JFileChooser c = new JFileChooser();
-            String extension = ".scs";
-            c.addChoosableFileFilter(new FileNameExtensionFilter("Sudoku Core List", extension));
+            String extension = GridCore.FILETYPE;
+            c.addChoosableFileFilter(new FileNameExtensionFilter(GridCore.FILETYPE_DESC, extension));
             c.setAcceptAllFileFilterUsed(false);
             int rVal = c.showSaveDialog(new JFrame());
             if (rVal == JFileChooser.APPROVE_OPTION) {

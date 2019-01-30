@@ -26,21 +26,9 @@ public class NetworkLearningSimulationView extends BaseView {
     public NetworkLearningSimulationView(Applet applet, NetworkLearningSimulatorScenario mode, boolean showChart) {
         super(applet, 800, 800);
         this.network = new NeuralNetwork(new DeepLayer(2, 4, ActivationFunction.SIGMOID));
-        this.network.addLayer(new DeepLayer(4, 2, ActivationFunction.SIGMOID));
-        this.network.addLayer(new DeepLayer(2, 1, ActivationFunction.SIGMOID));
+        this.network.addLayer(new DeepLayer(4, 4, ActivationFunction.SIGMOID));
+        this.network.addLayer(new DeepLayer(4, 3, ActivationFunction.SIGMOID));
 
-
-        /*this.network = new NeuralNetwork(new DeepLayer(2, 50, ActivationFunction.SIGMOID));
-        this.network.addLayer(new DeepLayer(50, 100, ActivationFunction.SIGMOID));
-        this.network.addLayer(new DeepLayer(100, 100, ActivationFunction.SIGMOID));
-        this.network.addLayer(new DeepLayer(100, 100, ActivationFunction.SIGMOID));
-        this.network.addLayer(new DeepLayer(100, 100, ActivationFunction.SIGMOID));
-        this.network.addLayer(new DeepLayer(100, 100, ActivationFunction.SIGMOID));
-        this.network.addLayer(new DeepLayer(100, 100, ActivationFunction.SIGMOID));
-        this.network.addLayer(new DeepLayer(100, 100, ActivationFunction.SIGMOID));
-        this.network.addLayer(new DeepLayer(100, 100, ActivationFunction.SIGMOID));
-        this.network.addLayer(new DeepLayer(100, 50, ActivationFunction.SIGMOID));
-        this.network.addLayer(new DeepLayer(50, 1, ActivationFunction.SIGMOID));*/
         if (showChart) {
             chartApplet = new NetworkChartApplet(applet, network, closedApplet -> {
                 chartApplet = null;
@@ -67,11 +55,16 @@ public class NetworkLearningSimulationView extends BaseView {
                 for (int y = 0; y < tilesY; y++) {
                     for (int x = 0; x < tilesX; x++) {
                         double[] est = network.estimate(new double[]{x / tilesX, y / tilesY});
-                        float bg = PApplet.map((float) est[0], 0, 1, 0, 255);
-                        estimate.fill(bg);
+                        float r = PApplet.map((float) est[0], 0, 1, 0, 255);
+                        float g = PApplet.map((float) est[1], 0, 1, 0, 255);
+                        float b = PApplet.map((float) est[2], 0, 1, 0, 255);
+                        estimate.fill(r, g, b);
                         estimate.rect((float) (x * tileSize), (float) (y * tileSize), (float) (tileSize), (float) (tileSize));
                     }
                 }
+                fill(255, 0, 0);
+                textAlign(RIGHT, BOTTOM);
+                text(String.valueOf(trainRunnable.getLastError()), width, height);
                 estimate.endDraw();
                 if (shouldResume) trainRunnable.resume();
                 drawIndex++;

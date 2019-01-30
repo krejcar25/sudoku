@@ -10,6 +10,9 @@ import java.util.Arrays;
 import java.util.Base64;
 
 public class GridCore implements TrainingDataPair {
+    public static final String FILETYPE = ".scs";
+    public static final String FILETYPE_DESC = "Sudoku Core List files";
+
     public final int sizea;
     public final int sizeb;
     public final int ncr;

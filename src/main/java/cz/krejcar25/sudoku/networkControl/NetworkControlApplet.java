@@ -15,7 +15,6 @@ public class NetworkControlApplet extends Applet implements ChildApplet {
     public NetworkControlApplet(SudokuApplet owner, AppletCloseEvent closeEvent) {
         this.owner = owner;
         this.closeEvent = closeEvent;
-        this.stack = new ViewStack(new MainMenuView(this));
     }
 
     public SudokuApplet getOwner() {
@@ -37,6 +36,7 @@ public class NetworkControlApplet extends Applet implements ChildApplet {
     public void setup() {
         surface.setTitle("Neural Network Control");
         setCloseOnExit(false);
+        this.stack = new ViewStack(new MainMenuView(this));
     }
 
     @Override

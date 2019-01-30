@@ -13,20 +13,20 @@ public class Button extends Control {
 
     public ButtonStyle style;
 
+    private float labelSize;
+
     public Button(BaseView baseView, int centerX, int centerY, int width, int height, String label, ButtonEvents click) {
         super(baseView, centerX - width / 2, centerY - height / 2, width, height);
-        this.label = label;
-        this.click = click;
-
         this.style = new ButtonStyle();
+        setLabel(label);
+        this.click = click;
     }
 
     public Button(Applet applet, int centerX, int centerY, int width, int height, String label, ButtonEvents click) {
         super(applet, centerX - width / 2, centerY - height / 2, width, height);
-        this.label = label;
-        this.click = click;
-
         this.style = new ButtonStyle();
+        setLabel(label);
+        this.click = click;
     }
 
     @Override
@@ -44,7 +44,7 @@ public class Button extends Control {
 
         push();
         fill(style.foreground.r, style.foreground.g, style.foreground.b);
-        textSize(height - style.borderThickness.totalTb());
+        textSize(labelSize);
         textAlign(PApplet.CENTER, PApplet.CENTER);
         translate(width / 2f, height / 2f);
         text(label, 0, -3);
@@ -70,6 +70,21 @@ public class Button extends Control {
     @Contract("_ -> new")
     public static Button getStandardBackButton(BaseView baseView) {
         return new Button(baseView, 30, 15, 60, 30, "Back", sender -> sender.baseView.removeFromViewStack());
+    }
+
+    public void setClick(ButtonEvents click ) {
+        this.click = click;
+    }
+
+    @Override
+    public void setLabel(String label) {
+        float Hb = height - style.borderThickness.totalTb();
+        float Wb = width - style.borderThickness.totalRl();
+        textSize(Hb);
+        float Wt = textWidth(label);
+        if (Wt > Wb) labelSize = Wb * Hb / Wt;
+        else labelSize = Hb;
+        this.label = label;
     }
 }
 

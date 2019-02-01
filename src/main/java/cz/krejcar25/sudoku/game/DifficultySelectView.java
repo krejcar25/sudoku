@@ -9,7 +9,6 @@ import cz.krejcar25.sudoku.ui.control.Control;
 import cz.krejcar25.sudoku.ui.control.ControlLabel;
 import processing.event.KeyEvent;
 import processing.event.MouseEvent;
-import sun.jvm.hotspot.debugger.DebuggerException;
 
 import java.util.ArrayList;
 
@@ -72,7 +71,7 @@ public class DifficultySelectView extends BaseView {
     public void click(int mx, int my, boolean rmb) {
         if (rmb) {
             removeFromViewStack();
-            throw new DebuggerException("This is a test exception thrown in a DifficultySelectView");
+            throw new RuntimeException("This is a test exception thrown in a DifficultySelectView");
         } else for (Control control : controls) if (control.isClick(mx - x, my - y)) control.click();
     }
 

@@ -1,7 +1,7 @@
 package cz.krejcar25.sudoku.game;
 
-import cz.krejcar25.sudoku.ui.Clock;
 import cz.krejcar25.sudoku.SudokuApplet;
+import cz.krejcar25.sudoku.ui.Clock;
 import processing.core.PApplet;
 
 import java.awt.*;
@@ -127,6 +127,8 @@ class BaseGenerator implements Runnable {
         game.lockAsBase(true, true);
         timer.stop();
         PApplet.println("Generation finished in " + timer.getTimer().getElapsedTimeSecs() + " seconds (" + timer.getTimer().getElapsedTime() + " milliseconds, to be precise)");
+        DirectSolver arbiter = new DirectSolver(game);
+        PApplet.println("The assessed difficulty is " + arbiter.getDifficulty());
         gameView.getApplet().frameRate(60);
         gameView.generator = null;
         game.gameClock.start();

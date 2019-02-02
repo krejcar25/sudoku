@@ -1,18 +1,19 @@
 package cz.krejcar25.sudoku.game;
 
-import cz.krejcar25.sudoku.*;
+import cz.krejcar25.sudoku.SettingsView;
+import cz.krejcar25.sudoku.SudokuApplet;
 import cz.krejcar25.sudoku.event.ControlClick;
 import cz.krejcar25.sudoku.ui.Clock;
 import cz.krejcar25.sudoku.ui.Drawable;
-import processing.core.*;
+import processing.core.PApplet;
 
 import java.awt.*;
 
 public class BaseGrid extends Drawable {
     GameView view;
 
-    private int sizea;
-    private int sizeb;
+    int sizea;
+    int sizeb;
     int extraRows;
     private int baseClues;
 

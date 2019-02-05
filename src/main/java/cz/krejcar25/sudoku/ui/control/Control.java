@@ -10,12 +10,12 @@ public abstract class Control extends Drawable {
     protected String tooltip;
     protected String label;
 
-    protected Control(BaseView baseView, int x, int y, int width, int height) {
+    protected Control(BaseView baseView, float x, float y, int width, int height) {
         super(baseView.getApplet(), x, y, width, height);
         this.baseView = baseView;
     }
 
-    protected Control(Applet applet, int x, int y, int width, int height) {
+    protected Control(Applet applet, float x, float y, int width, int height) {
         super(applet, x, y, width, height);
         this.baseView = null;
     }
@@ -34,6 +34,10 @@ public abstract class Control extends Drawable {
 
     public void setTooltip(String tooltip) {
         this.tooltip = tooltip;
+    }
+
+    public final boolean isClick(float mx, float my) {
+        return isClick((int) mx, (int) my);
     }
 
     public abstract boolean isClick(int mx, int my);

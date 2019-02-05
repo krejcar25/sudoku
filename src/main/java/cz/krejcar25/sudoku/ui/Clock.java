@@ -13,7 +13,7 @@ public class Clock extends Drawable {
     private Digit secD;
     private Digit secU;
 
-    public Clock(Applet applet, int x, int y, String name) {
+    public Clock(Applet applet, float x, float y, String name) {
         super(applet, x, y, baseWidth, baseHeight);
         this.timer = new Timer(name);
         this.minD = new Digit(getApplet(), 0, 0);
@@ -22,7 +22,7 @@ public class Clock extends Drawable {
         this.secU = new Digit(getApplet(), minD.width + minU.width + 50 + secD.width, 0);
     }
 
-    public Clock(Applet applet, int x, int y, Timer timer) {
+    public Clock(Applet applet, float x, float y, Timer timer) {
         super(applet, x, y, baseWidth, baseHeight);
         this.timer = timer;
         this.minD = new Digit(getApplet(), 0, 0);

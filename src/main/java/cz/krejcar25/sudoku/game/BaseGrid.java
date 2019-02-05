@@ -59,18 +59,20 @@ public class BaseGrid extends Drawable {
     private final float sx;
     private final float sy;
 
-    Clock gameClock;
+    private Clock gameClock;
 
-    BaseGenerator generator;
+    volatile BaseGenerator generator;
+    volatile boolean shouldUpdateGrid = true;
 
     GridDifficulty gridDifficulty;
 
-    Drawable gear;
+    private Drawable gear;
 
     BaseGrid(BaseView parent, GridProperties gridProperties) {
         super(parent.getApplet(), 0, 0, parent.width, parent.height);
         this.view = parent;
         this.core = new GridCore(gridProperties);
+        this.core.setOwner(this);
         this.extraRows = gridProperties.getControlRows() + 1;
         this.flashSquares = new FlashSquareList(getApplet());
         smallNumbers = getRootApplet().settings.isDefaultNotes();
@@ -138,7 +140,17 @@ public class BaseGrid extends Drawable {
     private void setClicks() {
         newGameClick = () -> {
             gameClock = new Clock(getApplet(), gameClock.x, gameClock.y, gridProperties.getName());
-            new BaseGenerator(core).generate(gridProperties.getClueCount(gridDifficulty), getApplet().isKeyPressed(SHIFT));
+
+            generator = new BaseGenerator(core);
+            if (view instanceof GameView) view.setOverlay(new GeneratingOverlay((GameView) view, gridDifficulty));
+            if (!getApplet().isKeyPressed(Applet.SHIFT)) shouldUpdateGrid = false;
+            Thread t = new Thread(() -> {
+                generator.generate(gridProperties.getClueCount(gridDifficulty), false);
+                view.setOverlay(null);
+                shouldUpdateGrid = true;
+            });
+            t.start();
+
         };
         helpClick = () -> {
             int count = getSolver().countSolutions();

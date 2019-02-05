@@ -1,8 +1,8 @@
 package cz.krejcar25.sudoku.ui.control;
 
+import cz.krejcar25.sudoku.event.ButtonEvents;
 import cz.krejcar25.sudoku.ui.Applet;
 import cz.krejcar25.sudoku.ui.BaseView;
-import cz.krejcar25.sudoku.event.ButtonEvents;
 import cz.krejcar25.sudoku.ui.style.ButtonStyle;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -54,9 +54,9 @@ public class Button extends Control {
 
     @Override
     public boolean isClick(int mx, int my) {
-        int right = (this.x + width);
+        float right = (this.x + width);
         boolean hor = this.x < mx && mx < right;
-        int bottom = (this.y + this.height);
+        float bottom = (this.y + this.height);
         boolean ver = this.y < my && my < bottom;
         return hor && ver;
     }

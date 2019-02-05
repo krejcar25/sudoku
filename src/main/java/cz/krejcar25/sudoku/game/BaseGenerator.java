@@ -2,13 +2,14 @@ package cz.krejcar25.sudoku.game;
 
 import cz.krejcar25.sudoku.SudokuApplet;
 import cz.krejcar25.sudoku.Timer;
-import cz.krejcar25.sudoku.ui.Applet;
 import processing.core.PApplet;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class BaseGenerator implements Runnable {
+    private static final Random random = new Random();
     private ArrayList<ArrayList<ArrayList<Integer>>> numbers;
     private boolean used;
     GridCore core;
@@ -47,6 +48,8 @@ public class BaseGenerator implements Runnable {
         if (used) return;
         used = true;
 
+        timer.start();
+
         int gx = 0;
         int gy = 0;
 
@@ -60,12 +63,16 @@ public class BaseGenerator implements Runnable {
 
         do {
             if (available(gx, gy)) {
-                int n = Applet.floor(Applet.map((float) Math.random(), 0, 1, 0, numbers.get(gx).get(gy).size()));
-                if (core.canPlaceNumber(numbers.get(gx).get(gy).get(n), gx, gy, -1)) {
-                    core.set(gx, gy, numbers.get(gx).get(gy).get(n));
-                    gx++;
-                } else {
-                    numbers.get(gx).get(gy).remove(n);
+                int n = random.nextInt(numbers.get(gx).get(gy).size());
+                try {
+                    if (core.canPlaceNumber(numbers.get(gx).get(gy).get(n), gx, gy, -1)) {
+                        core.set(gx, gy, numbers.get(gx).get(gy).get(n));
+                        gx++;
+                    } else {
+                        numbers.get(gx).get(gy).remove(n);
+                    }
+                } catch (IndexOutOfBoundsException ex) {
+                    if (core.getOwner() != null) core.getOwner().view.removeFromViewStack();
                 }
             } else {
                 replenish(gx, gy);
@@ -124,7 +131,7 @@ public class BaseGenerator implements Runnable {
         core.lockAsBase(true, true);
         timer.stop();
         PApplet.println("Generation finished in " + timer.getElapsedTimeSecs() + " seconds (" + timer.getElapsedTime() + " milliseconds, to be precise)");
-        if (core.getOwner()!=null) core.getOwner().getGameClock().start();
+        if (core.getOwner() != null) core.getOwner().getGameClock().start();
     }
 
     private boolean available(int x, int y) {

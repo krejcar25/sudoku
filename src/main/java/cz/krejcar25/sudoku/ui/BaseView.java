@@ -7,7 +7,7 @@ import processing.event.MouseEvent;
 
 public abstract class BaseView extends Drawable {
     protected ViewStack viewStack;
-    protected BaseOverlay overlay;
+    protected volatile BaseOverlay overlay;
     protected MouseButton mouseButton = MouseButton.None;
 
     public BaseView(Applet applet) {
@@ -23,6 +23,10 @@ public abstract class BaseView extends Drawable {
         mouseDown(mouseEvent.getX() - x, mouseEvent.getY() - y, mouseEvent.getButton() == RIGHT);
     }
 
+    public final void mouseDown(float mx, float my, boolean rmb) {
+        mouseDown((int) mx, (int) my, rmb);
+    }
+
     public abstract void mouseDown(int mx, int my, boolean rmb);
 
     public final void mouseReleased(@NotNull MouseEvent mouseEvent) {
@@ -30,10 +34,18 @@ public abstract class BaseView extends Drawable {
         mouseUp(mouseEvent.getX() - x, mouseEvent.getY() - y, mouseEvent.getButton() == RIGHT);
     }
 
+    public final void mouseUp(float mx, float my, boolean rmb) {
+        mouseUp((int) mx, (int) my, rmb);
+    }
+
     public abstract void mouseUp(int mx, int my, boolean rmb);
 
     public final void mouseClicked(@NotNull MouseEvent mouseEvent) {
         click(mouseEvent.getX() - x, mouseEvent.getY() - y, mouseEvent.getButton() == RIGHT);
+    }
+
+    public final void click(float mx, float my, boolean rmb) {
+        click((int) mx, (int) my, rmb);
     }
 
     public abstract void click(int mx, int my, boolean rmb);

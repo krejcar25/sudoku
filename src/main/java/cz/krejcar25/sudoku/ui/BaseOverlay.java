@@ -10,7 +10,7 @@ public abstract class BaseOverlay extends Drawable {
     protected OverlayResult result;
     protected ArrayList<Button> buttons;
 
-    protected BaseOverlay(BaseView baseView, int x, int y, int width, int height, OverlayType type, ButtonEvents... clicks) {
+    protected BaseOverlay(BaseView baseView, float x, float y, int width, int height, OverlayType type, ButtonEvents... clicks) {
         super(baseView.getApplet(), x, y, width, height);
         this.baseView = baseView;
         this.result = OverlayResult.None;
@@ -45,6 +45,10 @@ public abstract class BaseOverlay extends Drawable {
     }
 
     public abstract OverlayResult getResult();
+
+    public final void click(float mx, float my, boolean rmb) {
+        click((int) mx, (int) my, rmb);
+    }
 
     public abstract void click(int mx, int my, boolean rmb);
 }

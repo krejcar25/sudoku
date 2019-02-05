@@ -4,14 +4,14 @@ import cz.krejcar25.sudoku.SudokuApplet;
 import processing.awt.PGraphicsJava2D;
 
 public abstract class Drawable extends PGraphicsJava2D {
-    public int x;
-    public int y;
+    public float x;
+    public float y;
     private boolean resizable = false;
     private int widthLimit = -1;
     private int heightLimit = -1;
 
 
-    public Drawable(Applet applet, int x, int y, int width, int height) {
+    public Drawable(Applet applet, float x, float y, int width, int height) {
         this.x = x;
         this.y = y;
         setParent(applet);

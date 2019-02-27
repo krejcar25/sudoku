@@ -9,13 +9,20 @@ import processing.core.PApplet;
 public class DrawableGridCore extends Drawable
 {
 	private final GridCore core;
+	private final GridCore solvedCore;
 	private float sx, sy;
 	private boolean showSolved;
 
 	public DrawableGridCore(Applet applet, float x, float y, int width, int height, @NotNull GridCore core)
 	{
+		this(applet, x, y, width, height, core, null);
+	}
+
+	public DrawableGridCore(Applet applet, float x, float y, int width, int height, @NotNull GridCore core, GridCore solvedCore)
+	{
 		super(applet, x, y, width, height);
 		this.core = core;
+		this.solvedCore = solvedCore;
 		this.sx = (float) width / core.ncr;
 		this.sy = (float) height / core.ncr;
 		this.showSolved = false;
@@ -31,6 +38,11 @@ public class DrawableGridCore extends Drawable
 		return this.showSolved;
 	}
 
+	public GridCore getCore()
+	{
+		return core;
+	}
+
 	@Override
 	protected void draw()
 	{
@@ -40,7 +52,7 @@ public class DrawableGridCore extends Drawable
 			{
 				push();
 				stroke(51);
-				fill(255);
+				fill(core.isBaseGame(x, y) ? 220 : 255);
 
 				rect(x * sx, y * sy, sx, sy);
 				pop();
@@ -50,8 +62,14 @@ public class DrawableGridCore extends Drawable
 				if (thisNum > -1)
 				{
 					push();
-					if (core.isBaseGame(x, y)) fill(0, 0, 255);
-					else fill(51);
+					if (core.isBaseGame(x, y)) fill(51);
+					else if (solvedCore != null)
+					{
+						if (core.get(x, y) == solvedCore.getSolved(x, y)) fill(0, 255, 0);
+						else fill(255, 0, 0);
+					}
+					else fill(0, 0, 255);
+
 					translate(x * sx, y * sy);
 					translate(sx / 2f, sy / 2f);
 					translate(0, -7);

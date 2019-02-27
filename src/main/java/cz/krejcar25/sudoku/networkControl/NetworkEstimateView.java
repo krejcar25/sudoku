@@ -33,7 +33,6 @@ public class NetworkEstimateView extends BaseView
 	private int guessIndex;
 	private ArrayList<Control> controls;
 	private Map<NavigationDirection, Button<NavigationDirection>> navigationButtons;
-	private NeuralNetwork network;
 	private GridCore intermediate;
 
 	public NetworkEstimateView(Applet applet, GridCore base, NeuralNetwork network)
@@ -43,9 +42,8 @@ public class NetworkEstimateView extends BaseView
 		this.guesses = new ArrayList<>();
 		this.controls = new ArrayList<>();
 		this.navigationButtons = new HashMap<>();
-		this.network = network;
 
-		this.guesses.add(new DrawableGridCore(applet, gridWidth, topBarHeight, gridWidth, gridHeight, base));
+		this.guesses.add(new DrawableGridCore(applet, gridWidth, topBarHeight, gridWidth, gridHeight, base, base));
 		this.guessIndex = 0;
 
 		int bc = NavigationDirection.values().length; // button count
@@ -79,6 +77,32 @@ public class NetworkEstimateView extends BaseView
 		}
 
 		intermediate = base.clone();
+
+		while (!this.intermediate.isFinished())
+		{
+			NetworkOutputStore store = new NetworkOutputStore(network.estimate(this.intermediate.getInput()));
+			int placeIndex = 0;
+			NetworkOutputStore.GridCell top;
+			boolean canPlaceNumber;
+			boolean isEmpty;
+			top = store.getTop(placeIndex);
+			canPlaceNumber = this.intermediate.canPlaceNumber(top.n, top.x, top.y, -1);
+			isEmpty = this.intermediate.get(top.x, top.y) == -1;
+			placeIndex++;
+
+			while ((!canPlaceNumber || !isEmpty) && placeIndex < store.size())
+			{
+				top = store.getTop(placeIndex);
+				canPlaceNumber = this.intermediate.canPlaceNumber(top.n, top.x, top.y, -1);
+				isEmpty = this.intermediate.get(top.x, top.y) == -1;
+				placeIndex++;
+			}
+
+			if (placeIndex == store.size()) break;
+			this.intermediate.set(top.x, top.y, top.n);
+			DrawableGridCore newGuess = new DrawableGridCore(getApplet(), gridWidth, topBarHeight, gridWidth, gridHeight, intermediate.clone(), base);
+			this.guesses.add(newGuess);
+		}
 
 		int solvedToggleSize = bottomBarHeight;
 		ControlLabel solvedToggleLabel = new ControlLabel(new Toggle(this, (gridWidth - solvedToggleSize) / 2, topBarHeight + gridHeight, 2 * solvedToggleSize, solvedToggleSize, new ToggleEvents()
@@ -132,21 +156,9 @@ public class NetworkEstimateView extends BaseView
 			case Next:
 				if (this.guessIndex + 1 < guesses.size())
 				{
-					if (++this.guessIndex + 1 >= guesses.size() && intermediate.isFinished())
+					if (++this.guessIndex + 1 >= guesses.size())
 						this.navigationButtons.get(NavigationDirection.Next).setEnabled(false);
 					this.navigationButtons.get(NavigationDirection.Previous).setEnabled(true);
-				}
-				else if (!intermediate.isFinished())
-				{
-					NetworkOutputStore store = new NetworkOutputStore(network.estimate(intermediate.getInput()));
-					int placeIndex = 0;
-					NetworkOutputStore.GridCell top;
-					do top = store.getTop(placeIndex++);
-					while ((!intermediate.canPlaceNumber(top.n, top.x, top.y, -1) || intermediate.get(top.x, top.y) != -1) && placeIndex < store.size());
-					if (placeIndex == store.size()) break;
-					intermediate.set(top.x, top.y, top.n);
-					this.guesses.add(new DrawableGridCore(getApplet(), gridWidth, topBarHeight, gridWidth, gridHeight, intermediate.clone()));
-					navigate(direction);
 				}
 				break;
 			case Last:
@@ -213,6 +225,14 @@ public class NetworkEstimateView extends BaseView
 		image(guess, guess.x, guess.y);
 
 		push();
+		fill(255, 0, 0);
+		noStroke();
+		textAlign(RIGHT, TOP);
+		textSize(topBarHeight);
+		text(getApplet().frameRate, width, 0);
+		pop();
+
+		push();
 		stroke(0);
 		strokeWeight(5);
 		line(gridWidth, topBarHeight, gridWidth, topBarHeight + gridHeight);
@@ -259,7 +279,7 @@ public class NetworkEstimateView extends BaseView
 					for (int y = 0; y < ncr; y++)
 						for (int n = 0; n < ncr; n++)
 							this.cells.add(new GridCell(x, y, n, doubles[n + ncr * (y + ncr * x)]));
-				cells.sort(((o1, o2) -> (int) Math.ceil(o1.getValue() - o2.getValue())));
+				cells.sort(((o1, o2) -> (int) Math.signum(o1.getValue() - o2.getValue())));
 
 			}
 			else throw new IllegalArgumentException("The size of the doubles array is not an integer cube.");

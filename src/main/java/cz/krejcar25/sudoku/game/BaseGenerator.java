@@ -113,7 +113,7 @@ public class BaseGenerator implements Runnable {
                 int mirror = core.get(ox, oy);
                 core.set(x, y, -1);
                 core.set(ox, oy, -1);
-                core.lockAsBase(false, false);
+	            //core.lockAsBase(false, false);
                 int solutions = new BaseSolver(core).countSolutions();
                 if (solutions > 1) {
                     core.set(x, y, cell);

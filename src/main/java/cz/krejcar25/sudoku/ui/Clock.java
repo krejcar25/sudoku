@@ -12,6 +12,8 @@ public class Clock extends Drawable {
     private Digit minU;
     private Digit secD;
     private Digit secU;
+	private float displayWidth = baseWidth;
+	private float displayHeight = baseHeight;
 
     public Clock(Applet applet, float x, float y, String name) {
         super(applet, x, y, baseWidth, baseHeight);
@@ -51,12 +53,36 @@ public class Clock extends Drawable {
         return timer.isRunning();
     }
 
-    public static float getWidthFromHeight(float y) {
-        return y * baseWidth / baseHeight;
+	public void setDisplayWidthWithHeight(float height)
+	{
+		this.displayWidth = getWidthFromHeight(height);
+		this.displayHeight = height;
+	}
+
+	public void setDisplayHeightWithWidth(float width)
+	{
+		this.displayWidth = width;
+		this.displayHeight = getHeightFromWidth(width);
+	}
+
+	public float getDisplayWidth()
+	{
+		return displayWidth;
+	}
+
+	public float getDisplayHeight()
+	{
+		return displayHeight;
+	}
+
+	private static float getWidthFromHeight(float height)
+	{
+		return height * baseWidth / baseHeight;
     }
 
-    public static float getHeightFromWidth(float x) {
-        return x * baseHeight / baseWidth;
+	private static float getHeightFromWidth(float width)
+	{
+		return width * baseHeight / baseWidth;
     }
 
     public Timer getTimer() {

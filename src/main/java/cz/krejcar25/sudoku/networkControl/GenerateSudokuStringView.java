@@ -15,24 +15,29 @@ import processing.event.MouseEvent;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import java.awt.*;
 import java.io.*;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class GenerateSudokuStringView extends BaseView implements Runnable {
     private final GridProperties gridProperties;
+	private final GridDifficulty gridDifficulty;
     private final int count;
-    private volatile int cycle;
+	private volatile AtomicInteger cycle = new AtomicInteger(0);
     private ArrayList<String> sudokus;
-    private Thread thread;
     private ArrayList<Control> controls;
 
-    public GenerateSudokuStringView(Applet applet, GridProperties gridProperties, int count) {
+	GenerateSudokuStringView(Applet applet, GridProperties gridProperties, GridDifficulty gridDifficulty, int count)
+	{
         super(applet, 800, 600);
         this.gridProperties = gridProperties;
+		this.gridDifficulty = gridDifficulty;
         this.count = count;
         this.sudokus = new ArrayList<>();
-        this.thread = new Thread(this);
-        this.thread.start();
+		Thread thread = new Thread(this);
+		thread.start();
         this.controls = new ArrayList<>();
         this.controls.add(Button.getStandardBackButton(this));
     }
@@ -80,15 +85,16 @@ public class GenerateSudokuStringView extends BaseView implements Runnable {
         fill(51);
         textAlign(CENTER, CENTER);
 
-        if (cycle < count) {
+	    if (cycle.get() < count)
+	    {
             text("Generating", width / 2f, 100);
             fill(150);
             noStroke();
             rect(100, 400, 600, 100);
             fill(0, 200, 0);
-            rect(105, 405, Applet.map((float) cycle / count, 0, 1, 0, 590), 90);
+		    rect(105, 405, Applet.map(cycle.floatValue() / count, 0, 1, 0, 590), 90);
             fill(51);
-            text(String.format("%d / %d", cycle, count), 400, 450);
+		    text(String.format("%d / %d", cycle.get(), count), 400, 450);
         } else {
             text("Generation finished", width / 2f, 100);
         }
@@ -100,10 +106,13 @@ public class GenerateSudokuStringView extends BaseView implements Runnable {
         }
     }
 
+	private int rVal;
+
     @Override
     public void run() {
         ArrayList<GridCore> cores = new ArrayList<>();
-        for (cycle = 0; cycle < count; cycle++) {
+	    for (cycle.set(0); cycle.get() < count; cycle.getAndIncrement())
+	    {
             GridCore core = new GridCore(gridProperties);
             new BaseGenerator(core).generate(gridProperties.getClueCount(GridDifficulty.Easy), false);
             sudokus.add(core.getGridString());
@@ -113,18 +122,26 @@ public class GenerateSudokuStringView extends BaseView implements Runnable {
         for (GridCore core : cores) System.out.println(core);
         System.out.println("Generation finished...");
 
-        Button button = new Button(this, width / 2, 450, 600, 100, "Save to file", sender -> {
+	    Button button = new Button<>(this, width / 2f, 450, 600, 100, "Save to file", sender ->
+	    {
             JFileChooser c = new JFileChooser();
             String extension = GridCore.FILETYPE;
             c.addChoosableFileFilter(new FileNameExtensionFilter(GridCore.FILETYPE_DESC, extension));
             c.setAcceptAllFileFilterUsed(false);
-            int rVal = c.showSaveDialog(new JFrame());
+		    try
+		    {
+			    EventQueue.invokeAndWait(() -> rVal = c.showSaveDialog(null));
+		    }
+		    catch (InterruptedException | InvocationTargetException e)
+		    {
+			    e.printStackTrace();
+		    }
             if (rVal == JFileChooser.APPROVE_OPTION) {
                 File file = c.getSelectedFile();
                 String path = file.getAbsolutePath();
 
                 if (!path.endsWith(extension)) {
-                    file = new File(path + extension);
+	                file = new File(path + "." + extension);
                 }
                 try (FileOutputStream out = new FileOutputStream(file)) {
                     BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(out));

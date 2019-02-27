@@ -17,7 +17,7 @@ void setup() {
   pop();
   
   stack = new ViewStack(new MainMenuView());
-  BaseView v = stack.get();
+  BaseView value = stack.get();
   loadImages();
 }
 

@@ -1,18 +1,21 @@
 package cz.krejcar25.sudoku.networkControl;
 
+import cz.krejcar25.sudoku.game.GridDifficulty;
 import cz.krejcar25.sudoku.game.GridProperties;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.*;
 
-public class GeneratorSelectionDialog extends JDialog implements ActionListener {
+public class GeneratorSelectionDialog extends JDialog
+{
     private JPanel contentPane;
     private JButton buttonOK;
     private JButton buttonCancel;
     private JSpinner countSpinner;
-    private JPanel selectionPanel;
-    private GridProperties selectedProp;
+	private JComboBox<GridProperties> sizeComboBox;
+	private DefaultComboBoxModel<GridProperties> sizeComboBoxModel;
+	private JComboBox<GridDifficulty> difficultyComboBox;
+	private DefaultComboBoxModel<GridDifficulty> difficultyComboBoxModel;
     private CreateGenerationViewAction createGenerationViewAction;
 
     public GeneratorSelectionDialog(CreateGenerationViewAction createGenerationViewAction) {
@@ -49,43 +52,27 @@ public class GeneratorSelectionDialog extends JDialog implements ActionListener 
         }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 
         setTitle("Generator selection");
-        selectionPanel.setLayout(new GridLayout(GridProperties.values().length, 1));
-        ButtonGroup group = new ButtonGroup();
-        boolean selected = false;
-        for (GridProperties gp : GridProperties.values()) {
-            JRadioButton radio = new JRadioButton(gp.getName());
-            radio.setActionCommand(gp.getName());
-            radio.addActionListener(this);
-            if (!selected) {
-                radio.setSelected(true);
-                this.selectedProp = gp;
-                selected = true;
-            }
-            selectionPanel.add(radio);
-            group.add(radio);
-        }
+
+	    sizeComboBoxModel = new DefaultComboBoxModel<>();
+	    for (GridProperties gp : GridProperties.values()) sizeComboBoxModel.addElement(gp);
+	    sizeComboBox.setModel(sizeComboBoxModel);
+
+	    difficultyComboBoxModel = new DefaultComboBoxModel<>();
+	    for (GridDifficulty gd : GridDifficulty.values()) if (gd.isSelectable()) difficultyComboBoxModel.addElement(gd);
+	    difficultyComboBox.setModel(difficultyComboBoxModel);
+
         countSpinner.setValue(10);
 
         pack();
     }
 
     private void onOK() {
-        createGenerationViewAction.create(selectedProp, Integer.parseInt(countSpinner.getValue().toString()));
+	    createGenerationViewAction.create(sizeComboBoxModel.getElementAt(sizeComboBox.getSelectedIndex()), difficultyComboBoxModel.getElementAt(difficultyComboBox.getSelectedIndex()), Integer.parseInt(countSpinner.getValue().toString()));
         dispose();
     }
 
     private void onCancel() {
         // add your code here if necessary
         dispose();
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        for (GridProperties gp : GridProperties.values()) {
-            if (e.getActionCommand().equals(gp.getName())) {
-                selectedProp = gp;
-                return;
-            }
-        }
     }
 }

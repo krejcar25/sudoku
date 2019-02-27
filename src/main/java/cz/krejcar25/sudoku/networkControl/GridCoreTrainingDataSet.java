@@ -1,12 +1,12 @@
 package cz.krejcar25.sudoku.networkControl;
 
 import cz.krejcar25.sudoku.game.GridCore;
-import cz.krejcar25.sudoku.neuralNetwork.TrainingDataPair;
 import cz.krejcar25.sudoku.neuralNetwork.TrainingDataSet;
 
 import java.util.ArrayList;
 
-public class GridCoreTrainingDataSet implements TrainingDataSet {
+public class GridCoreTrainingDataSet implements TrainingDataSet<GridCore>
+{
     private ArrayList<GridCore> cores;
 
     public GridCoreTrainingDataSet() {
@@ -22,12 +22,14 @@ public class GridCoreTrainingDataSet implements TrainingDataSet {
     }
 
     @Override
-    public TrainingDataPair[] getAllData() {
-        return new TrainingDataPair[0];
+    public GridCore[] getAllData()
+    {
+	    return cores.toArray(new GridCore[cores.size()]);
     }
 
     @Override
-    public TrainingDataPair getRandomPair() {
+    public GridCore getRandomPair()
+    {
         return cores.get((int) Math.floor(Math.random() * cores.size()));
     }
 

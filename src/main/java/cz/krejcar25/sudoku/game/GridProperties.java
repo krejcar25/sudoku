@@ -16,7 +16,8 @@ public enum GridProperties {
     private final int width, height;
     private final int[] clueCounts;
 
-    GridProperties(int sizea, int sizeb, int controlRows, int newGameX, int newGameY, int helpX, int helpY, int orderToggleX, int orderToggleY, int deleteX, int deleteY, int smallNumX, int smallNumY, int settingsX, int settingsY, int exitX, int exitY, int timerX, int timerY, int drawNumberOffset, String name, int width, int height, int easyClueCount, int mediumClueCount, int HardClueCount, int extremeClueCount) {
+	GridProperties(int sizea, int sizeb, int controlRows, int newGameX, int newGameY, int helpX, int helpY, int orderToggleX, int orderToggleY, int deleteX, int deleteY, int smallNumX, int smallNumY, int settingsX, int settingsY, int exitX, int exitY, int timerX, int timerY, int drawNumberOffset, String name, int width, int height, int... clueCounts)
+	{
         this.sizea = sizea;
         this.sizeb = sizeb;
         this.controlRows = controlRows;
@@ -32,7 +33,7 @@ public enum GridProperties {
         this.name = name;
         this.width = width;
         this.height = height;
-        this.clueCounts = new int[]{easyClueCount, mediumClueCount, HardClueCount, extremeClueCount};
+		this.clueCounts = clueCounts;
     }
 
     public int getSizea() {
@@ -98,4 +99,10 @@ public enum GridProperties {
     public int getClueCount(GridDifficulty gridDifficulty) {
         return gridDifficulty == GridDifficulty.Debug ? (((sizea * sizeb) * (sizea * sizeb)) - 2) : clueCounts[gridDifficulty.getLevel()];
     }
+
+	@Override
+	public String toString()
+	{
+		return name;
+	}
 }

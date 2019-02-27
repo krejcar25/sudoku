@@ -5,13 +5,11 @@ import cz.krejcar25.sudoku.ui.Clock;
 import cz.krejcar25.sudoku.ui.OverlayResult;
 import cz.krejcar25.sudoku.ui.OverlayType;
 import processing.core.PApplet;
-import processing.core.PVector;
 
 public class GeneratingOverlay extends BaseOverlay {
     private Clock clock;
     private int clueCount;
     private GridDifficulty gridDifficulty;
-    private PVector clockSize;
 
     GeneratingOverlay(DifficultySelectView difficultySelectView, GridDifficulty gridDifficulty) {
         super(difficultySelectView, 105, 350, 600, 200, OverlayType.Info);
@@ -24,10 +22,9 @@ public class GeneratingOverlay extends BaseOverlay {
     }
 
     private void init(GameView gameView, GridDifficulty gridDifficulty) {
-        clockSize = new PVector();
-        clockSize.y = 60;
-        clockSize.x = Clock.getWidthFromHeight(clockSize.y);
-        this.clock = new Clock(getApplet(), (width - clockSize.x) / 2, 120, gameView.getGenerator().timer);
+	    this.clock = new Clock(getApplet(), 0, 120, gameView.getGenerator().timer);
+	    this.clock.setDisplayWidthWithHeight(60);
+	    this.clock.x = (width - this.clock.getDisplayWidth()) / 2f;
         this.gridDifficulty = gridDifficulty;
         this.clueCount = gameView.gridProperties.getClueCount(gridDifficulty);
     }
@@ -47,7 +44,7 @@ public class GeneratingOverlay extends BaseOverlay {
         // Used just as a debugging display, at times when I need to see how many clues I should be left with
         text("ClueCount: " + clueCount + " (" + gridDifficulty + ")", width / 2f, 100);
         clock.update();
-        image(clock, clock.x, clock.y, clockSize.x, clockSize.y);
+	    image(clock, clock.x, clock.y, clock.getDisplayWidth(), clock.getDisplayHeight());
     }
 
     @Override

@@ -1,6 +1,9 @@
 package cz.krejcar25.sudoku.neuralNetwork;
 
-public interface ActivationFunction {
+import java.io.Serializable;
+
+public interface ActivationFunction extends Serializable
+{
     double func(double value, int x, int y);
 
     double derivative(double value, int x, int y);

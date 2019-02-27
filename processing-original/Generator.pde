@@ -74,9 +74,9 @@ public class Sudoku9x9Generator extends BaseGenerator {
     int removed = 0;
     
     for (int i = 80; removed < (80 - targetCount) && i >= 0; i--) {
-      PVector v = cells[i];
-      int x = floor(v.x);
-      int y = floor(v.y);
+      PVector value = cells[i];
+      int x = floor(value.x);
+      int y = floor(value.y);
       
       if (game.game[x][y] > -1) {
         int cell = game.game[x][y];

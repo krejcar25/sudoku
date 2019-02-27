@@ -28,7 +28,7 @@ public class NetworkControlApplet extends Applet implements ChildApplet {
 
     @Override
     public void settings() {
-        size(800, 600);
+        size(800, 600, JAVA2D);
         pixelDensity(displayDensity());
     }
 
@@ -37,6 +37,7 @@ public class NetworkControlApplet extends Applet implements ChildApplet {
         surface.setTitle("Neural Network Control");
         setCloseOnExit(false);
         this.stack = new ViewStack(new MainMenuView(this));
+        surface.setIcon(owner.icon);
     }
 
     @Override

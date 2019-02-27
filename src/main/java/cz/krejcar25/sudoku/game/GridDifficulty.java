@@ -1,12 +1,15 @@
 package cz.krejcar25.sudoku.game;
 
 public enum GridDifficulty {
-    Debug(-1), Easy(0), Medium(1), Hard(2), Extreme(3);
+	Debug(-1, false), Easy(0, true), Medium(1, true), Hard(2, true), Extreme(3, true);
 
     private final int level;
+	private boolean selectable;
 
-    GridDifficulty(int level) {
+	GridDifficulty(int level, boolean selectable)
+	{
         this.level = level;
+		this.selectable = selectable;
     }
 
     public int getLevel() {
@@ -27,7 +30,13 @@ public enum GridDifficulty {
             case Extreme:
                 return "Extreme";
             default:
+	            assert false;
                 return "Nonsense";
         }
     }
+
+	public boolean isSelectable()
+	{
+		return selectable;
+	}
 }

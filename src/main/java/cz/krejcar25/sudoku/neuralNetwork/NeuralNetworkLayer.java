@@ -32,4 +32,9 @@ public abstract class NeuralNetworkLayer implements Serializable {
     public final int getNodes() {
         return nodes;
     }
+
+	public static NeuralNetworkLayer create(int inCount, int nodes)
+	{
+		throw new IllegalStateException("The create function was not created for this subclass of NeuralNetworkLayer");
+	}
 }

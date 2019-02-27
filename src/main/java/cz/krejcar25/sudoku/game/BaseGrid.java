@@ -111,7 +111,9 @@ public class BaseGrid extends Drawable {
 
         this.gridProperties = gridProperties;
 
-        gameClock = new Clock(getApplet(), (int) (timerPos.x * sx + 10), (int) (timerPos.y * sy + (sy - Clock.getHeightFromWidth(2 * sx - 20)) / 2), gridProperties.getName());
+	    gameClock = new Clock(getApplet(), (timerPos.x * sx + 10), 0, gridProperties.getName());
+	    gameClock.setDisplayHeightWithWidth(2 * sx - 20);
+	    gameClock.y = timerPos.y * sy + (sy - gameClock.getDisplayHeight()) / 2;
 
         gear = new Drawable(getApplet(), 0, 0, 80, 80) {
             @Override
@@ -391,7 +393,7 @@ public class BaseGrid extends Drawable {
         strokeWeight(1);
         rect(timerPos.x * sx, timerPos.y * sy, 2 * sx, sy);
         gameClock.update();
-        image(gameClock, gameClock.x, gameClock.y, 2 * sx - 20, Clock.getHeightFromWidth(2 * sx - 20));
+	    image(gameClock, gameClock.x, gameClock.y, gameClock.getDisplayWidth(), gameClock.getDisplayHeight());
         pop();
     }
 

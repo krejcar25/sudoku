@@ -37,9 +37,9 @@ public class NetworkChartApplet extends Applet implements ChildApplet {
 
     @Override
     public void setup() {
-        surface.setTitle("Neural Network Control");
+        //surface.setTitle("Neural Network Control");
         setCloseOnExit(false);
-        this.stack = new ViewStack(new NetworkChartView(this, network));
+        this.stack = new ViewStack(new NetworkChartView(this, network, false));
     }
 
     @Override

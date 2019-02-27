@@ -2,6 +2,8 @@ package cz.krejcar25.sudoku.game;
 
 import cz.krejcar25.sudoku.SudokuApplet;
 import cz.krejcar25.sudoku.neuralNetwork.TrainingDataPair;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import processing.core.PApplet;
 
 import java.nio.ByteBuffer;
@@ -26,7 +28,8 @@ public class GridCore implements TrainingDataPair {
     private int selectedy;
     private BaseGrid owner;
 
-    public GridCore(GridProperties gridProperties) {
+    public GridCore(@NotNull GridProperties gridProperties)
+    {
         this.sizea = gridProperties.getSizea();
         this.sizeb = gridProperties.getSizeb();
         this.ncr = sizea * sizeb;
@@ -40,6 +43,7 @@ public class GridCore implements TrainingDataPair {
             for (int x = 0; x < ncr; x++) {
                 grid[x][y] = -1;
                 solvedGrid[x][y] = -1;
+                baseGrid[x][y] = false;
             }
     }
 
@@ -80,8 +84,13 @@ public class GridCore implements TrainingDataPair {
         return grid[x][y];
     }
 
+    public int getSolved(int x, int y)
+    {
+        return solvedGrid[x][y];
+    }
+
     public void set(int x, int y, int n) {
-        grid[x][y] = n;
+        if (!isBaseGame(x, y)) grid[x][y] = n;
     }
 
     public boolean isBaseGame(int x, int y) {
@@ -94,6 +103,11 @@ public class GridCore implements TrainingDataPair {
 
     public int getSelectedy() {
         return selectedy;
+    }
+
+    public int getClueCount()
+    {
+        return baseClues;
     }
 
     boolean isRowCol(int x, int y) {
@@ -123,7 +137,8 @@ public class GridCore implements TrainingDataPair {
         return isRowCol(x, y, ofx, ofy) || isSc(x, y, ofx, ofy);
     }
 
-    boolean canPlaceNumber(int num, int atx, int aty, int flashTime) {
+    public boolean canPlaceNumber(int num, int atx, int aty, int flashTime)
+    {
         boolean can = true;
         for (int y = 0; y < ncr; y++) {
             for (int x = 0; x < ncr; x++) {
@@ -196,23 +211,12 @@ public class GridCore implements TrainingDataPair {
         return Base64.getEncoder().encodeToString(byteBuffer.array());
     }
 
-    public static GridCore fromGridString(String s) {
-        byte[] bytes = Base64.getDecoder().decode(s);
-        ByteBuffer byteBuffer = ByteBuffer.wrap(bytes);
-        IntBuffer intBuffer = byteBuffer.asIntBuffer();
-        int ncr = intBuffer.get(0);
-
-        int[][] grid = new int[ncr][ncr];
-        int[][] solved = new int[ncr][ncr];
-
-        for (int x = 0; x < ncr; x++) {
-            for (int y = 0; y < ncr; y++) {
-                grid[x][y] = intBuffer.get(x * ncr + y + 1);
-                solved[x][y] = intBuffer.get(ncr * ncr + x * ncr + y + 1);
-            }
-        }
-
-        return new GridCore(ncr, grid, solved);
+    public boolean isFinished()
+    {
+        for (int row = 0; row < ncr; row++)
+            for (int col = 0; col < ncr; col++)
+                if (grid[row][col] < 0) return false;
+        return true;
     }
 
     @Override
@@ -235,7 +239,8 @@ public class GridCore implements TrainingDataPair {
         return getBinaryDoublesFromGrid(solvedGrid);
     }
 
-    private double[] getBinaryDoublesFromGrid(int[][] grid) {
+    private double[] getBinaryDoublesFromGrid(@NotNull int[][] grid)
+    {
         double[] out = new double[getRequiredInputCount()];
         int index = 0;
         int temp;
@@ -243,5 +248,29 @@ public class GridCore implements TrainingDataPair {
             for (int cell : row)
                 for (temp = index; index < temp + ncr; index++) out[index] = index % ncr == cell ? 1 : -1;
         return out;
+    }
+
+    @NotNull
+    @Contract(value = "_ -> new")
+    public static GridCore fromGridString(@NotNull String s)
+    {
+        byte[] bytes = Base64.getDecoder().decode(s);
+        ByteBuffer byteBuffer = ByteBuffer.wrap(bytes);
+        IntBuffer intBuffer = byteBuffer.asIntBuffer();
+        int ncr = intBuffer.get(0);
+
+        int[][] grid = new int[ncr][ncr];
+        int[][] solved = new int[ncr][ncr];
+
+        for (int x = 0; x < ncr; x++)
+        {
+            for (int y = 0; y < ncr; y++)
+            {
+                grid[x][y] = intBuffer.get(x * ncr + y + 1);
+                solved[x][y] = intBuffer.get(ncr * ncr + x * ncr + y + 1);
+            }
+        }
+
+        return new GridCore(ncr, grid, solved);
     }
 }

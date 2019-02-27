@@ -6,7 +6,7 @@ import java.io.*;
 import java.util.ArrayList;
 
 public class NeuralNetwork implements Serializable {
-    public static final String FILETYPE = ".nn";
+	public static final String FILETYPE = "nn";
     public static final String FILETYPE_DESC = "Neural Network files";
 
     private final int inputCount;

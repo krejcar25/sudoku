@@ -1,16 +1,18 @@
 package cz.krejcar25.sudoku.neuralNetwork;
 
-public interface TrainingDataSet {
-    TrainingDataPair[] getAllData();
+public interface TrainingDataSet<T extends TrainingDataPair>
+{
+	T[] getAllData();
 
     default boolean checkDataDimensions(int input, int output) {
+	    boolean ret = true;
         for (TrainingDataPair pair : getAllData()) {
-            if (pair.getRequiredInputCount() != input || pair.getRequiredOutputCount() != output) return false;
+	        if (pair.getRequiredInputCount() != input || pair.getRequiredOutputCount() != output) ret = false;
         }
-        return true;
+	    return ret;
     }
 
-    TrainingDataPair getRandomPair();
+	T getRandomPair();
 
     int getDataCount();
 }

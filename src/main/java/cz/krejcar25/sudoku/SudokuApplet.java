@@ -62,7 +62,7 @@ public class SudokuApplet extends Applet {
         }
         scale(1f / pixelDensity);
         view.update();
-        image(view, 0, 0);
+	    image(view);
     }
 
     private void loadSettings() {

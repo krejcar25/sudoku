@@ -1,11 +1,11 @@
 package cz.krejcar25.sudoku.scoreboard;
 
-import cz.krejcar25.sudoku.ui.ScrollViewContent;
 import cz.krejcar25.sudoku.SudokuApplet;
 import cz.krejcar25.sudoku.Timer;
 import cz.krejcar25.sudoku.game.GridDifficulty;
 import cz.krejcar25.sudoku.game.GridProperties;
 import cz.krejcar25.sudoku.ui.ScrollView;
+import cz.krejcar25.sudoku.ui.ScrollViewContent;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -88,7 +88,7 @@ public class ScoreboardDisplayViewContent extends ScrollViewContent {
 
     private void addLine(ScoreboardEntry entry, int margin) {
         push();
-        float lineHeight = textSize + 5;
+        float lineHeight = this.g.textSize + 5;
         line(margin, 0, margin, lineHeight);
         line(width / 2f, 0, width / 2f, lineHeight);
         line(width - margin, 0, width - margin, lineHeight);

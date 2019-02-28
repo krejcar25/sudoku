@@ -1,8 +1,8 @@
 package cz.krejcar25.sudoku.ui.control;
 
-import cz.krejcar25.sudoku.ui.BaseView;
 import cz.krejcar25.sudoku.SudokuApplet;
 import cz.krejcar25.sudoku.event.ToggleEvents;
+import cz.krejcar25.sudoku.ui.BaseView;
 
 public class Toggle extends Control {
     public boolean state;
@@ -38,7 +38,7 @@ public class Toggle extends Control {
         push();
         if (state) {
             fill(0, 200, 0);
-            stroke(0, 150, 0);
+            stroke(150, 0);
         } else {
             fill(220);
             stroke(150);

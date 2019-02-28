@@ -1,11 +1,11 @@
 package cz.krejcar25.sudoku;
 
+import cz.krejcar25.sudoku.event.ButtonEvents;
 import cz.krejcar25.sudoku.game.DifficultySelectView;
 import cz.krejcar25.sudoku.game.GridProperties;
-import cz.krejcar25.sudoku.scoreboard.ScoreboardView;
+import cz.krejcar25.sudoku.scoreboard.ScoreboardSizeSelectView;
 import cz.krejcar25.sudoku.ui.BaseView;
 import cz.krejcar25.sudoku.ui.control.Button;
-import cz.krejcar25.sudoku.event.ButtonEvents;
 import processing.core.PApplet;
 import processing.event.KeyEvent;
 import processing.event.MouseEvent;
@@ -34,7 +34,7 @@ public class MainMenuView extends BaseView {
         String[] labels = {"Settings", "Scoreboard", "Help"};
         ButtonEvents[] buttonEvents = {
                 sender -> viewStack.push(new SettingsView(getApplet())),
-                sender -> viewStack.push(new ScoreboardView(getApplet())),
+                sender -> viewStack.push(new ScoreboardSizeSelectView(getApplet())),
                 sender -> viewStack.push(new HelpView(getApplet()))
         };
         for (int i = 0; i < labels.length && labels.length == buttonEvents.length; i++) {

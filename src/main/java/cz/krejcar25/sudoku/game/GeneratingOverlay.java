@@ -31,8 +31,8 @@ public class GeneratingOverlay extends BaseOverlay {
         //TODO Remove ClueCount text and clueCount and gridDifficulty variables and constructor parameters in the final version
         // Used just as a debugging display, at times when I need to see how many clues I should be left with
         text("ClueCount: " + clueCount + " (" + gridDifficulty + ")", width / 2f, 100);
-        clock.update();
-        float clockWidth = Clock.getWidthFromHeight(60);
+        float clockHeight = 60;
+        float clockWidth = Clock.getWidthFromHeight(clockHeight);
         image(clock, (width - clockWidth) / 2, 120, clockWidth, 60);
     }
 

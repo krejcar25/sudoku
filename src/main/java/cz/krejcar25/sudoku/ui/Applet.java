@@ -116,6 +116,28 @@ public abstract class Applet extends PApplet {
         popMatrix();
     }
 
+    protected void image(Drawable drawable)
+    {
+        drawable.update();
+        if (drawable.getTargetGraphics() == Drawable.OWN)
+            image(drawable.g, drawable.x, drawable.y, drawable.width, drawable.height);
+    }
+
+    protected void image(Drawable drawable, float x, float y)
+    {
+        drawable.update();
+        if (drawable.getTargetGraphics() == Drawable.OWN) image(drawable.g, x, y);
+    }
+
+    protected void image(Drawable drawable, float x, float y, float w, float h)
+    {
+        push();
+        drawable.update();
+        imageMode(CORNER);
+        if (drawable.getTargetGraphics() == Drawable.OWN) image(drawable.g, x, y, w, h);
+        pop();
+    }
+
     public PSurfaceAWT.SmoothCanvas getCanvas() {
         return (PSurfaceAWT.SmoothCanvas) initSurface().getNative();
     }

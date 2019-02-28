@@ -6,7 +6,7 @@ public class ControlLabel extends Control {
 
     private Control internalControl;
     private boolean controlOnLeft;
-    private int controlMargin = 10;
+    private float controlMargin = 10;
 
     public ControlLabel(Control internalControl, boolean controlSide, String label) {
         super(internalControl.baseView, 0, internalControl.y, 1, internalControl.height);

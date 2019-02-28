@@ -16,8 +16,8 @@ public abstract class Drawable implements PConstants
 	protected final PGraphics g;
 	@MagicConstant(intValues = {APPLET, OWN})
 	private final int targetGraphics;
-	public int x;
-	public int y;
+	public float x;
+	public float y;
 	public int width;
 	public int height;
 	private boolean resizable = false;
@@ -29,7 +29,7 @@ public abstract class Drawable implements PConstants
 		this(applet, x, y, width, height, APPLET);
 	}
 
-	public Drawable(Applet applet, int x, int y, int width, int height, @MagicConstant(intValues = {APPLET, OWN}) int targetGraphics)
+	public Drawable(Applet applet, float x, float y, int width, int height, @MagicConstant(intValues = {APPLET, OWN}) int targetGraphics)
 	{
 		this.x = x;
 		this.y = y;

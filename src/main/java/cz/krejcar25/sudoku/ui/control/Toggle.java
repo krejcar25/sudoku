@@ -19,6 +19,7 @@ public class Toggle extends Control {
 
     @Override
     public boolean isClick(int mx, int my) {
+	    if (!enabled) return false;
         boolean hor = this.x < mx && mx < (this.x + this.width);
         boolean ver = this.y < my && my < (this.y + this.height);
         return hor && ver;

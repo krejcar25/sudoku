@@ -31,7 +31,7 @@ public class Digit {
     noStroke();
     PGraphics g = createGraphics((int)sx, (int)sy);
     PShape h = createShape();
-    PShape v = createShape();
+    PShape value = createShape();
 
     h.beginShape();
     h.vertex(25, 0);
@@ -42,14 +42,14 @@ public class Digit {
     h.vertex(0, 25);
     h.endShape(CLOSE);
 
-    v.beginShape();
-    v.vertex(35, 0);
-    v.vertex(60, 25);
-    v.vertex(50, 125);
-    v.vertex(25, 150);
-    v.vertex(0, 125);
-    v.vertex(10, 25);
-    v.endShape(CLOSE);
+    value.beginShape();
+    value.vertex(35, 0);
+    value.vertex(60, 25);
+    value.vertex(50, 125);
+    value.vertex(25, 150);
+    value.vertex(0, 125);
+    value.vertex(10, 25);
+    value.endShape(CLOSE);
 
     g.beginDraw(); 
     g.noStroke();
@@ -61,20 +61,20 @@ public class Digit {
     h.setFill(isBitOn(segments, 1));
     g.shape(h, 50, 0);
     // B
-    v.setFill(isBitOn(segments, 2));
-    g.shape(v, 170, 30);
+    value.setFill(isBitOn(segments, 2));
+    g.shape(value, 170, 30);
     // C
-    v.setFill(isBitOn(segments, 3));
-    g.shape(v, 160, 190);
+    value.setFill(isBitOn(segments, 3));
+    g.shape(value, 160, 190);
     // D
     h.setFill(isBitOn(segments, 4));
     g.shape(h, 30, 320);
     // E
-    v.setFill(isBitOn(segments, 5));
-    g.shape(v, 0, 190);
+    value.setFill(isBitOn(segments, 5));
+    g.shape(value, 0, 190);
     // F
-    v.setFill(isBitOn(segments, 6));
-    g.shape(v, 10, 30);
+    value.setFill(isBitOn(segments, 6));
+    g.shape(value, 10, 30);
     // G
     h.setFill(isBitOn(segments, 7));
     g.shape(h, 40, 160);

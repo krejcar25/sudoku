@@ -8,5 +8,9 @@ public abstract class ScrollViewContent extends Drawable {
         this.scrollView = scrollView;
     }
 
+    public final void click(float mx, float my, boolean rmb) {
+        click((int) mx, (int) my, rmb);
+    }
+
     public abstract void click(int mx, int my, boolean rmb);
 }

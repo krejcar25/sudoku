@@ -5,19 +5,24 @@ import cz.krejcar25.sudoku.ui.BaseView;
 import cz.krejcar25.sudoku.ui.Drawable;
 
 
-public abstract class Control extends Drawable {
+public abstract class Control<O> extends Drawable
+{
     protected BaseView baseView;
     protected String tooltip;
     protected String label;
+	public O userObject;
+	protected boolean enabled;
 
-    protected Control(BaseView baseView, int x, int y, int width, int height) {
+    protected Control(BaseView baseView, float x, float y, int width, int height) {
         super(baseView.getApplet(), x, y, width, height);
         this.baseView = baseView;
+	    this.enabled = true;
     }
 
-    protected Control(Applet applet, int x, int y, int width, int height) {
+    protected Control(Applet applet, float x, float y, int width, int height) {
         super(applet, x, y, width, height);
         this.baseView = null;
+	    this.enabled = true;
     }
 
     public String getLabel() {
@@ -34,6 +39,25 @@ public abstract class Control extends Drawable {
 
     public void setTooltip(String tooltip) {
         this.tooltip = tooltip;
+    }
+
+	public final BaseView getBaseView()
+	{
+		return baseView;
+	}
+
+	public void setEnabled(boolean enabled)
+	{
+		this.enabled = enabled;
+	}
+
+	public boolean isEnabled()
+	{
+		return enabled;
+	}
+
+    public final boolean isClick(float mx, float my) {
+        return isClick((int) mx, (int) my);
     }
 
     public abstract boolean isClick(int mx, int my);

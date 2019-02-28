@@ -5,6 +5,7 @@ import com.besaba.revonline.pastebinapi.paste.PasteExpire;
 import com.besaba.revonline.pastebinapi.paste.PasteVisiblity;
 import cz.krejcar25.sudoku.Main;
 import cz.krejcar25.sudoku.SudokuApplet;
+import org.jetbrains.annotations.NotNull;
 import processing.awt.PSurfaceAWT;
 import processing.core.PApplet;
 import processing.core.PImage;
@@ -15,6 +16,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -96,8 +98,11 @@ public abstract class Applet extends PApplet {
         return max.compareTo(val) > 0 && val.compareTo(min) > 0;
     }
 
-    protected static PImage getImage(String url) throws Exception {
-        BufferedImage image = ImageIO.read(SudokuApplet.class.getResourceAsStream(url));
+    @NotNull
+    public static PImage getImage(String url) throws Exception
+    {
+        InputStream resourceStream = SudokuApplet.class.getResourceAsStream(url);
+        BufferedImage image = ImageIO.read(resourceStream);
         return new PImage(image);
     }
 

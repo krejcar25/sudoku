@@ -1,15 +1,15 @@
 package cz.krejcar25.sudoku.game;
 
-import cz.krejcar25.sudoku.ui.BaseView;
 import cz.krejcar25.sudoku.SudokuApplet;
+import cz.krejcar25.sudoku.ui.BaseView;
 import processing.core.PApplet;
 import processing.event.KeyEvent;
 import processing.event.MouseEvent;
 
 public class GameView extends BaseView {
     protected BaseSolver solver;
-    protected BaseGenerator generator;
-    protected BaseGrid game;
+    //protected volatile BaseGenerator generator;
+    protected volatile BaseGrid game;
     protected GridProperties gridProperties;
 
     GameView(SudokuApplet sudokuApplet, GridProperties gridProperties) {
@@ -22,13 +22,7 @@ public class GameView extends BaseView {
     @Override
     public void click(int mx, int my, boolean rmb) {
         if (overlay == null) {
-            float sx = PApplet.floor((float) this.width / game.cols());
-            float sy = PApplet.floor((float) this.height / (game.rows() + game.extraRows));
-
-            int x = PApplet.floor(mx / sx);
-            int y = PApplet.floor(my / sy);
-
-            game.click(x, y, parent.mouseButton == PApplet.RIGHT);
+            game.click(mx, my, parent.mouseButton == PApplet.RIGHT);
         } else {
             overlay.click(mx, my, rmb);
         }
@@ -36,7 +30,7 @@ public class GameView extends BaseView {
 
     @Override
     protected void draw() {
-        game.update();
+        if (game.shouldUpdateGrid) game.update();
         image(game, game.x, game.y);
 
         if (overlay != null) {
@@ -60,7 +54,7 @@ public class GameView extends BaseView {
     }
 
     public BaseGenerator getGenerator() {
-        return generator;
+        return game.generator;
     }
 
     public BaseGrid getGrid() {
@@ -73,12 +67,11 @@ public class GameView extends BaseView {
 
     public void generate(GridDifficulty gridDifficulty, boolean async) {
         game.gridDifficulty = gridDifficulty;
-        generator.generate(gridProperties.getClueCount(gridDifficulty), async);
+        game.generator.generate(gridProperties.getClueCount(gridDifficulty), async);
     }
 
     public void newGenerator() {
-        generator = new BaseGenerator(game);
-        game.generator = generator;
+        game.generator = new BaseGenerator(game.getCore());
     }
 
     public void newSolver() {

@@ -57,6 +57,7 @@ public class Timer {
     //elaspsed time in milliseconds
     public long getElapsedTime() {
         long elapsed = -pauseTotal;
+	    if (isPaused()) elapsed -= System.currentTimeMillis() - pauseStart;
         if (running) {
             elapsed += (System.currentTimeMillis() - startTime);
         } else {

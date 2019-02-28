@@ -19,7 +19,7 @@ public class HelpViewContent extends ScrollViewContent {
         textAlign(LEFT, TOP);
         translate(50, 50);
         header("Tutorial");
-        textLine("Welcome to Sudoku. Here, you can find help about all the functions of the game and how to work with them.");
+        textLine("Welcome to Sudoku. Here, you can find help about all the functions of the grid and how to work with them.");
         section("Section");
         textLine("Lorem ipsum dolor sit amet et simplicis et al some nonsense");
         pop();

@@ -30,6 +30,7 @@
     <groupId>cz.krejcar25.Sudoku</groupId>
     <artifactId>Sudoku</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
     <dependencies>
         <dependency>
             <groupId>com.fasterxml.jackson.dataformat</groupId>
@@ -46,6 +47,11 @@
             <artifactId>annotations</artifactId>
             <version>RELEASE</version>
             <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.jgoodies</groupId>
+            <artifactId>jgoodies-forms</artifactId>
+            <version>1.9.0</version>
         </dependency>
         <dependency>
             <groupId>com.github.marcoacierno</groupId>

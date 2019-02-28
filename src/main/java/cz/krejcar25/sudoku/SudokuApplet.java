@@ -2,10 +2,10 @@ package cz.krejcar25.sudoku;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
+import cz.krejcar25.sudoku.networkControl.NetworkControlApplet;
 import cz.krejcar25.sudoku.scoreboard.Scoreboard;
 import cz.krejcar25.sudoku.ui.Applet;
 import cz.krejcar25.sudoku.ui.BaseView;
-import cz.krejcar25.sudoku.ui.ScrollView;
 import cz.krejcar25.sudoku.ui.ViewStack;
 import processing.core.PImage;
 import processing.event.MouseEvent;
@@ -16,6 +16,7 @@ import java.io.IOException;
 public class SudokuApplet extends Applet {
     public Settings settings;
     public Scoreboard scoreboard;
+    public NetworkControlApplet networkControlApplet;
 
     @Override
     public void settings() {
@@ -140,11 +141,6 @@ public class SudokuApplet extends Applet {
     @Override
     public void mouseWheel(MouseEvent mouseEvent) {
         stack.get().scroll(mouseEvent);
-        if (stack.get() instanceof ScrollView) {
-            ScrollView view = (ScrollView) stack.get();
-            boolean hor = isKeyPressed(SHIFT);
-            view.scroll(hor ? view.scrollSpeed * mouseEvent.getCount() : 0, hor ? 0 : view.scrollSpeed * mouseEvent.getCount());
-        }
     }
 
     private void loadImages() {

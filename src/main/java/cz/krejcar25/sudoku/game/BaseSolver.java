@@ -5,7 +5,7 @@ import cz.krejcar25.sudoku.Timer;
 import java.util.ArrayList;
 
 public class BaseSolver {
-    protected BaseGrid game;
+    protected GridCore grid;
     protected boolean used = false;
     protected Timer timer;
     ArrayList<ArrayList<ArrayList<Integer>>> numbers;
@@ -17,18 +17,18 @@ public class BaseSolver {
     boolean cycleAllowed;
     protected boolean wentBack;
 
-    public BaseSolver(BaseGrid game) {
-        this.game = game.clone();
-        this.game.lockAsBase(false,false);
+    public BaseSolver(GridCore grid) {
+        this.grid = grid.clone();
+        this.grid.lockAsBase(false, false);
         timer = new Timer("GridSolver");
         numbers = new ArrayList<>();
         tryNext = true;
         cycleAllowed = false;
         wentBack = false;
 
-        for (int x = 0; x < game.cols(); x++) {
+        for (int x = 0; x < grid.ncr; x++) {
             numbers.add(new ArrayList<>());
-            for (int y = 0; y < game.rows(); y++) {
+            for (int y = 0; y < grid.ncr; y++) {
                 numbers.get(x).add(new ArrayList<>());
                 replenish(x, y);
             }
@@ -49,7 +49,7 @@ public class BaseSolver {
     public void cycle() {
         if (!cycleAllowed) return;
 
-        game.select(x,y);
+        grid.select(x, y);
 
         if (wentBack) {
             wentBack = false;
@@ -58,34 +58,32 @@ public class BaseSolver {
 
         if (available(x, y)) {
             int n = 0;
-            if (game.canPlaceNumber(numbers.get(x).get(y).get(n), x, y, -1) || game.game[x][y] == numbers.get(x).get(y).get(n)) {
-                game.game[x][y] = numbers.get(x).get(y).get(n);
+            if (grid.canPlaceNumber(numbers.get(x).get(y).get(n), x, y, -1) || grid.get(x, y) == numbers.get(x).get(y).get(n)) {
+                grid.set(x, y, numbers.get(x).get(y).get(n));
                 x++;
             } else {
                 numbers.get(x).get(y).remove(n);
             }
         } else {
             replenish(x, y);
-            if (!game.baseGame[x][y]) game.game[x][y] = -1;
+            if (!grid.isBaseGame(x, y)) grid.set(x, y, -1);
             x--;
             wentBack = true;
         }
 
-        int cols = game.cols();
-        int rows = game.rows();
-        if (x >= cols) {
-            x -= cols;
+        if (x >= grid.ncr) {
+            x -= grid.ncr;
             y++;
         } else if (x < 0) {
-            x += cols;
+            x += grid.ncr;
             y--;
         }
 
-        if (y >= rows) {
+        if (y >= grid.ncr) {
             count++;
-            x += (cols - 2);
+            x += (grid.ncr - 2);
             y--;
-            if (!game.baseGame[x][y]) game.game[cols - 1][rows - 1] = -1;
+            if (!grid.isBaseGame(x, y)) grid.set(grid.ncr - 1, grid.ncr - 1, -1);
             wentBack = true;
         }
         if (y < 0) {
@@ -96,7 +94,7 @@ public class BaseSolver {
 
     public int finish() {
         System.out.println("Solving finished in " + timer.getElapsedTimeSecs() + " seconds (" + timer.getElapsedTime() + " milliseconds, to be precise). Found " + count + " solutions.");
-        game.select(-1,-1);
+        grid.select(-1, -1);
         return count;
     }
 
@@ -115,10 +113,10 @@ public class BaseSolver {
     private void replenish(int x, int y) {
         ArrayList<Integer> list = numbers.get(x).get(y);
         list.clear();
-        if (game.baseGame[x][y]) {
-            list.add(game.game[x][y]);
+        if (grid.isBaseGame(x,y)) {
+            list.add(grid.get(x,y));
         } else {
-            for (int i = 0; i < game.numbers(); i++) {
+            for (int i = 0; i < grid.ncr; i++) {
                 list.add(i);
             }
         }

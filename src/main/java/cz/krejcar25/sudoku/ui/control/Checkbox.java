@@ -1,7 +1,7 @@
 package cz.krejcar25.sudoku.ui.control;
 
-import cz.krejcar25.sudoku.ui.BaseView;
 import cz.krejcar25.sudoku.event.ToggleEvents;
+import cz.krejcar25.sudoku.ui.BaseView;
 
 public class Checkbox extends Control {
     public boolean state = false;
@@ -16,6 +16,7 @@ public class Checkbox extends Control {
 
     @Override
     public boolean isClick(int mx, int my) {
+	    if (!enabled) return false;
         return x < mx && mx < (x + checkboxWidth) && y < my && my < (y + height);
     }
 

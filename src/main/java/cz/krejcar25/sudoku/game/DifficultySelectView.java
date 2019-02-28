@@ -44,7 +44,7 @@ public class DifficultySelectView extends BaseView {
 
             }
         });
-        ControlLabel animateLabel = new ControlLabel(animateCheckbox, ControlLabel.CONTROL_LEFT, "Animate game generation");
+        ControlLabel animateLabel = new ControlLabel(animateCheckbox, ControlLabel.CONTROL_LEFT, "Animate grid generation");
         animateLabel.centerOnX(400);
         controls.add(animateLabel);
     }

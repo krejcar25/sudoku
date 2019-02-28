@@ -130,12 +130,9 @@ public class BaseGenerator implements Runnable {
         PApplet.println("removal target: " + (((core.ncr * core.ncr) - 1) - clueCount) + ", removed: " + removed);
         core.lockAsBase(true, true);
         timer.stop();
-        PApplet.println("Generation finished in " + timer.getTimer().getElapsedTimeSecs() + " seconds (" + timer.getTimer().getElapsedTime() + " milliseconds, to be precise)");
-        DirectSolver arbiter = new DirectSolver(game);
+        PApplet.println("Generation finished in " + timer.getElapsedTimeSecs() + " seconds (" + timer.getElapsedTime() + " milliseconds, to be precise)");
+        DirectSolver arbiter = new DirectSolver(core);
         PApplet.println("The assessed difficulty is " + arbiter.getDifficulty());
-        gameView.getApplet().frameRate(60);
-        gameView.generator = null;
-        game.gameClock.start();
 		if (core.getOwner() != null) core.getOwner().getGameClock().start();
     }
 

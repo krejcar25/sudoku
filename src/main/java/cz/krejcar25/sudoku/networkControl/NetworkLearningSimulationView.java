@@ -50,22 +50,20 @@ public class NetworkLearningSimulationView extends BaseView {
                 textAlign(LEFT, TOP);
 
                 boolean shouldResume = trainRunnable.pause();
-                estimate.beginDraw();
-                estimate.background(0, 255, 0);
+                background(0, 255, 0);
                 for (int y = 0; y < tilesY; y++) {
                     for (int x = 0; x < tilesX; x++) {
                         double[] est = network.estimate(new double[]{x / tilesX, y / tilesY});
                         float r = PApplet.map((float) est[0], 0, 1, 0, 255);
                         float g = PApplet.map((float) est[1], 0, 1, 0, 255);
                         float b = PApplet.map((float) est[2], 0, 1, 0, 255);
-                        estimate.fill(r, g, b);
-                        estimate.rect((float) (x * tileSize), (float) (y * tileSize), (float) (tileSize), (float) (tileSize));
+                        fill(r, g, b);
+                        rect((float) (x * tileSize), (float) (y * tileSize), (float) (tileSize), (float) (tileSize));
                     }
                 }
                 fill(255, 0, 0);
                 textAlign(RIGHT, BOTTOM);
                 text(String.valueOf(trainRunnable.getLastError()), width, height);
-                estimate.endDraw();
                 if (shouldResume) trainRunnable.resume();
                 drawIndex++;
             }

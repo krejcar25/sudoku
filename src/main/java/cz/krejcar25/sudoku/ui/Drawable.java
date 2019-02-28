@@ -24,7 +24,7 @@ public abstract class Drawable implements PConstants
 	private int widthLimit = -1;
 	private int heightLimit = -1;
 
-	public Drawable(Applet applet, int x, int y, int width, int height)
+	public Drawable(Applet applet, float x, float y, int width, int height)
 	{
 		this(applet, x, y, width, height, APPLET);
 	}
@@ -397,7 +397,7 @@ public abstract class Drawable implements PConstants
 		pop();
 	}
 
-	protected void backgroud(float gray, float alpha)
+	protected void background(float gray, float alpha)
 	{
 		push();
 		noStroke();
@@ -407,7 +407,7 @@ public abstract class Drawable implements PConstants
 		pop();
 	}
 
-	protected void backgroud(float v1, float v2, float v3)
+	protected void background(float v1, float v2, float v3)
 	{
 		push();
 		noStroke();
@@ -417,7 +417,7 @@ public abstract class Drawable implements PConstants
 		pop();
 	}
 
-	protected void backgroud(float v1, float v2, float v3, float alpha)
+	protected void background(float v1, float v2, float v3, float alpha)
 	{
 		push();
 		noStroke();

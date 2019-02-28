@@ -35,16 +35,6 @@ public class Clock extends Drawable
 		this.secU = new Digit(getApplet(), minD.width + minU.width + 50 + secD.width, 0);
 	}
 
-	public static float getWidthFromHeight(float y)
-	{
-		return y * baseWidth / baseHeight;
-	}
-
-	public static float getHeightFromWidth(float x)
-	{
-		return x * baseHeight / baseWidth;
-	}
-
 	public void start()
 	{
 		timer.start();

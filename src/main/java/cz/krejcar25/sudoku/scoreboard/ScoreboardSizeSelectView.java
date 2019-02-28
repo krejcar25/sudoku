@@ -26,13 +26,13 @@ public class ScoreboardSizeSelectView extends BaseView
 		{
 			int bx = (2 * (index % 2) + 1) * width / 4;
 			int by = baseY + ((index / 2) * yDelta);
-			Button button = new Button(this, bx, by, bsx, bsy, gridProperties.getName(), sender -> viewStack.push(new ScoreboardDifficultySelectView(getApplet(), gridProperties)));
+			Button button = new Button<>(this, bx, by, bsx, bsy, gridProperties.getName(), sender -> viewStack.push(new ScoreboardDifficultySelectView(getApplet(), gridProperties)));
 			controls.add(button);
 			index++;
 		}
 		int bx = (2 * (index % 2) + 1) * width / 4;
 		int by = baseY + ((index / 2) * yDelta);
-		Button resetbutton = new Button(this, bx, by, bsx, bsy, "Reset Scoreboards",
+		Button resetbutton = new Button<>(this, bx, by, bsx, bsy, "Reset Scoreboards",
 				sender -> overlay = new BaseOverlay(this, 100, 100, 600, 400, OverlayType.YesNo,
 						yesButton ->
 						{

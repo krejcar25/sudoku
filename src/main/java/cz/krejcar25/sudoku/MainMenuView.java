@@ -6,6 +6,7 @@ import cz.krejcar25.sudoku.game.GridProperties;
 import cz.krejcar25.sudoku.scoreboard.ScoreboardSizeSelectView;
 import cz.krejcar25.sudoku.ui.BaseView;
 import cz.krejcar25.sudoku.ui.control.Button;
+import javafx.util.Pair;
 import processing.core.PApplet;
 import processing.event.KeyEvent;
 import processing.event.MouseEvent;
@@ -14,7 +15,7 @@ import java.util.ArrayList;
 
 public class MainMenuView extends BaseView
 {
-	private ArrayList<Button<Object>> buttons;
+	private final ArrayList<Button<?>> buttons;
 
 	MainMenuView(SudokuApplet applet)
 	{
@@ -34,18 +35,16 @@ public class MainMenuView extends BaseView
 			index++;
 		}
 
-		String[] labels = {"Settings", "Scoreboard", "Help", "Network Control"};
-		ButtonEvents[] buttonEvents = {
-				sender -> viewStack.push(new SettingsView(getApplet())),
-				sender -> viewStack.push(new ScoreboardSizeSelectView(getApplet())),
-				sender -> viewStack.push(new HelpView(getApplet())),
-				sender -> viewStack.push(new cz.krejcar25.sudoku.networkControl.MainMenuView(parent))
-		};
-		for (int i = 0; i < labels.length && labels.length == buttonEvents.length; i++)
+		ArrayList<Pair<String, ButtonEvents<Object>>> buttonEvents = new ArrayList<>();
+		buttonEvents.add(new Pair<>("Settings", sender -> showSettingsView()));
+		buttonEvents.add(new Pair<>("Scoreboard", sender -> showScoreboardSizeSelectView()));
+		buttonEvents.add(new Pair<>("Help", sender -> showHelpView()));
+		buttonEvents.add(new Pair<>("Network Control", sender -> showNetworkControl()));
+		for (Pair<String, ButtonEvents<Object>> buttonEvent : buttonEvents)
 		{
 			int bx = (2 * (index % 2) + 1) * width / 4;
 			int by = baseY + ((index / 2) * yDelta);
-			Button<Object> button = new Button<>(this, bx, by, bsx, bsy, labels[i], buttonEvents[i]);
+			Button<Object> button = new Button<>(this, bx, by, bsx, bsy, buttonEvent.getKey(), buttonEvent.getValue());
 			buttons.add(button);
 			index++;
 		}
@@ -114,9 +113,23 @@ public class MainMenuView extends BaseView
 		if (keyEvent.getKeyCode() == ESC) getApplet().exit();
 	}
 
-	@Override
-	public void keyUp(KeyEvent keyEvent)
+	private void showSettingsView()
 	{
+		viewStack.push(new SettingsView(parent));
+	}
 
+	private void showScoreboardSizeSelectView()
+	{
+		viewStack.push(new ScoreboardSizeSelectView(getApplet()));
+	}
+
+	private void showHelpView()
+	{
+		viewStack.push(new HelpView(getApplet()));
+	}
+
+	private void showNetworkControl()
+	{
+		viewStack.push(new cz.krejcar25.sudoku.networkControl.MainMenuView(parent));
 	}
 }

@@ -11,7 +11,7 @@ import processing.core.PImage;
 
 public class Button<O> extends Control<O>
 {
-	public ButtonStyle style;
+	public final ButtonStyle style;
 	private ButtonEvents<O> click;
 	private PImage content;
 	private float labelSize;
@@ -118,7 +118,7 @@ public class Button<O> extends Control<O>
 		this.label = label;
 	}
 
-	public void setLabel(PImage image)
+	private void setLabel(PImage image)
 	{
 		content = image.copy();
 		int Hb = (int) (height - style.borderThickness.totalTb());

@@ -9,10 +9,10 @@ public class Clock extends Drawable
 	private static final int baseHeight = 370;
 
 	private final Timer timer;
-	private Digit minD;
-	private Digit minU;
-	private Digit secD;
-	private Digit secU;
+	private final Digit minD;
+	private final Digit minU;
+	private final Digit secD;
+	private final Digit secU;
 	private float displayWidth = baseWidth;
 	private float displayHeight = baseHeight;
 
@@ -104,13 +104,13 @@ public class Clock extends Drawable
 	protected void draw()
 	{
 		long time = timer.getElapsedTimeSecs();
-		minD.setDigit(PApplet.abs(PApplet.floor(PApplet.floor(time / 60f) / 10f)), false);
+		minD.setDigit(PApplet.abs(PApplet.floor(PApplet.floor(time / 60f) / 10f)));
 		minD.update();
-		minU.setDigit(PApplet.abs(PApplet.floor(time / 60f) % 10), false);
+		minU.setDigit(PApplet.abs(PApplet.floor(time / 60f) % 10));
 		minU.update();
-		secD.setDigit(PApplet.abs(PApplet.floor(PApplet.floor(time % 60) / 10f)), false);
+		secD.setDigit(PApplet.abs(PApplet.floor(PApplet.floor(time % 60) / 10f)));
 		secD.update();
-		secU.setDigit(PApplet.abs(PApplet.floor(time % 60) % 10), false);
+		secU.setDigit(PApplet.abs(PApplet.floor(time % 60) % 10));
 		secU.update();
 
 		background(51);

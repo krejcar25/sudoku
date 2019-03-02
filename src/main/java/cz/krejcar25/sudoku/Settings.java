@@ -9,85 +9,93 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.security.InvalidParameterException;
 
-public class Settings {
-    public static final String DEF_PATH = "config.yml";
+public class Settings
+{
+	private static final String DEF_PATH = "config.yml";
+	@JsonIgnore
+	private String path;
+	private boolean defaultNumberFirst;
+	private boolean defaultNotes;
 
-    public static Settings loadSettings(String path) throws FileNotFoundException, IllegalArgumentException {
-        File file = new File(path);
-        if (!file.exists()) throw new FileNotFoundException("The path specified does not exist. You can use the prepare method to create the config file.");
-        if (file.isDirectory()) throw new IllegalArgumentException("The path specified is a directory. loadSettings requires a file to be specified.");
-        ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
-        try {
-            Settings settings = mapper.readValue(file, Settings.class);
-            settings.path = path;
-            return settings;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
+	private Settings(String path)
+	{
+		this.path = path;
+		this.defaultNumberFirst = true;
+		this.defaultNotes = false;
+	}
 
-    public static boolean prepare(String path) {
-        Settings settings = new Settings(path);
-        return settings.save();
-    }
+	static Settings loadSettings() throws FileNotFoundException, IllegalArgumentException
+	{
+		File file = new File(Settings.DEF_PATH);
+		if (!file.exists())
+			throw new FileNotFoundException("The path specified does not exist. You can use the prepare method to create the config file.");
+		if (file.isDirectory())
+			throw new IllegalArgumentException("The path specified is a directory. loadSettings requires a file to be specified.");
+		ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
+		try
+		{
+			Settings settings = mapper.readValue(file, Settings.class);
+			settings.path = Settings.DEF_PATH;
+			return settings;
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+		return null;
+	}
 
-    public static void isValidConfig(String path) throws IllegalArgumentException, IOException {
-        File file = new File(path);
-        if (!file.exists()) throw new FileNotFoundException("The path specified does not exist. You can use the prepare method to create the config file.");
-        if (file.isDirectory()) throw new IllegalArgumentException("The path specified is a directory. isValidConfig requires a file to be specified.");
-        ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
-        mapper.readValue(file, Settings.class);
-    }
+	static void prepare()
+	{
+		Settings settings = new Settings(Settings.DEF_PATH);
+		settings.save();
+	}
 
-    @JsonIgnore
-    private String path;
-    private boolean defaultNumberFirst;
-    private boolean defaultNotes;
+	static void isValidConfig() throws IllegalArgumentException, IOException
+	{
+		File file = new File(Settings.DEF_PATH);
+		if (!file.exists())
+			throw new FileNotFoundException("The path specified does not exist. You can use the prepare method to create the config file.");
+		if (file.isDirectory())
+			throw new IllegalArgumentException("The path specified is a directory. isValidConfig requires a file to be specified.");
+		ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
+		mapper.readValue(file, Settings.class);
+	}
 
-    private Settings() {
-        this.path = DEF_PATH;
-        this.defaultNumberFirst = true;
-        this.defaultNotes = false;
-    }
+	void save()
+	{
+		File file = new File(path);
+		if (file.isDirectory())
+			throw new InvalidParameterException("The location specified is a directory. save requires a file to be specified.");
+		ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
+		try
+		{
+			mapper.writeValue(file, this);
+		}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+	}
 
-    private Settings(String path) {
-        this.path = path;
-        this.defaultNumberFirst = true;
-        this.defaultNotes = false;
-    }
+	public boolean isDefaultNumberFirst()
+	{
+		return defaultNumberFirst;
+	}
 
-    public boolean save() {
-        File file = new File(path);
-        if (file.isDirectory()) throw new InvalidParameterException("The location specified is a directory. save requires a file to be specified.");
-        ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
-        try {
-            mapper.writeValue(file, this);
-            return true;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
+	void setDefaultNumberFirst(boolean defaultNumberFirst)
+	{
+		this.defaultNumberFirst = defaultNumberFirst;
+	}
 
-    public String getPath() {
-        return path;
-    }
+	public boolean isDefaultNotes()
+	{
+		return defaultNotes;
+	}
 
-    public boolean isDefaultNumberFirst() {
-        return defaultNumberFirst;
-    }
-
-    public void setDefaultNumberFirst(boolean defaultNumberFirst) {
-        this.defaultNumberFirst = defaultNumberFirst;
-    }
-
-    public boolean isDefaultNotes() {
-        return defaultNotes;
-    }
-
-    public void setDefaultNotes(boolean defaultNotes) {
-        this.defaultNotes = defaultNotes;
-    }
+	void setDefaultNotes(boolean defaultNotes)
+	{
+		this.defaultNotes = defaultNotes;
+	}
 }
 

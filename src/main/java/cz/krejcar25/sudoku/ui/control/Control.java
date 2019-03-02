@@ -7,39 +7,29 @@ import cz.krejcar25.sudoku.ui.Drawable;
 
 public abstract class Control<O> extends Drawable
 {
-    protected BaseView baseView;
-    protected String tooltip;
-    protected String label;
 	public O userObject;
-	protected boolean enabled;
+	final BaseView baseView;
+	String label;
+	boolean enabled;
 
-    protected Control(BaseView baseView, float x, float y, int width, int height) {
-        super(baseView.getApplet(), x, y, width, height);
-        this.baseView = baseView;
-	    this.enabled = true;
-    }
+	Control(BaseView baseView, float x, float y, int width, int height)
+	{
+		super(baseView.getApplet(), x, y, width, height);
+		this.baseView = baseView;
+		this.enabled = true;
+	}
 
-    protected Control(Applet applet, float x, float y, int width, int height) {
-        super(applet, x, y, width, height);
-        this.baseView = null;
-	    this.enabled = true;
-    }
+	Control(Applet applet, float x, float y, int width, int height)
+	{
+		super(applet, x, y, width, height);
+		this.baseView = null;
+		this.enabled = true;
+	}
 
-    public String getLabel() {
-        return label;
-    }
-
-    public void setLabel(String label) {
-        this.label = label;
-    }
-
-    public String getTooltip() {
-        return tooltip;
-    }
-
-    public void setTooltip(String tooltip) {
-        this.tooltip = tooltip;
-    }
+	public void setLabel(String label)
+	{
+		this.label = label;
+	}
 
 	public final BaseView getBaseView()
 	{
@@ -51,16 +41,12 @@ public abstract class Control<O> extends Drawable
 		this.enabled = enabled;
 	}
 
-	public boolean isEnabled()
+	public final boolean isClick(float mx, float my)
 	{
-		return enabled;
+		return isClick((int) mx, (int) my);
 	}
 
-    public final boolean isClick(float mx, float my) {
-        return isClick((int) mx, (int) my);
-    }
+	public abstract boolean isClick(int mx, int my);
 
-    public abstract boolean isClick(int mx, int my);
-
-    public abstract void click();
+	public abstract void click();
 }

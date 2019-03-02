@@ -7,19 +7,19 @@ import java.util.BitSet;
 // Stupid sudoku solver with a limited set of solving rules
 // useful for assessing the difficulty
 
-public class DirectSolver
+class DirectSolver
 {
-	protected GridCore game;
-	protected Rule[] rules;
+	private final GridCore game;
+	private final Rule[] rules;
 
-	public DirectSolver(GridCore game)
+	DirectSolver(GridCore game)
 	{
-		this.game = game.clone();
-		this.game.lockAsBase(false, false);
+		this.game = game.copy();
+		this.game.lockAsBase(false);
 		this.rules = new Rule[]{new LastInBlockRule(), new LastInRowRule(), new LastInColumnRule(), new OnlyRule()};
 	}
 
-	public int getDifficulty()
+	int getDifficulty()
 	{
 		Timer timer = new Timer("DirectSolver");
 		timer.start();

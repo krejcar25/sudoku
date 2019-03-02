@@ -7,34 +7,33 @@ import java.util.ArrayList;
 
 public class GridCoreTrainingDataSet implements TrainingDataSet<GridCore>
 {
-    private ArrayList<GridCore> cores;
+	private final ArrayList<GridCore> cores;
 
-    public GridCoreTrainingDataSet() {
-        cores = new ArrayList<>();
-    }
+	GridCoreTrainingDataSet()
+	{
+		cores = new ArrayList<>();
+	}
 
-    public void addCore(String coreString) {
-        addCore(GridCore.fromGridString(coreString));
-    }
+	void addCore(String coreString)
+	{
+		addCore(GridCore.fromGridString(coreString));
+	}
 
-    public void addCore(GridCore core) {
-        cores.add(core);
-    }
+	private void addCore(GridCore core)
+	{
+		cores.add(core);
+	}
 
-    @Override
-    public GridCore[] getAllData()
-    {
-	    return cores.toArray(new GridCore[cores.size()]);
-    }
+	@Override
+	public GridCore[] getAllData()
+	{
+		return cores.toArray(new GridCore[0]);
+	}
 
-    @Override
-    public GridCore getRandomPair()
-    {
-        return cores.get((int) Math.floor(Math.random() * cores.size()));
-    }
+	@Override
+	public GridCore getRandomPair()
+	{
+		return cores.get((int) Math.floor(Math.random() * cores.size()));
+	}
 
-    @Override
-    public int getDataCount() {
-        return cores.size();
-    }
 }

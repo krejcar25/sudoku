@@ -1,5 +1,6 @@
 package cz.krejcar25.sudoku.networkControl;
 
+import cz.krejcar25.sudoku.FileChooserFactory;
 import cz.krejcar25.sudoku.game.GridCore;
 import cz.krejcar25.sudoku.ui.Applet;
 import cz.krejcar25.sudoku.ui.BaseView;
@@ -8,62 +9,50 @@ import cz.krejcar25.sudoku.ui.control.Control;
 import processing.event.KeyEvent;
 import processing.event.MouseEvent;
 
-import javax.swing.*;
-import javax.swing.filechooser.FileNameExtensionFilter;
-import java.awt.*;
-import java.io.*;
-import java.lang.reflect.InvocationTargetException;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.logging.Logger;
 
 public class SudokuBrowserView extends BaseView
 {
-	private static final Logger log = Logger.getLogger(SudokuBrowserView.class.getName());
-	private ArrayList<String> cores;
-	private ArrayList<Control> controls;
+	boolean shouldLeave;
+	private final ArrayList<String> cores;
+	private final ArrayList<Control> controls;
 	private DrawableGridCore core;
 	private int coreIndex = 0;
-	private int rVal;
 
-	public final boolean shouldLeave;
-
-	public SudokuBrowserView(Applet applet)
+	SudokuBrowserView(Applet applet)
 	{
 		super(applet, 800, 800);
 		cores = new ArrayList<>();
 		controls = new ArrayList<>();
 		controls.add(Button.getStandardBackButton(this));
 
-		JFileChooser c = new JFileChooser();
-		String extension = GridCore.FILETYPE;
-		c.addChoosableFileFilter(new FileNameExtensionFilter(GridCore.FILETYPE_DESC, extension));
-		c.setAcceptAllFileFilterUsed(false);
-		try
-		{
-			EventQueue.invokeAndWait(() -> rVal = c.showOpenDialog(null));
-		}
-		catch (InterruptedException | InvocationTargetException e)
-		{
-			e.printStackTrace();
-		}
-		if (rVal == JFileChooser.APPROVE_OPTION)
-		{
-			File file = c.getSelectedFile();
-			try (FileInputStream in = new FileInputStream(file))
-			{
-				BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-				reader.lines().forEach(line -> cores.add(line));
-			}
-			catch (IOException e)
-			{
-				e.printStackTrace();
-			}
+		String extension = GridCore.FILE_TYPE;
+		new FileChooserFactory()
+				.addFileType(GridCore.FILE_TYPE_DESC, extension)
+				.setAllowAll(false)
+				.setOkAction(file ->
+				{
+					try (FileInputStream in = new FileInputStream(file))
+					{
+						BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+						reader.lines().forEach(line -> cores.add(line));
+					}
+					catch (IOException e)
+					{
+						e.printStackTrace();
+					}
 
-			core = new DrawableGridCore(getApplet(), 0, 0, width, height, GridCore.fromGridString(cores.get(coreIndex)));
-			core.update();
-			shouldLeave = false;
-		}
-		else shouldLeave = true;
+					core = new DrawableGridCore(getApplet(), 0, 0, width, height, GridCore.fromGridString(cores.get(coreIndex)));
+					core.update();
+					shouldLeave = false;
+				})
+				.setCancelAction(() -> shouldLeave = true)
+				.setMode(FileChooserFactory.OPEN)
+				.show();
 	}
 
 	@Override
@@ -115,12 +104,6 @@ public class SudokuBrowserView extends BaseView
 
 		if (changed)
 			core = new DrawableGridCore(getApplet(), 0, 0, width, height, GridCore.fromGridString(cores.get(coreIndex)));
-	}
-
-	@Override
-	public void keyUp(KeyEvent keyEvent)
-	{
-
 	}
 
 	@Override

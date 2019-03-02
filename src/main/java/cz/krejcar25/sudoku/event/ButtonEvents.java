@@ -5,6 +5,6 @@ import cz.krejcar25.sudoku.ui.control.Button;
 @FunctionalInterface
 public interface ButtonEvents<O>
 {
-    void click(Button<O> sender);
+	void click(Button<O> sender);
 }
 

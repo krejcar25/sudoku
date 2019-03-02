@@ -10,15 +10,16 @@ public class DrawableGridCore extends Drawable
 {
 	private final GridCore core;
 	private final GridCore solvedCore;
-	private float sx, sy;
+	private final float sx;
+	private final float sy;
 	private boolean showSolved;
 
-	public DrawableGridCore(Applet applet, float x, float y, int width, int height, @NotNull GridCore core)
+	DrawableGridCore(Applet applet, float x, float y, int width, int height, @NotNull GridCore core)
 	{
 		this(applet, x, y, width, height, core, null);
 	}
 
-	public DrawableGridCore(Applet applet, float x, float y, int width, int height, @NotNull GridCore core, GridCore solvedCore)
+	DrawableGridCore(Applet applet, float x, float y, int width, int height, @NotNull GridCore core, GridCore solvedCore)
 	{
 		super(applet, x, y, width, height);
 		this.core = core;
@@ -28,12 +29,12 @@ public class DrawableGridCore extends Drawable
 		this.showSolved = false;
 	}
 
-	public void setShowSolved(boolean showSolved)
+	void setShowSolved(boolean showSolved)
 	{
 		this.showSolved = showSolved;
 	}
 
-	public boolean isShowingSolved()
+	boolean isShowingSolved()
 	{
 		return this.showSolved;
 	}

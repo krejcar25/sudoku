@@ -444,7 +444,7 @@ public abstract class Drawable implements PConstants
 		return this.parent.blue(rgb);
 	}
 
-	protected float brightnes(int rgb)
+	protected float brightness(int rgb)
 	{
 		return this.parent.brightness(rgb);
 	}
@@ -454,9 +454,9 @@ public abstract class Drawable implements PConstants
 		return this.parent.color(gray);
 	}
 
-	protected int color(float fgray)
+	protected int color(float gray)
 	{
-		return this.parent.color(fgray);
+		return this.parent.color(gray);
 	}
 
 	protected int color(int gray, int alpha)
@@ -464,9 +464,9 @@ public abstract class Drawable implements PConstants
 		return this.parent.color(gray, alpha);
 	}
 
-	protected int color(float fgray, float falpha)
+	protected int color(float gray, float alpha)
 	{
-		return this.parent.color(fgray, falpha);
+		return this.parent.color(gray, alpha);
 	}
 
 	protected int color(int v1, int v2, int v3)

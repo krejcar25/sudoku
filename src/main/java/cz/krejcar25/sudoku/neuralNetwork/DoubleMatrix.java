@@ -6,110 +6,128 @@ import org.jetbrains.annotations.NotNull;
 import java.io.Serializable;
 import java.util.Arrays;
 
-public class DoubleMatrix implements Serializable {
-    private final int rows;
-    private final int cols;
-    private double[][] values;
+public class DoubleMatrix implements Serializable
+{
+	private final int rows;
+	private final int cols;
+	private final double[][] values;
 
-    public DoubleMatrix(int rows, int cols) {
-        this.rows = rows;
-        this.cols = cols;
+	DoubleMatrix(int rows, int cols)
+	{
+		this.rows = rows;
+		this.cols = cols;
 
-        this.values = new double[rows][cols];
-    }
+		this.values = new double[rows][cols];
+	}
 
-    @Contract(" -> new")
-    public DoubleMatrix copy() {
-        DoubleMatrix dm = new DoubleMatrix(rows, cols);
-        dm.map((value, i, j) -> values[i][j]);
-        return dm;
-    }
+	@Contract("null -> fail; !null -> new")
+	static DoubleMatrix fromArray(@NotNull double... values)
+	{
+		return new DoubleMatrix(values.length, 1).map(((value, i, j) -> values[i]));
+	}
 
-    @Contract("null -> fail; !null -> this")
-    public DoubleMatrix add(DoubleMatrix dm) {
-        if (rows != dm.rows || cols != dm.cols)
-            throw new IllegalArgumentException("Dimensions of both matrices must be identical");
-        map((value, i, j) -> value + dm.values[i][j]);
-        return this;
-    }
+	@Contract(" -> new")
+	DoubleMatrix copy()
+	{
+		DoubleMatrix dm = new DoubleMatrix(rows, cols);
+		dm.map((value, i, j) -> values[i][j]);
+		return dm;
+	}
 
-    @Contract("null -> fail; !null -> this")
-    public DoubleMatrix sub(DoubleMatrix dm) {
-        if (rows != dm.rows || cols != dm.cols)
-            throw new IllegalArgumentException("Dimensions of both matrices must be identical");
-        map((value, i, j) -> value - dm.values[i][j]);
-        return this;
-    }
+	@Contract("null -> fail; !null -> this")
+	public DoubleMatrix add(DoubleMatrix dm)
+	{
+		if (rows != dm.rows || cols != dm.cols)
+			throw new IllegalArgumentException("Dimensions of both matrices must be identical");
+		map((value, i, j) -> value + dm.values[i][j]);
+		return this;
+	}
 
-    @Contract("_ -> this")
-    public DoubleMatrix mult(double coefficient) {
-        map((value, i, j) -> value * coefficient);
-        return this;
-    }
+	@Contract("null -> fail; !null -> this")
+	DoubleMatrix sub(DoubleMatrix dm)
+	{
+		if (rows != dm.rows || cols != dm.cols)
+			throw new IllegalArgumentException("Dimensions of both matrices must be identical");
+		map((value, i, j) -> value - dm.values[i][j]);
+		return this;
+	}
 
-    @Contract("_, _ -> this")
-    public DoubleMatrix randomise(double min, double max) {
-        map((value, i, j) -> (Math.random() * (max - min) + min));
-        return this;
-    }
+	@Contract("_ -> this")
+	DoubleMatrix mult(double coefficient)
+	{
+		map((value, i, j) -> value * coefficient);
+		return this;
+	}
 
-    @Contract(" -> new")
-    public DoubleMatrix transpose() {
-        DoubleMatrix dm = new DoubleMatrix(cols, rows);
-        dm.map((value, i, j) -> values[j][i]);
-        return dm;
-    }
+	@Contract("_, _ -> this")
+	DoubleMatrix randomise(double min, double max)
+	{
+		map((value, i, j) -> (Math.random() * (max - min) + min));
+		return this;
+	}
 
-    @Contract("null -> fail; !null -> this")
-    public DoubleMatrix mult(DoubleMatrix dm) {
-        if (cols == dm.cols && rows == dm.rows) return map(((value, i, j) -> value * dm.values[i][j]));
-        else throw new IllegalArgumentException("Dimensions of both matrices must be identical");
-    }
+	@Contract(" -> new")
+	DoubleMatrix transpose()
+	{
+		DoubleMatrix dm = new DoubleMatrix(cols, rows);
+		dm.map((value, i, j) -> values[j][i]);
+		return dm;
+	}
 
-    @Contract("null -> fail; !null -> new")
-    public DoubleMatrix matmult(DoubleMatrix dm) {
-        if (cols == dm.rows) return new DoubleMatrix(rows, dm.cols).map((value, i, j) -> {
-            double sum = 0;
-            for (int k = 0; k < cols; k++)
-                sum += values[i][k] * dm.values[k][j];
-            return sum;
-        });
-        else
-            throw new IllegalArgumentException(String.format("This matrix's cols (%d) must be the same as the other matrix's rows (%d)!", cols, dm.rows));
-    }
+	@Contract("null -> fail; !null -> this")
+	DoubleMatrix mult(DoubleMatrix dm)
+	{
+		if (cols == dm.cols && rows == dm.rows) return map(((value, i, j) -> value * dm.values[i][j]));
+		else throw new IllegalArgumentException("Dimensions of both matrices must be identical");
+	}
 
-    @Override
-    @Contract(" -> new")
-    public String toString() {
-        return Arrays.deepToString(values);
-    }
+	@Contract("null -> fail; !null -> new")
+	DoubleMatrix matmult(DoubleMatrix dm)
+	{
+		if (cols == dm.rows) return new DoubleMatrix(rows, dm.cols).map((value, i, j) ->
+		{
+			double sum = 0;
+			for (int k = 0; k < cols; k++)
+				sum += values[i][k] * dm.values[k][j];
+			return sum;
+		});
+		else
+			throw new IllegalArgumentException(String.format("This matrix's cols (%d) must be the same as the other matrix's rows (%d)!", cols, dm.rows));
+	}
 
-    public double get(int i, int j) {
-        return values[i][j];
-    }
+	@Override
+	@Contract(" -> new")
+	public String toString()
+	{
+		return Arrays.deepToString(values);
+	}
 
-    public DoubleMatrix set(int i, int j, double val) {
-        values[i][j] = val;
-        return this;
-    }
+	public double get(int i, int j)
+	{
+		return values[i][j];
+	}
 
-    @Contract("null -> fail; !null -> this")
-    public DoubleMatrix map(MapFunction<Double> function) {
-        for (int j = 0; j < cols; j++)
-            for (int i = 0; i < rows; i++) values[i][j] = function.map(values[i][j], i, j);
-        return this;
-    }
+	public DoubleMatrix set(int i, int j, double val)
+	{
+		values[i][j] = val;
+		return this;
+	}
 
-    @Contract("null -> fail; !null -> new")
-    public static DoubleMatrix fromArray(@NotNull double... values) {
-        return new DoubleMatrix(values.length, 1).map(((value, i, j) -> values[i]));
-    }
+	@Contract("_ -> this")
+	DoubleMatrix map(MapFunction<Double> function)
+	{
+		for (int j = 0; j < cols; j++)
+			for (int i = 0; i < rows; i++) values[i][j] = function.map(values[i][j], i, j);
+		return this;
+	}
 
-    public int getRows() {
-        return rows;
-    }
+	int getRows()
+	{
+		return rows;
+	}
 
-    public int getCols() {
-        return cols;
-    }
+	int getCols()
+	{
+		return cols;
+	}
 }

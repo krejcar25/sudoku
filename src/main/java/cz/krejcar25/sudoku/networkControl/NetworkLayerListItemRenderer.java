@@ -7,7 +7,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.lang.annotation.Annotation;
 
-public class NetworkLayerListItemRenderer implements ListCellRenderer<NeuralNetworkLayer>
+class NetworkLayerListItemRenderer implements ListCellRenderer<NeuralNetworkLayer>
 {
 	@Override
 	public Component getListCellRendererComponent(JList list, NeuralNetworkLayer value, int index, boolean isSelected, boolean hasFocus)

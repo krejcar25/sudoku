@@ -13,19 +13,17 @@ public class NetworkChartViewContent extends ScrollViewContent
 {
 	private final NeuralNetwork network;
 
-	ArrayList<ArrayList<PVector>> positions;
-	private float mx;
-	private float my;
-	private float d;
+	private final ArrayList<ArrayList<PVector>> positions;
+	private final float d;
 
-	public NetworkChartViewContent(ScrollView scrollView, NeuralNetwork network)
+	NetworkChartViewContent(ScrollView scrollView, NeuralNetwork network)
 	{
 		super(scrollView, scrollView.width, scrollView.height);
 		this.network = network;
 
 		positions = new ArrayList<>();
-		mx = 30;
-		my = 30;
+		float mx = 30;
+		float my = 30;
 		d = 30;
 
 		int highestCount = network.getInputCount();

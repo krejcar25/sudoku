@@ -7,15 +7,13 @@ import java.util.ArrayList;
 
 public abstract class BaseOverlay extends Drawable
 {
-	protected BaseView baseView;
-	protected OverlayResult result;
-	protected ArrayList<Button<Object>> buttons;
+	private final BaseView baseView;
+	protected final ArrayList<Button<?>> buttons;
 
-	protected BaseOverlay(BaseView baseView, float x, float y, int width, int height, OverlayType type, ButtonEvents<Object>... clicks)
+	protected BaseOverlay(BaseView baseView, float x, float y, int width, int height, OverlayType type, ButtonEvents<?>... clicks)
 	{
 		super(baseView.getApplet(), x, y, width, height);
 		this.baseView = baseView;
-		this.result = OverlayResult.None;
 		this.buttons = new ArrayList<>();
 
 		int bsx = 135;
@@ -42,14 +40,12 @@ public abstract class BaseOverlay extends Drawable
 
 	protected void drawButtons()
 	{
-		for (Button<Object> button : buttons)
+		for (Button<?> button : buttons)
 		{
 			button.update();
 			//image(button, button.x, button.y);
 		}
 	}
-
-	public abstract OverlayResult getResult();
 
 	public final void click(float mx, float my, boolean rmb)
 	{

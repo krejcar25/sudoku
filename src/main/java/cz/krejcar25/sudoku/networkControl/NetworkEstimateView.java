@@ -28,14 +28,13 @@ public class NetworkEstimateView extends BaseView
 	private static final int gridHeight = 800;
 	private static final int topBarHeight = 50;
 	private static final int bottomBarHeight = 50;
-	private DrawableGridCore base;
-	private ArrayList<DrawableGridCore> guesses;
+	private final DrawableGridCore base;
+	private final ArrayList<DrawableGridCore> guesses;
 	private int guessIndex;
-	private ArrayList<Control> controls;
-	private Map<NavigationDirection, Button<NavigationDirection>> navigationButtons;
-	private GridCore intermediate;
+	private final ArrayList<Control> controls;
+	private final Map<NavigationDirection, Button<NavigationDirection>> navigationButtons;
 
-	public NetworkEstimateView(Applet applet, GridCore base, NeuralNetwork network)
+	NetworkEstimateView(Applet applet, GridCore base, NeuralNetwork network)
 	{
 		super(applet, 2 * gridWidth, topBarHeight + gridHeight + bottomBarHeight);
 		this.base = new DrawableGridCore(applet, 0, topBarHeight, gridWidth, gridHeight, base);
@@ -46,19 +45,16 @@ public class NetworkEstimateView extends BaseView
 		this.guesses.add(new DrawableGridCore(applet, gridWidth, topBarHeight, gridWidth, gridHeight, base, base));
 		this.guessIndex = 0;
 
-		int bc = NavigationDirection.values().length; // button count
+		float bc = NavigationDirection.values().length; // button count
 		int bs = bottomBarHeight - 5; // button size
-		float bxb = gridWidth; // button x base
-		float bxd = gridWidth; // button x distance
-		float bxs = bxd / bc; // single button x space
+		float bxs = gridWidth / bc; // single button x space
 		float byb = gridHeight + topBarHeight; // button y base
-		float byd = bottomBarHeight; // button y distance
 		int bi = 0; // button index
 
 		for (NavigationDirection direction : NavigationDirection.values())
 		{
-			float bx = bxb + bi * bxs + bxs / 2f;
-			float by = byb + byd / 2;
+			float bx = (float) gridWidth + bi * bxs + bxs / 2f;
+			float by = byb + bottomBarHeight / 2f;
 			try
 			{
 				InputStream resourceStream = NetworkEstimateView.class.getResourceAsStream(String.format("%s.png", direction.getImageName()));
@@ -76,31 +72,31 @@ public class NetworkEstimateView extends BaseView
 			}
 		}
 
-		intermediate = base.clone();
+		GridCore intermediate = base.copy();
 
-		while (!this.intermediate.isFinished())
+		while (!intermediate.isFinished())
 		{
-			NetworkOutputStore store = new NetworkOutputStore(network.estimate(this.intermediate.getInput()));
+			NetworkOutputStore store = new NetworkOutputStore(network.estimate(intermediate.getInput()));
 			int placeIndex = 0;
 			NetworkOutputStore.GridCell top;
 			boolean canPlaceNumber;
 			boolean isEmpty;
 			top = store.getTop(placeIndex);
-			canPlaceNumber = this.intermediate.canPlaceNumber(top.n, top.x, top.y, -1);
-			isEmpty = this.intermediate.get(top.x, top.y) == -1;
+			canPlaceNumber = intermediate.canPlaceNumber(top.n, top.x, top.y, -1);
+			isEmpty = intermediate.get(top.x, top.y) == -1;
 			placeIndex++;
 
 			while ((!canPlaceNumber || !isEmpty) && placeIndex < store.size())
 			{
 				top = store.getTop(placeIndex);
-				canPlaceNumber = this.intermediate.canPlaceNumber(top.n, top.x, top.y, -1);
-				isEmpty = this.intermediate.get(top.x, top.y) == -1;
+				canPlaceNumber = intermediate.canPlaceNumber(top.n, top.x, top.y, -1);
+				isEmpty = intermediate.get(top.x, top.y) == -1;
 				placeIndex++;
 			}
 
 			if (placeIndex == store.size()) break;
-			this.intermediate.set(top.x, top.y, top.n);
-			DrawableGridCore newGuess = new DrawableGridCore(getApplet(), gridWidth, topBarHeight, gridWidth, gridHeight, intermediate.clone(), base);
+			intermediate.set(top.x, top.y, top.n);
+			DrawableGridCore newGuess = new DrawableGridCore(getApplet(), gridWidth, topBarHeight, gridWidth, gridHeight, intermediate.copy(), base);
 			this.guesses.add(newGuess);
 		}
 
@@ -208,12 +204,6 @@ public class NetworkEstimateView extends BaseView
 	}
 
 	@Override
-	public void keyUp(KeyEvent keyEvent)
-	{
-
-	}
-
-	@Override
 	protected void draw()
 	{
 		background(51);
@@ -249,7 +239,7 @@ public class NetworkEstimateView extends BaseView
 	{
 		First("rw"), Previous("prev"), Next("next"), Last("ff");
 
-		private String imageName;
+		private final String imageName;
 
 		NavigationDirection(String imageName)
 		{
@@ -257,7 +247,7 @@ public class NetworkEstimateView extends BaseView
 		}
 
 		@Contract(pure = true)
-		public String getImageName()
+		String getImageName()
 		{
 			return imageName;
 		}
@@ -267,30 +257,30 @@ public class NetworkEstimateView extends BaseView
 	{
 		private ArrayList<GridCell> cells;
 
-		public NetworkOutputStore(@NotNull double[] doubles)
+		NetworkOutputStore(@NotNull double[] doubles)
 		{
-			double ncrd = Math.cbrt(doubles.length);
-			if (ncrd == Math.floor(ncrd) && !Double.isInfinite(ncrd))
+			double cbrt = Math.cbrt(doubles.length);
+			if (cbrt == Math.floor(cbrt) && !Double.isInfinite(cbrt))
 			{
 				this.cells = new ArrayList<>();
-				int ncr = (int) ncrd;
+				int ncr = (int) cbrt;
 
 				for (int x = 0; x < ncr; x++)
 					for (int y = 0; y < ncr; y++)
 						for (int n = 0; n < ncr; n++)
 							this.cells.add(new GridCell(x, y, n, doubles[n + ncr * (y + ncr * x)]));
-				cells.sort(((o1, o2) -> (int) Math.signum(o1.getValue() - o2.getValue())));
+				cells.sort(((o1, o2) -> (int) Math.signum(o1.value - o2.value)));
 
 			}
 			else throw new IllegalArgumentException("The size of the doubles array is not an integer cube.");
 		}
 
-		public GridCell getTop(int offset)
+		GridCell getTop(int offset)
 		{
 			return cells.get(offset);
 		}
 
-		public int size()
+		int size()
 		{
 			return cells.size();
 		}
@@ -300,32 +290,12 @@ public class NetworkEstimateView extends BaseView
 			private final int x, y, n;
 			private final double value;
 
-			public GridCell(int x, int y, int n, double value)
+			GridCell(int x, int y, int n, double value)
 			{
 				this.x = x;
 				this.y = y;
 				this.n = n;
 				this.value = value;
-			}
-
-			public int getX()
-			{
-				return x;
-			}
-
-			public int getY()
-			{
-				return y;
-			}
-
-			public int getN()
-			{
-				return n;
-			}
-
-			public double getValue()
-			{
-				return value;
 			}
 		}
 	}

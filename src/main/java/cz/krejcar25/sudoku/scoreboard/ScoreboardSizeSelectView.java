@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 public class ScoreboardSizeSelectView extends BaseView
 {
-	private ArrayList<Control> controls;
+	private final ArrayList<Control> controls;
 
 	public ScoreboardSizeSelectView(Applet applet)
 	{
@@ -32,7 +32,7 @@ public class ScoreboardSizeSelectView extends BaseView
 		}
 		int bx = (2 * (index % 2) + 1) * width / 4;
 		int by = baseY + ((index / 2) * yDelta);
-		Button resetbutton = new Button<>(this, bx, by, bsx, bsy, "Reset Scoreboards",
+		Button resetButton = new Button<>(this, bx, by, bsx, bsy, "Reset Scoreboards",
 				sender -> overlay = new BaseOverlay(this, 100, 100, 600, 400, OverlayType.YesNo,
 						yesButton ->
 						{
@@ -42,11 +42,6 @@ public class ScoreboardSizeSelectView extends BaseView
 						},
 						noButton -> overlay = null)
 				{
-					@Override
-					public OverlayResult getResult()
-					{
-						return result;
-					}
 
 					@Override
 					public void click(int mx, int my, boolean rmb)
@@ -71,7 +66,7 @@ public class ScoreboardSizeSelectView extends BaseView
 						drawButtons();
 					}
 				});
-		controls.add(resetbutton);
+		controls.add(resetButton);
 		controls.add(Button.getStandardBackButton(this));
 	}
 
@@ -111,12 +106,6 @@ public class ScoreboardSizeSelectView extends BaseView
 
 	@Override
 	public void keyDown(KeyEvent keyEvent)
-	{
-
-	}
-
-	@Override
-	public void keyUp(KeyEvent keyEvent)
 	{
 
 	}

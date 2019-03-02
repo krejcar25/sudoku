@@ -8,9 +8,9 @@ public class ControlLabel extends Control
 	public static final int CONTROL_LEFT = 0;
 	public static final int CONTROL_RIGHT = 1;
 
-	private Control internalControl;
+	private final Control internalControl;
 	@MagicConstant(intValues = {CONTROL_LEFT, CONTROL_RIGHT})
-	private int controlSide;
+	private final int controlSide;
 	private float controlMargin = 10;
 
 	public ControlLabel(@NotNull Control internalControl, @MagicConstant(intValues = {CONTROL_LEFT, CONTROL_RIGHT}) int controlSide, String label)

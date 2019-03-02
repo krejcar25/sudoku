@@ -17,17 +17,17 @@ public class ScoreboardDisplayViewContent extends ScrollViewContent
 	private final GridDifficulty gridDifficulty;
 	private ArrayList<ScoreboardEntry> entries;
 
-	private int contentY = 170;
-	private int tableHeight;
-	private int contentTextSize = 25;
-	private int tableMargin = 20;
+	private final int contentY = 170;
+	private final int tableHeight;
+	private final int contentTextSize = 25;
+	private final int tableMargin = 20;
 
 	private Scoreboard.SortBy sortBy;
 	private int sortOrder;
 
 	private PGraphics table;
 
-	public ScoreboardDisplayViewContent(ScrollView scrollView, GridProperties gridProperties, GridDifficulty gridDifficulty)
+	ScoreboardDisplayViewContent(ScrollView scrollView, GridProperties gridProperties, GridDifficulty gridDifficulty)
 	{
 		super(scrollView, 800, 600);
 		this.gridProperties = gridProperties;
@@ -79,15 +79,15 @@ public class ScoreboardDisplayViewContent extends ScrollViewContent
 		this.table.textSize(30);
 		this.table.stroke(51);
 		this.table.strokeWeight(1);
-		int xleft = this.table.width / 4;
-		int xright = 3 * this.table.width / 4;
+		int xLeft = this.table.width / 4;
+		int xRight = 3 * this.table.width / 4;
 		this.table.line(0, 0, this.table.width, 0);
 		this.table.line(0, 0, 0, 40);
 		this.table.line(this.table.width / 2f, 0, this.table.width / 2f, 40);
 		this.table.line(this.table.width - 1, 0, this.table.width - 1, 40);
 		this.table.line(0, 40, this.table.width, 40);
-		this.table.text("Game date", xleft, 20);
-		this.table.text("Time spent", xright, 20);
+		this.table.text("Game date", xLeft, 20);
+		this.table.text("Time spent", xRight, 20);
 		this.table.pushMatrix();
 		this.table.pushStyle();
 		this.table.textAlign(RIGHT, CENTER);
@@ -98,7 +98,7 @@ public class ScoreboardDisplayViewContent extends ScrollViewContent
 		this.table.pushMatrix();
 		this.table.pushStyle();
 		this.table.translate(0, 40);
-		this.table.textSize(25);
+		this.table.textSize(contentTextSize);
 		for (ScoreboardEntry entry : entries)
 		{
 			this.table.pushMatrix();

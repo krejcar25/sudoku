@@ -20,7 +20,7 @@ public class Digit extends Drawable
 
 	Digit(Applet applet, int x, int y)
 	{
-		super(applet, x, y, 230, 370, OWN);
+		super(applet, x, y, 230, 370);
 
 		this.on = color(255, 0, 0);
 		this.off = color(51, 0, 0);

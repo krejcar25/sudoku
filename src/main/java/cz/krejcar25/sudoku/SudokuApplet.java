@@ -2,7 +2,6 @@ package cz.krejcar25.sudoku;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
-import cz.krejcar25.sudoku.networkControl.NetworkControlApplet;
 import cz.krejcar25.sudoku.scoreboard.Scoreboard;
 import cz.krejcar25.sudoku.ui.Applet;
 import cz.krejcar25.sudoku.ui.BaseView;
@@ -16,7 +15,6 @@ import java.io.IOException;
 public class SudokuApplet extends Applet {
     public Settings settings;
     public Scoreboard scoreboard;
-    public NetworkControlApplet networkControlApplet;
 
     @Override
     public void settings() {
@@ -50,20 +48,10 @@ public class SudokuApplet extends Applet {
     @Override
     public void draw() {
         BaseView view = stack.get();
-        boolean isResizable = view.isResizable();
-        surface.setResizable(true);
-        if (isResizable) {
-            int w = constrain(width, 50, view.getWidthLimit());
-            int h = constrain(height, 50, view.getHeightLimit());
-
-            surface.setSize(w, h);
-            view.setSize(w * pixelDensity, h * pixelDensity);
-        } else {
-            surface.setSize(view.width / pixelDensity, view.height / pixelDensity);
-        }
+	    surface.setSize(view.width / pixelDensity, view.height / pixelDensity);
         scale(1f / pixelDensity);
         view.update();
-	    image(view);
+	    //image(view);
     }
 
     private void loadSettings() {

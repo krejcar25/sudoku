@@ -23,10 +23,10 @@ public class DifficultySelectView extends BaseView {
         int bsx = 340;
         int bsy = 40;
         controls = new ArrayList<>();
-        controls.add(new Button(this, width / 4, 200, bsx, bsy, "Easy", sender -> startGeneration(getApplet().isKeyPressed(SHIFT) ? GridDifficulty.Debug : GridDifficulty.Easy)));
-        controls.add(new Button(this, 3 * width / 4, 200, bsx, bsy, "Medium", sender -> startGeneration(GridDifficulty.Medium)));
-        controls.add(new Button(this, width / 4, 280, bsx, bsy, "Hard", sender -> startGeneration(GridDifficulty.Hard)));
-        controls.add(new Button(this, 3 * width / 4, 280, bsx, bsy, "Extreme", sender -> startGeneration(GridDifficulty.Extreme)));
+	    controls.add(new Button<>(this, width / 4f, 200, bsx, bsy, "Easy", sender -> startGeneration(getApplet().isKeyPressed(SHIFT) ? GridDifficulty.Debug : GridDifficulty.Easy)));
+	    controls.add(new Button<>(this, 3 * width / 4f, 200, bsx, bsy, "Medium", sender -> startGeneration(GridDifficulty.Medium)));
+	    controls.add(new Button<>(this, width / 4f, 280, bsx, bsy, "Hard", sender -> startGeneration(GridDifficulty.Hard)));
+	    controls.add(new Button<>(this, 3 * width / 4f, 280, bsx, bsy, "Extreme", sender -> startGeneration(GridDifficulty.Extreme)));
         controls.add(Button.getStandardBackButton(this));
         animateCheckbox = new Checkbox(this, 300, 400, 30, 30, new ToggleEvents() {
             @Override
@@ -106,12 +106,12 @@ public class DifficultySelectView extends BaseView {
 
         for (Control control : controls) {
             control.update();
-            image(control, control.x, control.y);
+	        //image(control, control.x, control.y);
         }
 
         if (overlay != null) {
             overlay.update();
-            image(overlay, overlay.x, overlay.y);
+	        //image(overlay, overlay.x, overlay.y);
         }
         pop();
     }

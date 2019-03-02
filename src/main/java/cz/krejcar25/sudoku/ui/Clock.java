@@ -18,21 +18,32 @@ public class Clock extends Drawable
 
 	public Clock(Applet applet, float x, float y, String name)
 	{
-		super(applet, x, y, baseWidth, baseHeight, OWN);
+		super(applet, x, y, baseWidth, baseHeight);
 		this.timer = new Timer(name);
 		this.minD = new Digit(getApplet(), 0, 0);
-        this.minU = new Digit(getApplet(), minD.width, 0);
-        this.secD = new Digit(getApplet(), minD.width + minU.width + 50, 0);
-        this.secU = new Digit(getApplet(), minD.width + minU.width + 50 + secD.width, 0);
-    }
-
-    public Clock(Applet applet, float x, float y, Timer timer) {
-        super(applet, x, y, baseWidth, baseHeight);
-        this.timer = timer;
-        this.minD = new Digit(getApplet(), 0, 0);
 		this.minU = new Digit(getApplet(), minD.width, 0);
 		this.secD = new Digit(getApplet(), minD.width + minU.width + 50, 0);
 		this.secU = new Digit(getApplet(), minD.width + minU.width + 50 + secD.width, 0);
+	}
+
+	public Clock(Applet applet, float x, float y, Timer timer)
+	{
+		super(applet, x, y, baseWidth, baseHeight);
+		this.timer = timer;
+		this.minD = new Digit(getApplet(), 0, 0);
+		this.minU = new Digit(getApplet(), minD.width, 0);
+		this.secD = new Digit(getApplet(), minD.width + minU.width + 50, 0);
+		this.secU = new Digit(getApplet(), minD.width + minU.width + 50 + secD.width, 0);
+	}
+
+	private static float getWidthFromHeight(float height)
+	{
+		return height * baseWidth / baseHeight;
+	}
+
+	private static float getHeightFromWidth(float width)
+	{
+		return width * baseHeight / baseWidth;
 	}
 
 	public void start()
@@ -64,12 +75,14 @@ public class Clock extends Drawable
 	{
 		this.displayWidth = getWidthFromHeight(height);
 		this.displayHeight = height;
+		this.scale = height / baseHeight;
 	}
 
 	public void setDisplayHeightWithWidth(float width)
 	{
 		this.displayWidth = width;
 		this.displayHeight = getHeightFromWidth(width);
+		this.scale = width / baseWidth;
 	}
 
 	public float getDisplayWidth()
@@ -82,19 +95,10 @@ public class Clock extends Drawable
 		return displayHeight;
 	}
 
-	private static float getWidthFromHeight(float height)
+	public Timer getTimer()
 	{
-		return height * baseWidth / baseHeight;
-    }
-
-	private static float getHeightFromWidth(float width)
-	{
-		return width * baseHeight / baseWidth;
-    }
-
-    public Timer getTimer() {
-        return timer;
-    }
+		return timer;
+	}
 
 	@Override
 	protected void draw()

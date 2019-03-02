@@ -43,12 +43,6 @@ public abstract class ScrollView extends BaseView {
 
         background(220);
         content.update();
-        try {
-            image(content, -horizontalScroll, -verticalScroll);
-        } catch (ArrayIndexOutOfBoundsException ex) {
-            SudokuApplet.println("Whoops, get outta here!");
-            removeFromViewStack();
-        }
         push();
         noStroke();
 
@@ -74,12 +68,12 @@ public abstract class ScrollView extends BaseView {
         push();
         for (Control control : additionalControls) {
             control.update();
-            image(control, control.x, control.y);
+            //image(control, control.x, control.y);
         }
         pop();
         if (overlay != null) {
             overlay.update();
-            image(overlay, overlay.x, overlay.y);
+            //image(overlay, overlay.x, overlay.y);
         }
     }
 
@@ -126,6 +120,8 @@ public abstract class ScrollView extends BaseView {
     public void mouseDrag(MouseEvent mouseEvent) {
         horizontalScroll = SudokuApplet.constrain(hScrollO - (mouseEvent.getX() - mousePressX), 0, content.width - width);
         verticalScroll = SudokuApplet.constrain(vScrollO - (mouseEvent.getY() - mousePressY), 0, content.height - height);
+        content.x = -horizontalScroll;
+        content.y = -verticalScroll;
     }
 
     @Override

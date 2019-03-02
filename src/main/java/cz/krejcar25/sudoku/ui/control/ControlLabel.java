@@ -1,76 +1,110 @@
 package cz.krejcar25.sudoku.ui.control;
 
-public class ControlLabel extends Control {
-    public static final boolean CONTROL_LEFT = true;
-    public static final boolean CONTROL_RIGHT = false;
+import org.intellij.lang.annotations.MagicConstant;
+import org.jetbrains.annotations.NotNull;
 
-    private Control internalControl;
-    private boolean controlOnLeft;
-    private float controlMargin = 10;
+public class ControlLabel extends Control
+{
+	public static final int CONTROL_LEFT = 0;
+	public static final int CONTROL_RIGHT = 1;
 
-    public ControlLabel(Control internalControl, boolean controlSide, String label) {
-        super(internalControl.baseView, 0, internalControl.y, 1, internalControl.height);
-        this.internalControl = internalControl;
-        this.controlOnLeft = controlSide;
-        this.label = label;
-        autosize();
-        x = (int) (internalControl.x - (controlSide ? 0 : textWidth(label)));
-    }
+	private Control internalControl;
+	@MagicConstant(intValues = {CONTROL_LEFT, CONTROL_RIGHT})
+	private int controlSide;
+	private float controlMargin = 10;
 
-    public void centerOnX(int centerX) {
-        x = centerX - width / 2;
-        if (controlOnLeft) internalControl.x = x;
-        else internalControl.x = (int) (x + textWidth(label) + controlMargin);
-    }
+	public ControlLabel(@NotNull Control internalControl, @MagicConstant(intValues = {CONTROL_LEFT, CONTROL_RIGHT}) int controlSide, String label)
+	{
+		super(internalControl.baseView, internalControl.x, internalControl.y, 1, internalControl.height);
+		this.internalControl = internalControl;
+		this.controlSide = controlSide;
+		this.label = label;
+		autosize();
+		if (controlSide == CONTROL_RIGHT) x -= textWidth(label);
+		internalControl.x -= this.x;
+		internalControl.y -= this.y;
+	}
 
-    public int fixLabelOnX(int x) {
-        if (controlOnLeft) return 1;
-        int textLength = (int) textWidth(label);
-        if (internalControl.x - x < textLength) return 2;
-        controlMargin = internalControl.x - x - textLength;
-        this.x = x;
-        return 0;
-    }
+	public void centerOnX(int centerX)
+	{
+		x = centerX - width / 2f;
+		switch (controlSide)
+		{
+			case CONTROL_LEFT:
+				internalControl.x = 0;
+				break;
+			case CONTROL_RIGHT:
+				internalControl.x = labelSize() + controlMargin;
+				break;
+		}
+	}
 
-    private void autosize() {
-        push();
-        textSize(4 * height / 5f);
-        float labelSize = (label.equals("")) ? 0 : textWidth(label);
-        setSize((int) (internalControl.width + labelSize + controlMargin), height);
-        pop();
-    }
+	public void fixLabelOnX(int x)
+	{
+		if (controlSide == CONTROL_RIGHT)
+		{
+			float textLength = labelSize();
+			if ((this.x + internalControl.x) - x > textLength)
+			{
+				float move = x - this.x;
+				this.x = x;
+				internalControl.x -= move;
+				controlMargin = internalControl.x - textLength;
+			}
+		}
+	}
 
-    @Override
-    protected void beforeDraw() {
-        autosize();
-    }
+	private void autosize()
+	{
+		this.width = (int) (internalControl.width + labelSize() + controlMargin);
+	}
 
-    @Override
-    protected void draw() {
-        background(0, 0);
-        textAlign(LEFT, TOP);
-        textSize(4 * height / 5f);
+	private float labelSize()
+	{
+		push();
+		textSize(4 * height / 5f);
+		float labelSize = (label.isEmpty()) ? 0 : textWidth(label);
+		pop();
+		return labelSize;
+	}
 
-        if (controlOnLeft) {
-            internalControl.update();
-            image(internalControl, 0, 0);
+	@Override
+	protected void beforeDraw()
+	{
+		autosize();
+	}
 
-            text(label, internalControl.width + controlMargin, 0);
-        } else {
-            text(label, 0, 0);
+	@Override
+	protected void draw()
+	{
+		textAlign(LEFT, TOP);
+		textSize(4 * height / 5f);
 
-            internalControl.update();
-            image(internalControl, (int) textWidth(label) + controlMargin, 0);
-        }
-    }
+		if (controlSide == CONTROL_LEFT)
+		{
+			internalControl.update();
+			//image(internalControl, 0, 0);
 
-    @Override
-    public boolean isClick(int mx, int my) {
-        return internalControl.isClick(mx, my);
-    }
+			text(label, internalControl.width + controlMargin, 0);
+		}
+		else
+		{
+			text(label, 0, 0);
 
-    @Override
-    public void click() {
-        internalControl.click();
-    }
+			internalControl.update();
+			//image(internalControl, (int) textWidth(label) + controlMargin, 0);
+		}
+	}
+
+	@Override
+	public boolean isClick(int mx, int my)
+	{
+		return internalControl.isClick(mx - this.x, my - this.y);
+	}
+
+	@Override
+	public void click()
+	{
+		internalControl.click();
+	}
 }

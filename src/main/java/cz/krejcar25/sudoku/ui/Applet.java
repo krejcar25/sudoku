@@ -14,9 +14,9 @@ import processing.event.MouseEvent;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -124,14 +124,11 @@ public abstract class Applet extends PApplet {
     protected void image(Drawable drawable)
     {
         drawable.update();
-        if (drawable.getTargetGraphics() == Drawable.OWN)
-            image(drawable.g, drawable.x, drawable.y, drawable.width, drawable.height);
     }
 
     protected void image(Drawable drawable, float x, float y)
     {
         drawable.update();
-        if (drawable.getTargetGraphics() == Drawable.OWN) image(drawable.g, x, y);
     }
 
     protected void image(Drawable drawable, float x, float y, float w, float h)
@@ -139,7 +136,6 @@ public abstract class Applet extends PApplet {
         push();
         drawable.update();
         imageMode(CORNER);
-        if (drawable.getTargetGraphics() == Drawable.OWN) image(drawable.g, x, y, w, h);
         pop();
     }
 

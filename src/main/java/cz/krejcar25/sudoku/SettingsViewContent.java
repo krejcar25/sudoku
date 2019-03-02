@@ -1,11 +1,10 @@
 package cz.krejcar25.sudoku;
 
+import cz.krejcar25.sudoku.event.ToggleEvents;
 import cz.krejcar25.sudoku.ui.ScrollViewContent;
 import cz.krejcar25.sudoku.ui.control.Control;
 import cz.krejcar25.sudoku.ui.control.ControlLabel;
 import cz.krejcar25.sudoku.ui.control.Toggle;
-import cz.krejcar25.sudoku.event.ToggleEvents;
-import processing.core.PGraphics;
 
 import java.util.ArrayList;
 
@@ -66,10 +65,10 @@ public class SettingsViewContent extends ScrollViewContent {
         background(51);
         for (Control c : controls) {
             c.update();
-            image(c, c.x, c.y);
+	        //image(c, c.x, c.y);
         }
         textSize(80);
-        textAlign(PGraphics.LEFT, PGraphics.TOP);
+	    textAlign(LEFT, TOP);
         fill(220);
         text("Settings", 50, 50);
         textSize(40);

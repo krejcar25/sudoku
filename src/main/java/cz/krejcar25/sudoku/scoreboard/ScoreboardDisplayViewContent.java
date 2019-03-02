@@ -6,99 +6,121 @@ import cz.krejcar25.sudoku.game.GridDifficulty;
 import cz.krejcar25.sudoku.game.GridProperties;
 import cz.krejcar25.sudoku.ui.ScrollView;
 import cz.krejcar25.sudoku.ui.ScrollViewContent;
+import processing.core.PGraphics;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
-public class ScoreboardDisplayViewContent extends ScrollViewContent {
-    private final GridProperties gridProperties;
-    private final GridDifficulty gridDifficulty;
-    ArrayList<ScoreboardEntry> entries;
+public class ScoreboardDisplayViewContent extends ScrollViewContent
+{
+	private final GridProperties gridProperties;
+	private final GridDifficulty gridDifficulty;
+	private ArrayList<ScoreboardEntry> entries;
 
-    private int contentY = 170;
-    private int contentTextSize = 25;
-    int tableMargin = 20;
+	private int contentY = 170;
+	private int tableHeight;
+	private int contentTextSize = 25;
+	private int tableMargin = 20;
 
-    private Scoreboard.SortBy sortBy;
-    private int sortOrder;
+	private Scoreboard.SortBy sortBy;
+	private int sortOrder;
 
-    public ScoreboardDisplayViewContent(ScrollView scrollView, GridProperties gridProperties, GridDifficulty gridDifficulty) {
-        super(scrollView, 800, 600);
-        this.gridProperties = gridProperties;
-        this.gridDifficulty = gridDifficulty;
-        this.sortBy = Scoreboard.SortBy.Time;
-        this.sortOrder = 1;
-        this.entries = getRootApplet().scoreboard.getEntries(gridProperties, gridDifficulty, sortBy, sortOrder);
-    }
+	private PGraphics table;
 
-    @Override
-    public void click(int mx, int my, boolean rmb) {
-        if (rmb) scrollView.removeFromViewStack();
-        else if (SudokuApplet.isBetween(tableMargin, mx, width - tableMargin) && SudokuApplet.isBetween(130, my, contentY)) {
-            Scoreboard.SortBy newSort = (mx < width / 2f) ? Scoreboard.SortBy.Date : Scoreboard.SortBy.Time;
-            if (sortBy == newSort) sortOrder *= -1;
-            else {
-                sortBy = newSort;
-                sortOrder = 1;
-            }
-            entries = getRootApplet().scoreboard.getEntries(gridProperties, gridDifficulty, sortBy, sortOrder);
-        }
-    }
+	public ScoreboardDisplayViewContent(ScrollView scrollView, GridProperties gridProperties, GridDifficulty gridDifficulty)
+	{
+		super(scrollView, 800, 600);
+		this.gridProperties = gridProperties;
+		this.gridDifficulty = gridDifficulty;
+		this.sortBy = Scoreboard.SortBy.Time;
+		this.sortOrder = 1;
+		this.entries = getRootApplet().scoreboard.getEntries(gridProperties, gridDifficulty, sortBy, sortOrder);
 
-    @Override
-    protected void beforeDraw() {
-        int requiredHeight = SudokuApplet.floor(contentY + 50 + entries.size() * (contentTextSize + 5));
-        int actualHeight = (requiredHeight > scrollView.height) ? requiredHeight : height;
-        setSize(width, actualHeight);
-    }
+		this.tableHeight = 150 + entries.size() * (contentTextSize + 5);
+		int requiredHeight = SudokuApplet.floor(contentY + this.tableHeight);
+		this.height = (requiredHeight > scrollView.height) ? requiredHeight : scrollView.height;
+		generateTable();
+	}
 
-    @Override
-    protected void draw() {
-        textSize(40);
-        fill(51);
-        textAlign(CENTER, CENTER);
-        text("Scoreboard for " + gridDifficulty.toString() + " " + gridProperties.getName() + ":", width / 2f, 100);
-        textSize(30);
-        stroke(51);
-        strokeWeight(1);
-        int xleft = ((width - (2 * tableMargin)) / 4) + tableMargin;
-        int xright = ((3 * (width - (2 * tableMargin))) / 4) + tableMargin;
-        line(tableMargin, 130, width - tableMargin, 130);
-        line(tableMargin, 130, tableMargin, 170);
-        line(width / 2f, 130, width / 2f, 170);
-        line(width - tableMargin, 130, width - tableMargin, 170);
-        line(tableMargin, 170, width - tableMargin, 170);
-        text("Game date", xleft, 150);
-        text("Time spent", xright, 150);
-        push();
-        textAlign(RIGHT, CENTER);
-        float xIndicator = sortBy == Scoreboard.SortBy.Date ? width / 2f : width - tableMargin;
-        text(sortOrder > 0 ? "▲" : "▼", xIndicator, 150);
-        pop();
-        push();
-        translate(0, 170);
-        textSize(25);
-        int lines = 0;
-        for (ScoreboardEntry entry : entries) {
-            addLine(entry, tableMargin);
-            lines++;
-        }
-        pop();
-    }
+	@Override
+	public void click(int mx, int my, boolean rmb)
+	{
+		if (rmb) scrollView.removeFromViewStack();
+		else if (SudokuApplet.isBetween(tableMargin, mx, width - tableMargin) && SudokuApplet.isBetween(contentY, my, contentY + 40))
+		{
+			Scoreboard.SortBy newSort = (mx < width / 2f) ? Scoreboard.SortBy.Date : Scoreboard.SortBy.Time;
+			if (sortBy == newSort) sortOrder *= -1;
+			else
+			{
+				sortBy = newSort;
+				sortOrder = 1;
+			}
+			entries = getRootApplet().scoreboard.getEntries(gridProperties, gridDifficulty, sortBy, sortOrder);
+			generateTable();
+		}
+	}
 
-    private void addLine(ScoreboardEntry entry, int margin) {
-        push();
-        float lineHeight = this.g.textSize + 5;
-        line(margin, 0, margin, lineHeight);
-        line(width / 2f, 0, width / 2f, lineHeight);
-        line(width - margin, 0, width - margin, lineHeight);
-        line(margin, lineHeight, width - margin, lineHeight);
-        push();
-        textAlign(LEFT, CENTER);
-        text(new SimpleDateFormat("dd.MM.yyyy HH:mm").format(entry.getDateStarted()), margin + 10, lineHeight / 2f);
-        text(Timer.formatMillis(entry.getDurationMillis()), width / 2f + 10, lineHeight / 2f);
-        pop();
-        pop();
-        translate(0, lineHeight);
-    }
+	@Override
+	protected void draw()
+	{
+		textSize(40);
+		fill(51);
+		textAlign(CENTER, CENTER);
+		text(String.format("Scoreboard for %s %s:", gridDifficulty.toString(), gridProperties.getName()), width / 2f, 100);
+		image(this.table, tableMargin, contentY);
+	}
+
+	private void generateTable()
+	{
+		this.table = this.parent.createGraphics(this.width - 2 * tableMargin, tableHeight);
+		this.table.beginDraw();
+		this.table.fill(51);
+		this.table.textAlign(CENTER, CENTER);
+		this.table.textSize(30);
+		this.table.stroke(51);
+		this.table.strokeWeight(1);
+		int xleft = this.table.width / 4;
+		int xright = 3 * this.table.width / 4;
+		this.table.line(0, 0, this.table.width, 0);
+		this.table.line(0, 0, 0, 40);
+		this.table.line(this.table.width / 2f, 0, this.table.width / 2f, 40);
+		this.table.line(this.table.width - 1, 0, this.table.width - 1, 40);
+		this.table.line(0, 40, this.table.width, 40);
+		this.table.text("Game date", xleft, 20);
+		this.table.text("Time spent", xright, 20);
+		this.table.pushMatrix();
+		this.table.pushStyle();
+		this.table.textAlign(RIGHT, CENTER);
+		float xIndicator = sortBy == Scoreboard.SortBy.Date ? this.table.width / 2f : this.table.width;
+		this.table.text(sortOrder > 0 ? "▲" : "▼", xIndicator, 20);
+		this.table.popStyle();
+		this.table.popMatrix();
+		this.table.pushMatrix();
+		this.table.pushStyle();
+		this.table.translate(0, 40);
+		this.table.textSize(25);
+		for (ScoreboardEntry entry : entries)
+		{
+			this.table.pushMatrix();
+			this.table.pushStyle();
+			float lineHeight = this.parent.g.textSize + 5;
+			this.table.line(0, 0, 0, lineHeight);
+			this.table.line(this.table.width / 2f, 0, this.table.width / 2f, lineHeight);
+			this.table.line(this.table.width, 0, this.table.width, lineHeight);
+			this.table.line(0, lineHeight, this.table.width, lineHeight);
+			this.table.pushMatrix();
+			this.table.pushStyle();
+			this.table.textAlign(LEFT, CENTER);
+			this.table.text(new SimpleDateFormat("dd.MM.yyyy HH:mm").format(entry.getDateStarted()), 10, lineHeight / 2f);
+			this.table.text(Timer.formatMillis(entry.getDurationMillis()), this.table.width / 2f + 10, lineHeight / 2f);
+			this.table.popStyle();
+			this.table.popMatrix();
+			this.table.popStyle();
+			this.table.popMatrix();
+			this.table.translate(0, lineHeight);
+		}
+		this.table.popStyle();
+		this.table.popMatrix();
+		this.table.endDraw();
+	}
 }

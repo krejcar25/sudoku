@@ -218,11 +218,11 @@ public class NetworkEstimateView extends BaseView
 	{
 		background(51);
 		base.update();
-		image(base, base.x, base.y);
+		//image(base, base.x, base.y);
 
 		DrawableGridCore guess = guesses.get(guessIndex);
 		guess.update();
-		image(guess, guess.x, guess.y);
+		//image(guess, guess.x, guess.y);
 
 		push();
 		fill(255, 0, 0);
@@ -241,7 +241,7 @@ public class NetworkEstimateView extends BaseView
 		for (Control control : controls)
 		{
 			control.update();
-			image(control, control.x, control.y);
+			//image(control, control.x, control.y);
 		}
 	}
 

@@ -3,7 +3,6 @@ package cz.krejcar25.sudoku.networkControl;
 import cz.krejcar25.sudoku.event.ButtonEvents;
 import cz.krejcar25.sudoku.game.BaseGenerator;
 import cz.krejcar25.sudoku.game.GridCore;
-import cz.krejcar25.sudoku.game.GridDifficulty;
 import cz.krejcar25.sudoku.game.GridProperties;
 import cz.krejcar25.sudoku.neuralNetwork.DeepLayer;
 import cz.krejcar25.sudoku.neuralNetwork.NeuralNetwork;
@@ -25,7 +24,7 @@ import java.util.ArrayList;
 
 public class MainMenuView extends BaseView
 {
-	ArrayList<Control> controls;
+	private ArrayList<Control> controls;
 	private int rVal;
 
 	public MainMenuView(Applet applet)
@@ -64,6 +63,8 @@ public class MainMenuView extends BaseView
 			controls.add(button);
 			index++;
 		}
+
+		controls.add(Button.getStandardBackButton(this));
 	}
 
 	private void testNetwork(Button button)
@@ -92,7 +93,8 @@ public class MainMenuView extends BaseView
 			if (properties == null) return;
 
 			GridCore testCore = new GridCore(properties);
-			new BaseGenerator(testCore).generate(properties.getClueCount(GridDifficulty.Hard), false);
+			int clueCount = 50;//properties.getClueCount(GridDifficulty.Hard);
+			new BaseGenerator(testCore).generate(clueCount, false);
 			viewStack.push(new NetworkEstimateView(getApplet(), testCore, network));
 		}
 	}
@@ -176,13 +178,13 @@ public class MainMenuView extends BaseView
 		for (Control button : controls)
 		{
 			button.update();
-			image(button, button.x, button.y);
+			//image(button, button.x, button.y);
 		}
 
 		if (overlay != null)
 		{
 			overlay.update();
-			image(overlay, overlay.x, overlay.y);
+			//image(overlay, overlay.x, overlay.y);
 		}
 		pop();
 	}

@@ -129,7 +129,7 @@ public class BaseGrid extends Drawable {
                 for (int i = 0; i < 8; i++) {
                     push();
                     noStroke();
-	                this.g.rotate(PApplet.PI * i / 4);
+                    this.parent.rotate(PApplet.PI * i / 4);
                     translate(width / 4f, 0);
                     rect(0, 0, width / 8f, height / 8f);
                     pop();

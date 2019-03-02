@@ -79,12 +79,12 @@ public class ScoreboardDifficultySelectView extends BaseView {
 
         for (Control control : controls) {
             control.update();
-            image(control, control.x, control.y);
+	        //image(control, control.x, control.y);
         }
 
         if (overlay != null) {
             overlay.update();
-            image(overlay, overlay.x, overlay.y);
+	        //image(overlay, overlay.x, overlay.y);
         }
         pop();
     }

@@ -31,11 +31,11 @@ public class GameView extends BaseView {
     @Override
     protected void draw() {
         if (game.shouldUpdateGrid) game.update();
-        image(game, game.x, game.y);
+	    //image(game, game.x, game.y);
 
         if (overlay != null) {
             overlay.update();
-            image(overlay, overlay.x, overlay.y);
+	        //image(overlay, overlay.x, overlay.y);
         }
     }
 

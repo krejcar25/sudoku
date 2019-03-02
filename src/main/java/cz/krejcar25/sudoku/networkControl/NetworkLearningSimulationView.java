@@ -117,7 +117,7 @@ public class NetworkLearningSimulationView extends BaseView {
 
         if (shouldTrain && network.getTrainCycles() > drawIndex * 1000) estimate.update();
 
-        image(estimate, 0, 0);
+	    //image(estimate, 0, 0);
 
         fill(255, 0, 0);
         textSize((float) tileSize * 2);

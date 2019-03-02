@@ -40,7 +40,7 @@ public class HelpViewContent extends ScrollViewContent {
     private void textLine(String text) {
         textSize(40);
         int lines = (int) Math.ceil((double) (textWidth(text) / (width - 100))) + 1;
-	    text(text, 0, 0, width - 50, lines * this.g.textSize);
-	    translate(0, lines * this.g.textSize + 20);
+        text(text, 0, 0, width - 50, lines * this.parent.g.textSize);
+        translate(0, lines * this.parent.g.textSize + 20);
     }
 }

@@ -3,72 +3,39 @@ package cz.krejcar25.sudoku.ui;
 import cz.krejcar25.sudoku.SudokuApplet;
 import org.intellij.lang.annotations.MagicConstant;
 import processing.core.PConstants;
-import processing.core.PGraphics;
 import processing.core.PImage;
 import processing.core.PShape;
 
+@SuppressWarnings({"unused", "WeakerAccess", "SameParameterValue"})
 public abstract class Drawable implements PConstants
 {
-	public static final int APPLET = 0;
-	public static final int OWN = 1;
-
 	protected final Applet parent;
-	protected final PGraphics g;
-	@MagicConstant(intValues = {APPLET, OWN})
-	private final int targetGraphics;
 	public float x;
 	public float y;
 	public int width;
 	public int height;
-	private boolean resizable = false;
-	private int widthLimit = -1;
-	private int heightLimit = -1;
+	protected float scale = 1;
 
 	public Drawable(Applet applet, float x, float y, int width, int height)
-	{
-		this(applet, x, y, width, height, APPLET);
-	}
-
-	public Drawable(Applet applet, float x, float y, int width, int height, @MagicConstant(intValues = {APPLET, OWN}) int targetGraphics)
 	{
 		this.x = x;
 		this.y = y;
 		this.width = width;
 		this.height = height;
 		this.parent = applet;
-		this.targetGraphics = targetGraphics;
-
-		switch (targetGraphics)
-		{
-			case APPLET:
-				this.g = applet.g;
-				break;
-			case OWN:
-				this.g = applet.createGraphics(width, height);
-				break;
-			default:
-				assert false;
-				this.g = null;
-				break;
-		}
 	}
 
 	public final void update()
 	{
-		if (this.targetGraphics == APPLET)
-		{
-			this.parent.push();
-			this.parent.translate(x, y);
-		}
-		else if (this.targetGraphics == OWN) this.g.beginDraw();
+		this.parent.push();
+		this.parent.translate(x, y);
 
 		fill(-1);
 		stroke(0);
-		background(0);
+		this.parent.scale(scale);
 
 		draw();
-		if (this.targetGraphics == APPLET) this.parent.pop();
-		else if (this.targetGraphics == OWN) this.g.endDraw();
+		this.parent.pop();
 	}
 
 	protected void beforeDraw()
@@ -89,302 +56,247 @@ public abstract class Drawable implements PConstants
 		else return null;
 	}
 
-	protected void setResizable(int limitx, int limity)
-	{
-		resizable = true;
-		widthLimit = limitx;
-		heightLimit = limity;
-	}
-
-	protected void setNonResizable()
-	{
-		resizable = false;
-		widthLimit = -1;
-		heightLimit = -1;
-	}
-
-	@MagicConstant(intValues = {APPLET, OWN})
-	public int getTargetGraphics()
-	{
-		return targetGraphics;
-	}
-
 	// Mirroring methods from PGraphics
-
-	public void setSize(int width, int height)
-	{
-		switch (targetGraphics)
-		{
-			case APPLET:
-				this.parent.setSize(width, height);
-				break;
-			case OWN:
-				this.g.setSize(width, height);
-				break;
-		}
-		this.width = width;
-		this.height = height;
-	}
 
 	protected void push()
 	{
 		//TODO Update to Processing 3.5
-		this.g.pushMatrix();
-		this.g.pushStyle();
+		this.parent.pushMatrix();
+		this.parent.pushStyle();
 	}
 
 	protected void pop()
 	{
 		//TODO Update to Processing 3.5
-		this.g.popStyle();
-		this.g.popMatrix();
+		this.parent.popStyle();
+		this.parent.popMatrix();
 	}
 
 	protected PShape createShape()
 	{
-		return this.g.createShape();
+		return this.parent.createShape();
 	}
 
 	protected PShape createShape(@MagicConstant(intValues = {POINT, LINE, TRIANGLE, QUAD, RECT, ELLIPSE, ARC, BOX, SPHERE}) int type)
 	{
-		return this.g.createShape(type);
+		return this.parent.createShape(type);
 	}
 
 	protected PShape createShape(@MagicConstant(intValues = {POINT, LINE, TRIANGLE, QUAD, RECT, ELLIPSE, ARC, BOX, SPHERE}) int kind, float[] p)
 	{
-		return this.g.createShape(kind, p);
+		return this.parent.createShape(kind, p);
 	}
 
 	protected void arc(float a, float b, float c, float d, float start, float stop)
 	{
-		this.g.arc(a, b, c, d, start, stop);
+		this.parent.arc(a, b, c, d, start, stop);
 	}
 
 	protected void arc(float a, float b, float c, float d, float start, float stop, @MagicConstant(intValues = {PIE, OPEN, CHORD}) int mode)
 	{
-		this.g.arc(a, b, c, d, start, stop, mode);
+		this.parent.arc(a, b, c, d, start, stop, mode);
 	}
 
 	protected void circle(float x, float y, float extent)
 	{
 		//TODO Update to Processing 3.5
-		this.g.ellipse(x, y, extent, extent);
+		this.parent.ellipse(x, y, extent, extent);
 	}
 
 	protected void ellipse(float a, float b, float c, float d)
 	{
-		this.g.ellipse(a, b, c, d);
+		this.parent.ellipse(a, b, c, d);
 	}
 
 	protected void line(float x1, float y1, float x2, float y2)
 	{
-		this.g.line(x1, y1, x2, y2);
+		this.parent.line(x1, y1, x2, y2);
 	}
 
 	protected void point(float x, float y)
 	{
-		this.g.point(x, y);
+		this.parent.point(x, y);
 	}
 
 	protected void quad(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4)
 	{
-		this.g.quad(x1, y1, x2, y2, x3, y3, x4, y4);
+		this.parent.quad(x1, y1, x2, y2, x3, y3, x4, y4);
 	}
 
 	protected void rect(float a, float b, float c, float d)
 	{
-		this.g.rect(a, b, c, d);
+		this.parent.rect(a, b, c, d);
 	}
 
 	protected void rect(float a, float b, float c, float d, float r)
 	{
-		this.g.rect(a, b, c, d, r);
+		this.parent.rect(a, b, c, d, r);
 	}
 
 	protected void rect(float a, float b, float c, float d, float tl, float tr, float br, float bl)
 	{
-		this.g.rect(a, b, c, d, tl, tr, br, bl);
+		this.parent.rect(a, b, c, d, tl, tr, br, bl);
 	}
 
 	protected void square(float x, float y, float extent)
 	{
 		//TODO Update to Processing 3.5
-		this.g.rect(x, y, extent, extent);
+		this.parent.rect(x, y, extent, extent);
 	}
 
 	protected void triangle(float x1, float y1, float x2, float y2, float x3, float y3)
 	{
-		this.g.triangle(x1, y1, x2, y2, x3, y3);
+		this.parent.triangle(x1, y1, x2, y2, x3, y3);
 	}
 
 	protected void bezier(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4)
 	{
-		this.g.bezier(x1, y1, x2, y2, x3, y3, x4, y4);
+		this.parent.bezier(x1, y1, x2, y2, x3, y3, x4, y4);
 	}
 
 	protected void bezierDetail(int detail)
 	{
-		this.g.bezierDetail(detail);
+		this.parent.bezierDetail(detail);
 	}
 
 	protected float bezierPoint(float a, float b, float c, float d, float t)
 	{
-		return this.g.bezierPoint(a, b, c, d, t);
+		return this.parent.bezierPoint(a, b, c, d, t);
 	}
 
 	protected float bezierTangent(float a, float b, float c, float d, float t)
 	{
-		return this.g.bezierTangent(a, b, c, d, t);
+		return this.parent.bezierTangent(a, b, c, d, t);
 	}
 
 	protected void curve(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4)
 	{
-		this.g.curve(x1, y1, x2, y2, x3, y3, x4, y4);
+		this.parent.curve(x1, y1, x2, y2, x3, y3, x4, y4);
 	}
 
 	protected void curveDetail(int detail)
 	{
-		this.g.curveDetail(detail);
+		this.parent.curveDetail(detail);
 	}
 
 	protected float curvePoint(float a, float b, float c, float d, float t)
 	{
-		return this.g.curvePoint(a, b, c, d, t);
+		return this.parent.curvePoint(a, b, c, d, t);
 	}
 
 	protected float curveTangent(float a, float b, float c, float d, float t)
 	{
-		return this.g.curveTangent(a, b, c, d, t);
+		return this.parent.curveTangent(a, b, c, d, t);
 	}
 
 	protected void curveTightness(float tightness)
 	{
-		this.g.curveTightness(tightness);
+		this.parent.curveTightness(tightness);
 	}
 
 	protected void ellipseMode(@MagicConstant(intValues = {RADIUS, CENTER, CORNER, CORNERS}) int mode)
 	{
-		this.g.ellipseMode(mode);
+		this.parent.ellipseMode(mode);
 	}
 
 	protected void rectMode(@MagicConstant(intValues = {CORNER, CORNERS, RADIUS, CENTER}) int mode)
 	{
-		this.g.rectMode(mode);
+		this.parent.rectMode(mode);
 	}
 
 	protected void strokeCap(@MagicConstant(intValues = {SQUARE, PROJECT, ROUND}) int cap)
 	{
-		this.g.strokeCap(cap);
+		this.parent.strokeCap(cap);
 	}
 
 	protected void strokeJoin(@MagicConstant(intValues = {MITER, BEVEL, ROUND}) int join)
 	{
-		this.g.strokeJoin(join);
+		this.parent.strokeJoin(join);
 	}
 
 	protected void strokeWeight(float weight)
 	{
-		this.g.strokeWeight(weight);
+		this.parent.strokeWeight(weight);
 	}
 
 	protected void beginContour()
 	{
-		this.g.beginContour();
+		this.parent.beginContour();
 	}
 
 	protected void beginShape()
 	{
-		this.g.beginShape();
+		this.parent.beginShape();
 	}
 
 	protected void bezierVertex(float x2, float y2, float x3, float y3, float x4, float y4)
 	{
-		this.g.bezierVertex(x2, y2, x3, y3, x4, y4);
+		this.parent.bezierVertex(x2, y2, x3, y3, x4, y4);
 	}
 
 	protected void curveVertex(float x, float y)
 	{
-		this.g.curveVertex(x, y);
+		this.parent.curveVertex(x, y);
 	}
 
 	protected void endContour()
 	{
-		this.g.endContour();
+		this.parent.endContour();
 	}
 
 	protected void endShape()
 	{
-		this.g.endShape();
+		this.parent.endShape();
 	}
 
 	protected void endShape(@MagicConstant(intValues = {CLOSE}) int mode)
 	{
-		this.g.endShape(mode);
+		this.parent.endShape(mode);
 	}
 
 	protected void quadraticVertex(float cx, float cy, float x3, float y3)
 	{
-		this.g.quadraticVertex(cx, cy, x3, y3);
+		this.parent.quadraticVertex(cx, cy, x3, y3);
 	}
 
 	protected void vertex(float x, float y)
 	{
-		this.g.vertex(x, y);
+		this.parent.vertex(x, y);
 	}
 
 	protected void vertex(float[] v)
 	{
-		this.g.vertex(v);
+		this.parent.vertex(v);
 	}
 
 	protected void vertex(float x, float y, float u, float v)
 	{
-		this.g.vertex(x, y, u, v);
+		this.parent.vertex(x, y, u, v);
 	}
 
 	protected void shape(PShape shape)
 	{
-		this.g.shape(shape);
+		this.parent.shape(shape);
 	}
 
 	protected void shape(PShape shape, float x, float y)
 	{
-		this.g.shape(shape, x, y);
+		this.parent.shape(shape, x, y);
 	}
 
 	protected void shape(PShape shape, float a, float b, float c, float d)
 	{
-		this.g.shape(shape, a, b, c, d);
+		this.parent.shape(shape, a, b, c, d);
 	}
 
 	protected void shapeMode(@MagicConstant(intValues = {CORNER, CORNERS, CENTER}) int mode)
 	{
-		this.g.shapeMode(mode);
+		this.parent.shapeMode(mode);
 	}
 
 	protected void translate(float x, float y)
 	{
-		this.g.translate(x, y);
-	}
-
-	protected void background(int rgb)
-	{
-		push();
-		noStroke();
-		fill(rgb);
-		rectMode(CORNER);
-		rect(0, 0, this.width, this.height);
-		pop();
-	}
-
-	protected void background(int rgb, int alpha)
-	{
-		push();
-		noStroke();
-		fill(rgb, alpha);
-		rectMode(CORNER);
-		rect(0, 0, this.width, this.height);
-		pop();
+		this.parent.translate(x, y);
 	}
 
 	protected void background(float gray)
@@ -429,177 +341,177 @@ public abstract class Drawable implements PConstants
 
 	protected void background(PImage image)
 	{
-		this.g.image(image, 0, 0, width, height);
+		this.parent.image(image, 0, 0, width, height);
 	}
 
 	protected void colorMode(@MagicConstant(intValues = {RGB, HSB}) int mode)
 	{
-		this.g.colorMode(mode);
+		this.parent.colorMode(mode);
 	}
 
 	protected void colorMode(@MagicConstant(intValues = {RGB, HSB}) int mode, float max)
 	{
-		this.g.colorMode(mode, max);
+		this.parent.colorMode(mode, max);
 	}
 
 	protected void colorMode(@MagicConstant(intValues = {RGB, HSB}) int mode, float max1, float max2, float max3)
 	{
-		this.g.colorMode(mode, max1, max2, max3);
+		this.parent.colorMode(mode, max1, max2, max3);
 	}
 
 	protected void colorMode(@MagicConstant(intValues = {RGB, HSB}) int mode, float max1, float max2, float max3, float maxA)
 	{
-		this.g.colorMode(mode, max1, max2, max3, maxA);
+		this.parent.colorMode(mode, max1, max2, max3, maxA);
 	}
 
 	protected void fill(int rgb)
 	{
-		this.g.fill(rgb);
+		this.parent.fill(rgb);
 	}
 
 	protected void fill(int rgb, float alpha)
 	{
-		this.g.fill(rgb, alpha);
+		this.parent.fill(rgb, alpha);
 	}
 
 	protected void fill(float gray)
 	{
-		this.g.fill(gray);
+		this.parent.fill(gray);
 	}
 
 	protected void fill(float gray, float alpha)
 	{
-		this.g.fill(gray, alpha);
+		this.parent.fill(gray, alpha);
 	}
 
 	protected void fill(float v1, float v2, float v3)
 	{
-		this.g.fill(v1, v2, v3);
+		this.parent.fill(v1, v2, v3);
 	}
 
 	protected void fill(float v1, float v2, float v3, float alpha)
 	{
-		this.g.fill(v1, v2, v3, alpha);
+		this.parent.fill(v1, v2, v3, alpha);
 	}
 
 	protected void noFill()
 	{
-		this.g.noFill();
+		this.parent.noFill();
 	}
 
 	protected void noStroke()
 	{
-		this.g.noStroke();
+		this.parent.noStroke();
 	}
 
 	protected void stroke(int rgb)
 	{
-		this.g.stroke(rgb);
+		this.parent.stroke(rgb);
 	}
 
 	protected void stroke(int rgb, float alpha)
 	{
-		this.g.stroke(rgb, alpha);
+		this.parent.stroke(rgb, alpha);
 	}
 
 	protected void stroke(float gray)
 	{
-		this.g.stroke(gray);
+		this.parent.stroke(gray);
 	}
 
 	protected void stroke(float gray, float alpha)
 	{
-		this.g.stroke(gray, alpha);
+		this.parent.stroke(gray, alpha);
 	}
 
 	protected void stroke(float v1, float v2, float v3)
 	{
-		this.g.stroke(v1, v2, v3);
+		this.parent.stroke(v1, v2, v3);
 	}
 
 	protected void stroke(float v1, float v2, float v3, float alpha)
 	{
-		this.g.stroke(v1, v2, v3, alpha);
+		this.parent.stroke(v1, v2, v3, alpha);
 	}
 
 	protected float alpha(int rgb)
 	{
-		return this.g.alpha(rgb);
+		return this.parent.alpha(rgb);
 	}
 
 	protected float blue(int rgb)
 	{
-		return this.g.blue(rgb);
+		return this.parent.blue(rgb);
 	}
 
 	protected float brightnes(int rgb)
 	{
-		return this.g.brightness(rgb);
+		return this.parent.brightness(rgb);
 	}
 
 	protected int color(int gray)
 	{
-		return this.g.color(gray);
+		return this.parent.color(gray);
 	}
 
 	protected int color(float fgray)
 	{
-		return this.g.color(fgray);
+		return this.parent.color(fgray);
 	}
 
 	protected int color(int gray, int alpha)
 	{
-		return this.g.color(gray, alpha);
+		return this.parent.color(gray, alpha);
 	}
 
 	protected int color(float fgray, float falpha)
 	{
-		return this.g.color(fgray, falpha);
+		return this.parent.color(fgray, falpha);
 	}
 
 	protected int color(int v1, int v2, int v3)
 	{
-		return this.g.color(v1, v2, v3);
+		return this.parent.color(v1, v2, v3);
 	}
 
 	protected int color(int v1, int v2, int v3, int alpha)
 	{
-		return this.g.color(v1, v2, v3, alpha);
+		return this.parent.color(v1, v2, v3, alpha);
 	}
 
 	protected int color(float v1, float v2, float v3)
 	{
-		return this.g.color(v1, v2, v3);
+		return this.parent.color(v1, v2, v3);
 	}
 
 	protected int color(float v1, float v2, float v3, float alpha)
 	{
-		return this.g.color(v1, v2, v3, alpha);
+		return this.parent.color(v1, v2, v3, alpha);
 	}
 
 	protected float green(int rgb)
 	{
-		return this.g.green(rgb);
+		return this.parent.green(rgb);
 	}
 
 	protected float hue(int rgb)
 	{
-		return this.g.hue(rgb);
+		return this.parent.hue(rgb);
 	}
 
 	protected int lerpColor(int c1, int c2, float amt)
 	{
-		return this.g.lerpColor(c1, c2, amt);
+		return this.parent.lerpColor(c1, c2, amt);
 	}
 
 	protected float red(int rgb)
 	{
-		return this.g.red(rgb);
+		return this.parent.red(rgb);
 	}
 
 	protected float saturation(int rgb)
 	{
-		return this.g.saturation(rgb);
+		return this.parent.saturation(rgb);
 	}
 
 	protected PImage createImage(int w, int h, @MagicConstant(intValues = {RGB, ARGB, ALPHA}) int format)
@@ -609,24 +521,22 @@ public abstract class Drawable implements PConstants
 
 	protected void image(PImage image, float a, float b)
 	{
-		this.g.image(image, a, b);
+		this.parent.image(image, a, b);
 	}
 
 	protected void image(PImage image, float a, float b, float c, float d)
 	{
-		this.g.image(image, a, b, c, d);
+		this.parent.image(image, a, b, c, d);
 	}
 
 	protected void image(Drawable drawable)
 	{
 		drawable.update();
-		if (drawable.targetGraphics == OWN) image(drawable.g, drawable.x, drawable.y, drawable.width, drawable.height);
 	}
 
 	protected void image(Drawable drawable, float x, float y)
 	{
 		drawable.update();
-		if (drawable.targetGraphics == OWN) image(drawable.g, x, y);
 	}
 
 	protected void image(Drawable drawable, float x, float y, float w, float h)
@@ -634,7 +544,6 @@ public abstract class Drawable implements PConstants
 		push();
 		drawable.update();
 		imageMode(CORNER);
-		if (drawable.targetGraphics == OWN) image(drawable.g, x, y, w, h);
 		pop();
 	}
 
@@ -645,7 +554,7 @@ public abstract class Drawable implements PConstants
 
 	protected void imageMode(@MagicConstant(intValues = {CORNER, CORNERS, CENTER}) int mode)
 	{
-		this.g.imageMode(mode);
+		this.parent.imageMode(mode);
 	}
 
 	protected PImage loadImage(String filename, String extension)
@@ -655,12 +564,12 @@ public abstract class Drawable implements PConstants
 
 	protected void text(String str, float x, float y)
 	{
-		this.g.text(str, x, y);
+		this.parent.text(str, x, y);
 	}
 
 	protected void text(String str, float x1, float y1, float x2, float y2)
 	{
-		this.g.text(str, x1, y1, x2, y2);
+		this.parent.text(str, x1, y1, x2, y2);
 	}
 
 	protected void text(Object obj, float x, float y)
@@ -675,46 +584,31 @@ public abstract class Drawable implements PConstants
 
 	protected void textAlign(@MagicConstant(intValues = {LEFT, CENTER, RIGHT}) int alignX)
 	{
-		this.g.textAlign(alignX);
+		this.parent.textAlign(alignX);
 	}
 
 	protected void textAlign(@MagicConstant(intValues = {LEFT, CENTER, RIGHT}) int alignX, @MagicConstant(intValues = {TOP, BOTTOM, CENTER, BASELINE}) int alignY)
 	{
-		this.g.textAlign(alignX, alignY);
+		this.parent.textAlign(alignX, alignY);
 	}
 
 	protected void textLeading(float leading)
 	{
-		this.g.textLeading(leading);
+		this.parent.textLeading(leading);
 	}
 
 	protected void textMode(@MagicConstant(intValues = {MODEL, SHAPE}) int mode)
 	{
-		this.g.textMode(mode);
+		this.parent.textMode(mode);
 	}
 
 	protected void textSize(float size)
 	{
-		this.g.textSize(size);
+		this.parent.textSize(size);
 	}
 
 	protected float textWidth(String str)
 	{
-		return this.g.textWidth(str);
-	}
-
-	public boolean isResizable()
-	{
-		return resizable;
-	}
-
-	public int getWidthLimit()
-	{
-		return widthLimit;
-	}
-
-	public int getHeightLimit()
-	{
-		return heightLimit;
+		return this.parent.textWidth(str);
 	}
 }

@@ -132,7 +132,7 @@ public class SudokuBrowserView extends BaseView
 		for (Control control : controls)
 		{
 			control.update();
-			image(control, control.x, control.y);
+			//image(control, control.x, control.y);
 		}
 	}
 }

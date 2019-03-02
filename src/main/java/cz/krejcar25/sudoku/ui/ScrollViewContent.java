@@ -4,7 +4,7 @@ public abstract class ScrollViewContent extends Drawable {
     protected ScrollView scrollView;
 
     public ScrollViewContent(ScrollView scrollView, int width, int height) {
-        super(scrollView.getApplet(), 0, 0, width, height, OWN);
+        super(scrollView.getApplet(), 0, 0, width, height);
         this.scrollView = scrollView;
     }
 

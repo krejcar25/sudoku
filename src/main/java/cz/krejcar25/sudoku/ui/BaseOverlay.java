@@ -45,7 +45,7 @@ public abstract class BaseOverlay extends Drawable
 		for (Button<Object> button : buttons)
 		{
 			button.update();
-			image(button, button.x, button.y);
+			//image(button, button.x, button.y);
 		}
 	}
 

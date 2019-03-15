@@ -79,7 +79,6 @@ public abstract class Applet extends PApplet
 	public void keyReleased(KeyEvent keyEvent)
 	{
 		keyCodesPressed.removeAll(Collections.singletonList(keyEvent.getKeyCode()));
-		stack.get().keyUp(keyEvent);
 	}
 
 	@Override

@@ -23,5 +23,7 @@
     <orderEntry type="library" name="Maven: com.jgoodies:jgoodies-common:1.8.1" level="project" />
     <orderEntry type="library" name="Maven: com.github.marcoacierno:pastebin-java-api:0.2.1" level="project" />
     <orderEntry type="library" name="Maven: com.intellij:annotations:12.0" level="project" />
+    <orderEntry type="library" name="Maven: commons-cli:commons-cli:1.4" level="project" />
+    <orderEntry type="library" name="Maven: com.sun:tools:1.7.0.13" level="project" />
   </component>
 </module>

@@ -1,12 +1,12 @@
 package cz.krejcar25.sudoku;
 
+import com.sun.tools.javac.util.Pair;
 import cz.krejcar25.sudoku.event.ButtonEvents;
 import cz.krejcar25.sudoku.game.DifficultySelectView;
 import cz.krejcar25.sudoku.game.GridProperties;
 import cz.krejcar25.sudoku.scoreboard.ScoreboardSizeSelectView;
 import cz.krejcar25.sudoku.ui.BaseView;
 import cz.krejcar25.sudoku.ui.control.Button;
-import javafx.util.Pair;
 import processing.core.PApplet;
 import processing.event.KeyEvent;
 import processing.event.MouseEvent;
@@ -44,7 +44,7 @@ public class MainMenuView extends BaseView
 		{
 			int bx = (2 * (index % 2) + 1) * width / 4;
 			int by = baseY + ((index / 2) * yDelta);
-			Button<Object> button = new Button<>(this, bx, by, bsx, bsy, buttonEvent.getKey(), buttonEvent.getValue());
+			Button<Object> button = new Button<>(this, bx, by, bsx, bsy, buttonEvent.fst, buttonEvent.snd);
 			buttons.add(button);
 			index++;
 		}

@@ -8,6 +8,7 @@ import java.util.Arrays;
 
 public class DoubleMatrix implements Serializable
 {
+	static final long serialVersionUID = -5744503367528885903L;
 	private final int rows;
 	private final int cols;
 	private final double[][] values;

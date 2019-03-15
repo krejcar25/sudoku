@@ -6,6 +6,7 @@ import java.io.Serializable;
 
 public abstract class NeuralNetworkLayer implements Serializable
 {
+	static final long serialVersionUID = 108732142133458883L;
 	private final int inCount;
 	private final int nodes;
 	private NeuralNetwork network;

@@ -1,6 +1,5 @@
 package cz.krejcar25.sudoku;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
@@ -12,14 +11,11 @@ import java.security.InvalidParameterException;
 public class Settings
 {
 	private static final String DEF_PATH = "config.yml";
-	@JsonIgnore
-	private String path;
 	private boolean defaultNumberFirst;
 	private boolean defaultNotes;
 
-	private Settings(String path)
+	private Settings()
 	{
-		this.path = path;
 		this.defaultNumberFirst = true;
 		this.defaultNotes = false;
 	}
@@ -35,7 +31,6 @@ public class Settings
 		try
 		{
 			Settings settings = mapper.readValue(file, Settings.class);
-			settings.path = Settings.DEF_PATH;
 			return settings;
 		}
 		catch (IOException e)
@@ -47,7 +42,7 @@ public class Settings
 
 	static void prepare()
 	{
-		Settings settings = new Settings(Settings.DEF_PATH);
+		Settings settings = new Settings();
 		settings.save();
 	}
 
@@ -64,7 +59,7 @@ public class Settings
 
 	void save()
 	{
-		File file = new File(path);
+		File file = new File(DEF_PATH);
 		if (file.isDirectory())
 			throw new InvalidParameterException("The location specified is a directory. save requires a file to be specified.");
 		ObjectMapper mapper = new ObjectMapper(new YAMLFactory());

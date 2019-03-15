@@ -9,12 +9,12 @@ public class GridCoreTrainingDataSet implements TrainingDataSet<GridCore>
 {
 	private final ArrayList<GridCore> cores;
 
-	GridCoreTrainingDataSet()
+	public GridCoreTrainingDataSet()
 	{
 		cores = new ArrayList<>();
 	}
 
-	void addCore(String coreString)
+	public void addCore(String coreString)
 	{
 		addCore(GridCore.fromGridString(coreString));
 	}

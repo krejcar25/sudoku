@@ -9,6 +9,7 @@ public class NeuralNetwork implements Serializable
 {
 	public static final String FILE_TYPE = "nn";
 	public static final String FILE_TYPE_DESC = "Neural Network files";
+	static final long serialVersionUID = -7317338358506558555L;
 
 	private final int inputCount;
 	private int outputCount;

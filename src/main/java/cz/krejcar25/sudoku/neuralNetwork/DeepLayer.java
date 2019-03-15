@@ -6,6 +6,7 @@ import org.jetbrains.annotations.NotNull;
 @NeuralNetworkLayerProperties(label = "Deep Layer")
 public class DeepLayer extends NeuralNetworkLayer
 {
+	static final long serialVersionUID = -5437988244594683918L;
 	private final DoubleMatrix weights;
 	private final DoubleMatrix bias;
 	private final ActivationFunction activationFunction;

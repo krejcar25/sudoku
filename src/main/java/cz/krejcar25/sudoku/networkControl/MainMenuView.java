@@ -1,5 +1,6 @@
 package cz.krejcar25.sudoku.networkControl;
 
+import com.sun.tools.javac.util.Pair;
 import cz.krejcar25.sudoku.FileChooserFactory;
 import cz.krejcar25.sudoku.event.ButtonEvents;
 import cz.krejcar25.sudoku.game.GridCore;
@@ -11,7 +12,6 @@ import cz.krejcar25.sudoku.ui.Applet;
 import cz.krejcar25.sudoku.ui.BaseView;
 import cz.krejcar25.sudoku.ui.control.Button;
 import cz.krejcar25.sudoku.ui.control.Control;
-import javafx.util.Pair;
 import processing.core.PApplet;
 import processing.core.PConstants;
 import processing.event.KeyEvent;
@@ -55,7 +55,7 @@ public class MainMenuView extends BaseView
 		{
 			int bx = (2 * (index % 2) + 1) * width / 4;
 			int by = baseY + ((index / 2) * yDelta);
-			Button button = new Button<>(this, bx, by, bsx, bsy, buttonEvent.getKey(), buttonEvent.getValue());
+			Button button = new Button<>(this, bx, by, bsx, bsy, buttonEvent.fst, buttonEvent.snd);
 			controls.add(button);
 			index++;
 		}
@@ -80,7 +80,7 @@ public class MainMenuView extends BaseView
 					if (properties == null) return;
 
 					GridCore testCore = new GridCore(properties);
-					int clueCount = 50;//properties.getClueCount(GridDifficulty.Hard);
+					int clueCount = 10;//properties.getClueCount(GridDifficulty.Hard);
 					new SudokuGenerator(testCore).generate(clueCount, false);
 					viewStack.push(new NetworkEstimateView(getApplet(), testCore, network));
 				})

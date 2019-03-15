@@ -2,14 +2,15 @@ package cz.krejcar25.sudoku.neuralNetwork;
 
 public class NetworkTrainRunnable implements Runnable
 {
+	private final NeuralNetwork network;
+	private final TrainingDataSet trainingData;
 	private volatile boolean runAllowed;
 	private volatile boolean shouldPause;
 	private volatile boolean isPaused;
 	private volatile boolean running;
-	private final NeuralNetwork network;
 	private Thread thread;
-	private final TrainingDataSet trainingData;
 	private volatile double lastError;
+	private volatile Runnable trainCycleFinishedCallback;
 
 	public NetworkTrainRunnable(NeuralNetwork network, TrainingDataSet trainingData)
 	{
@@ -30,6 +31,11 @@ public class NetworkTrainRunnable implements Runnable
 
 		this.thread = new Thread(this);
 		this.thread.setName("NeuralNetwork-TrainThread");
+	}
+
+	public void setTrainCycleFinishedCallback(Runnable callback)
+	{
+		this.trainCycleFinishedCallback = callback;
 	}
 
 	@Override
@@ -53,6 +59,7 @@ public class NetworkTrainRunnable implements Runnable
 			else
 			{
 				lastError = network.train(trainingData.getRandomPair());
+				if (trainCycleFinishedCallback != null) new Thread(trainCycleFinishedCallback).start();
 			}
 		}
 

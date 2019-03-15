@@ -2,7 +2,6 @@ package cz.krejcar25.sudoku.networkControl;
 
 import cz.krejcar25.sudoku.FileChooserFactory;
 import cz.krejcar25.sudoku.game.GridCore;
-import cz.krejcar25.sudoku.game.GridDifficulty;
 import cz.krejcar25.sudoku.game.GridProperties;
 import cz.krejcar25.sudoku.game.SudokuGenerator;
 import cz.krejcar25.sudoku.ui.Applet;
@@ -21,17 +20,17 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class GenerateSudokuStringView extends BaseView implements Runnable
 {
 	private final GridProperties gridProperties;
-	private final GridDifficulty gridDifficulty;
+	private final int clueCount;
 	private final int count;
 	private final AtomicInteger cycle = new AtomicInteger(0);
 	private final ArrayList<String> sudokus;
 	private final ArrayList<Control> controls;
 
-	GenerateSudokuStringView(Applet applet, GridProperties gridProperties, GridDifficulty gridDifficulty, int count)
+	GenerateSudokuStringView(Applet applet, GridProperties gridProperties, int clueCount, int count)
 	{
 		super(applet, 800, 600);
 		this.gridProperties = gridProperties;
-		this.gridDifficulty = gridDifficulty;
+		this.clueCount = clueCount;
 		this.count = count;
 		this.sudokus = new ArrayList<>();
 		Thread thread = new Thread(this);
@@ -102,9 +101,9 @@ public class GenerateSudokuStringView extends BaseView implements Runnable
 		}
 		pop();
 
-		for (Control control : controls)
+		for (int i = controls.size() - 1; i >= 0; i--)
 		{
-			control.update();
+			controls.get(i).update();
 			//image(control, control.x, control.y);
 		}
 	}
@@ -116,7 +115,7 @@ public class GenerateSudokuStringView extends BaseView implements Runnable
 		for (cycle.set(0); cycle.get() < count; cycle.getAndIncrement())
 		{
 			GridCore core = new GridCore(gridProperties);
-			new SudokuGenerator(core).generate(gridProperties.getClueCount(gridDifficulty), false);
+			new SudokuGenerator(core).generate(clueCount, false);
 			sudokus.add(core.getGridString());
 			cores.add(core);
 		}

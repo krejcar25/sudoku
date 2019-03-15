@@ -171,7 +171,7 @@ public class NetworkCreationDialog extends JDialog
 					if (network.saveToFile(file.getAbsolutePath())) dispose();
 				})
 				.setMode(FileChooserFactory.SAVE)
-				.show();
+				.show(false);
 	}
 
 	private void onCancel()

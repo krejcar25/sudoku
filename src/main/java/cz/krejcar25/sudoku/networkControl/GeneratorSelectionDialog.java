@@ -4,19 +4,22 @@ import cz.krejcar25.sudoku.game.GridDifficulty;
 import cz.krejcar25.sudoku.game.GridProperties;
 
 import javax.swing.*;
-import java.awt.event.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class GeneratorSelectionDialog extends JDialog
 {
+	private final DefaultComboBoxModel<GridProperties> sizeComboBoxModel;
+	private final DefaultComboBoxModel<GridDifficulty> difficultyComboBoxModel;
+	private final CreateGenerationViewAction createGenerationViewAction;
 	private JPanel contentPane;
 	private JButton buttonOK;
 	private JButton buttonCancel;
 	private JSpinner countSpinner;
 	private JComboBox<GridProperties> sizeComboBox;
-	private final DefaultComboBoxModel<GridProperties> sizeComboBoxModel;
 	private JComboBox<GridDifficulty> difficultyComboBox;
-	private final DefaultComboBoxModel<GridDifficulty> difficultyComboBoxModel;
-	private final CreateGenerationViewAction createGenerationViewAction;
+	private JSpinner clueCountSpinner;
 
 	GeneratorSelectionDialog(CreateGenerationViewAction createGenerationViewAction)
 	{
@@ -47,19 +50,30 @@ public class GeneratorSelectionDialog extends JDialog
 		sizeComboBoxModel = new DefaultComboBoxModel<>();
 		for (GridProperties gp : GridProperties.values()) sizeComboBoxModel.addElement(gp);
 		sizeComboBox.setModel(sizeComboBoxModel);
+		sizeComboBox.addActionListener(e ->
+		{
+			setClueLimit();
+			setClueCount();
+		});
 
 		difficultyComboBoxModel = new DefaultComboBoxModel<>();
 		for (GridDifficulty gd : GridDifficulty.values()) if (gd.isSelectable()) difficultyComboBoxModel.addElement(gd);
 		difficultyComboBox.setModel(difficultyComboBoxModel);
+		difficultyComboBox.addActionListener(e ->
+		{
+			clueCountSpinner.setEnabled(difficultyComboBox.getSelectedItem() == GridDifficulty.Custom);
+			setClueCount();
+		});
 
-		countSpinner.setValue(10);
+		countSpinner.setModel(new SpinnerNumberModel(10, 0, 100000, 1));
 
+		setClueLimit();
 		pack();
 	}
 
 	private void onOK()
 	{
-		createGenerationViewAction.create(sizeComboBoxModel.getElementAt(sizeComboBox.getSelectedIndex()), difficultyComboBoxModel.getElementAt(difficultyComboBox.getSelectedIndex()), Integer.parseInt(countSpinner.getValue().toString()));
+		createGenerationViewAction.create(sizeComboBoxModel.getElementAt(sizeComboBox.getSelectedIndex()), (int) clueCountSpinner.getValue(), Integer.parseInt(countSpinner.getValue().toString()));
 		dispose();
 	}
 
@@ -67,5 +81,20 @@ public class GeneratorSelectionDialog extends JDialog
 	{
 		// add your code here if necessary
 		dispose();
+	}
+
+	private void setClueLimit()
+	{
+		GridProperties gp = sizeComboBoxModel.getElementAt(sizeComboBox.getSelectedIndex());
+		int ncr = (int) Math.pow(gp.getSizea() * gp.getSizeb(), 2);
+		int min = ncr / 3;
+		int val = ncr / 2;
+		clueCountSpinner.setModel(new SpinnerNumberModel(val, min, ncr, 1));
+	}
+
+	private void setClueCount()
+	{
+		if (difficultyComboBox.getSelectedItem() != GridDifficulty.Custom)
+			this.clueCountSpinner.setValue(sizeComboBoxModel.getElementAt(sizeComboBox.getSelectedIndex()).getClueCount(difficultyComboBoxModel.getElementAt(difficultyComboBox.getSelectedIndex())));
 	}
 }

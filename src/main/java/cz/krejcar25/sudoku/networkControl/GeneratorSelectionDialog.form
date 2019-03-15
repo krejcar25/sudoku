@@ -54,6 +54,8 @@
         <rowspec value="top:3dlu:noGrow"/>
         <rowspec value="center:max(d;4px):noGrow"/>
         <rowspec value="top:3dlu:noGrow"/>
+        <rowspec value="center:max(d;4px):noGrow"/>
+        <rowspec value="top:3dlu:noGrow"/>
         <rowspec value="top:d:noGrow"/>
         <colspec value="fill:max(d;4px):noGrow"/>
         <colspec value="left:4dlu:noGrow"/>
@@ -66,14 +68,14 @@
         <children>
           <component id="72fe1" class="javax.swing.JSpinner" binding="countSpinner">
             <constraints>
-              <grid row="4" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+              <grid row="6" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
               <forms defaultalign-horz="false" defaultalign-vert="false"/>
             </constraints>
             <properties/>
           </component>
           <component id="74619" class="javax.swing.JLabel">
             <constraints>
-              <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
               <forms defaultalign-vert="false"/>
             </constraints>
             <properties>
@@ -114,6 +116,22 @@
               <labelFor value="96aea"/>
               <text value="Sudoku Difficulty"/>
             </properties>
+          </component>
+          <component id="a501b" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <forms/>
+            </constraints>
+            <properties>
+              <text value="Clue count"/>
+            </properties>
+          </component>
+          <component id="a6cd9" class="javax.swing.JSpinner" binding="clueCountSpinner">
+            <constraints>
+              <grid row="4" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+              <forms defaultalign-horz="false"/>
+            </constraints>
+            <properties/>
           </component>
         </children>
       </grid>

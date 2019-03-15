@@ -4,15 +4,24 @@ import org.jetbrains.annotations.Nullable;
 
 public enum GridDifficulty
 {
-	Debug(-1, false), Easy(0, true), Medium(1, true), Hard(2, true), Extreme(3, true);
+	Custom(-2, true, false, "Custom"),
+	Debug(-1, false, false, "Debug"),
+	Easy(0, true, true, "Easy"),
+	Medium(1, true, true, "Medium"),
+	Hard(2, true, true, "Hard"),
+	Extreme(3, true, true, "Extreme");
 
 	private final int level;
 	private final boolean selectable;
+	private final boolean playable;
+	private final String name;
 
-	GridDifficulty(int level, boolean selectable)
+	GridDifficulty(int level, boolean selectable, boolean playable, String name)
 	{
 		this.level = level;
 		this.selectable = selectable;
+		this.playable = playable;
+		this.name = name;
 	}
 
 	@Nullable
@@ -30,26 +39,16 @@ public enum GridDifficulty
 	@Override
 	public String toString()
 	{
-		switch (this)
-		{
-			case Debug:
-				return "Debug";
-			case Easy:
-				return "Easy";
-			case Medium:
-				return "Medium";
-			case Hard:
-				return "Hard";
-			case Extreme:
-				return "Extreme";
-			default:
-				assert false;
-				return "Nonsense";
-		}
+		return this.name;
 	}
 
 	public boolean isSelectable()
 	{
 		return selectable;
+	}
+
+	public boolean isPlayable()
+	{
+		return playable;
 	}
 }

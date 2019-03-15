@@ -49,19 +49,26 @@ public class FileChooserFactory
 		return this;
 	}
 
-	public FileChooserFactory setMode(@MagicConstant(intValues = {OPEN, SAVE}) int mode) {
+	public FileChooserFactory setMode(@MagicConstant(intValues = {OPEN, SAVE}) int mode)
+	{
 		this.mode = mode;
 		return this;
 	}
 
 	public void show()
 	{
+		show(true);
+	}
+
+	public void show(boolean invokeAndWait)
+	{
 		switch (mode)
 		{
 			case OPEN:
 				try
 				{
-					EventQueue.invokeAndWait(() -> result = fileChooser.showOpenDialog(null));
+					if (invokeAndWait) EventQueue.invokeAndWait(this::open);
+					else open();
 				}
 				catch (InterruptedException | InvocationTargetException e)
 				{
@@ -71,7 +78,8 @@ public class FileChooserFactory
 			case SAVE:
 				try
 				{
-					EventQueue.invokeAndWait(() -> result = fileChooser.showSaveDialog(null));
+					if (invokeAndWait) EventQueue.invokeAndWait(this::save);
+					else save();
 				}
 				catch (InterruptedException | InvocationTargetException e)
 				{
@@ -82,5 +90,15 @@ public class FileChooserFactory
 
 		if (result == JFileChooser.APPROVE_OPTION && okAction != null) okAction.accept(fileChooser.getSelectedFile());
 		else if (result == JFileChooser.CANCEL_OPTION && cancelAction != null) cancelAction.run();
+	}
+
+	private void open()
+	{
+		result = fileChooser.showOpenDialog(null);
+	}
+
+	private void save()
+	{
+		result = fileChooser.showSaveDialog(null);
 	}
 }

@@ -5,13 +5,11 @@ import cz.krejcar25.sudoku.ui.control.Button;
 
 import java.util.ArrayList;
 
-public abstract class BaseOverlay extends Drawable
-{
-	private final BaseView baseView;
+public abstract class BaseOverlay extends Drawable {
 	protected final ArrayList<Button<?>> buttons;
+	private final BaseView baseView;
 
-	protected BaseOverlay(BaseView baseView, float x, float y, int width, int height, OverlayType type, ButtonEvents<?>... clicks)
-	{
+	protected BaseOverlay(BaseView baseView, float x, float y, int width, int height, OverlayType type, ButtonEvents<?>... clicks) {
 		super(baseView.getApplet(), x, y, width, height);
 		this.baseView = baseView;
 		this.buttons = new ArrayList<>();
@@ -19,8 +17,7 @@ public abstract class BaseOverlay extends Drawable
 		int bsx = 135;
 		int bsy = 40;
 		if (clicks.length != type.buttonCount) throw new IllegalArgumentException();
-		switch (type.buttonCount)
-		{
+		switch (type.buttonCount) {
 			case 0:
 				break;
 			case 1:
@@ -38,17 +35,13 @@ public abstract class BaseOverlay extends Drawable
 		}
 	}
 
-	protected void drawButtons()
-	{
-		for (Button<?> button : buttons)
-		{
+	protected void drawButtons() {
+		for (Button<?> button : buttons) {
 			button.update();
-			//image(button, button.x, button.y);
 		}
 	}
 
-	public final void click(float mx, float my, boolean rmb)
-	{
+	public final void click(float mx, float my, boolean rmb) {
 		click((int) mx, (int) my, rmb);
 	}
 

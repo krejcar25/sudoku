@@ -19,13 +19,11 @@ import processing.event.MouseEvent;
 
 import java.util.ArrayList;
 
-public class MainMenuView extends BaseView
-{
+public class MainMenuView extends BaseView {
 	private final ArrayList<Control> controls;
 	private int rVal;
 
-	public MainMenuView(Applet applet)
-	{
+	public MainMenuView(Applet applet) {
 		super(applet, 800, 600);
 		controls = new ArrayList<>();
 
@@ -51,8 +49,7 @@ public class MainMenuView extends BaseView
 			if (!view.shouldLeave) viewStack.push(view);
 		}));
 
-		for (Pair<String, ButtonEvents<Object>> buttonEvent : buttonEvents)
-		{
+		for (Pair<String, ButtonEvents<Object>> buttonEvent : buttonEvents) {
 			int bx = (2 * (index % 2) + 1) * width / 4;
 			int by = baseY + ((index / 2) * yDelta);
 			Button button = new Button<>(this, bx, by, bsx, bsy, buttonEvent.fst, buttonEvent.snd);
@@ -63,8 +60,7 @@ public class MainMenuView extends BaseView
 		controls.add(Button.getStandardBackButton(this));
 	}
 
-	private void testNetwork()
-	{
+	private void testNetwork() {
 		String extension = NeuralNetwork.FILE_TYPE;
 		new FileChooserFactory()
 				.addFileType(NeuralNetwork.FILE_TYPE_DESC, extension)
@@ -88,8 +84,7 @@ public class MainMenuView extends BaseView
 				.show();
 	}
 
-	private void openNetworkFileInViewer()
-	{
+	private void openNetworkFileInViewer() {
 		String extension = NeuralNetwork.FILE_TYPE;
 		new FileChooserFactory()
 				.addFileType(NeuralNetwork.FILE_TYPE_DESC, extension)
@@ -100,47 +95,39 @@ public class MainMenuView extends BaseView
 	}
 
 	@Override
-	public void mouseDown(int mx, int my, boolean rmb)
-	{
+	public void mouseDown(int mx, int my, boolean rmb) {
 
 	}
 
 	@Override
-	public void mouseUp(int mx, int my, boolean rmb)
-	{
+	public void mouseUp(int mx, int my, boolean rmb) {
 
 	}
 
 	@Override
-	public void click(int mx, int my, boolean rmb)
-	{
-		if (!rmb)
-		{
+	public void click(int mx, int my, boolean rmb) {
+		if (!rmb) {
 			for (Control control : controls) if (control.isClick(mx - x, my - y)) control.click();
 		}
 	}
 
 	@Override
-	public void mouseDrag(MouseEvent mouseEvent)
-	{
+	public void mouseDrag(MouseEvent mouseEvent) {
 
 	}
 
 	@Override
-	public void scroll(MouseEvent event)
-	{
+	public void scroll(MouseEvent event) {
 
 	}
 
 	@Override
-	public void keyDown(KeyEvent keyEvent)
-	{
+	public void keyDown(KeyEvent keyEvent) {
 
 	}
 
 	@Override
-	protected void draw()
-	{
+	protected void draw() {
 		push();
 		background(220);
 		textSize(40);
@@ -148,16 +135,12 @@ public class MainMenuView extends BaseView
 		textAlign(PApplet.CENTER, PApplet.CENTER);
 		text("Network Control", 400, 100);
 
-		for (Control button : controls)
-		{
+		for (Control button : controls) {
 			button.update();
-			//image(button, button.x, button.y);
 		}
 
-		if (overlay != null)
-		{
+		if (overlay != null) {
 			overlay.update();
-			//image(overlay, overlay.x, overlay.y);
 		}
 		pop();
 	}

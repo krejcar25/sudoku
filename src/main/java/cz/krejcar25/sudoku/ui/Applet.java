@@ -21,30 +21,25 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-public abstract class Applet extends PApplet
-{
-	protected ViewStack stack;
+public abstract class Applet extends PApplet {
 	private final List<Integer> keyCodesPressed;
+	protected ViewStack stack;
 	private boolean closeOnExit = true;
 
-	protected Applet()
-	{
+	protected Applet() {
 		keyCodesPressed = new ArrayList<>();
 	}
 
-	public static boolean xor(boolean a, boolean b)
-	{
+	public static boolean xor(boolean a, boolean b) {
 		return (a && !b) || (!a && b);
 	}
 
-	public static <T> void shuffle(T[] input)
-	{
+	public static <T> void shuffle(T[] input) {
 		int m = input.length;
 		int i;
 		T t;
 
-		while (m > 0)
-		{
+		while (m > 0) {
 			i = PApplet.floor(new Random().nextInt(m--));
 			t = input[m];
 			input[m] = input[i];
@@ -52,44 +47,36 @@ public abstract class Applet extends PApplet
 		}
 	}
 
-	public static <T> boolean isBetween(Comparable<T> min, T val, Comparable<T> max)
-	{
+	public static <T> boolean isBetween(Comparable<T> min, T val, Comparable<T> max) {
 		return max.compareTo(val) > 0 && min.compareTo(val) < 0;
 	}
 
 	@NotNull
-	protected static PImage getImage(String url) throws Exception
-	{
+	protected static PImage getImage(String url) throws Exception {
 		InputStream resourceStream = SudokuApplet.class.getResourceAsStream(url);
 		BufferedImage image = ImageIO.read(resourceStream);
 		return new PImage(image);
 	}
 
 	@Override
-	public void keyPressed(KeyEvent keyEvent)
-	{
-		if (!keyEvent.isAutoRepeat())
-		{
+	public void keyPressed(KeyEvent keyEvent) {
+		if (!keyEvent.isAutoRepeat()) {
 			keyCodesPressed.add(keyEvent.getKeyCode());
 		}
 		stack.get().keyDown(keyEvent);
 	}
 
 	@Override
-	public void keyReleased(KeyEvent keyEvent)
-	{
+	public void keyReleased(KeyEvent keyEvent) {
 		keyCodesPressed.removeAll(Collections.singletonList(keyEvent.getKeyCode()));
 	}
 
 	@Override
-	public void handleDraw()
-	{
-		try
-		{
+	public void handleDraw() {
+		try {
 			super.handleDraw();
 		}
-		catch (Exception ex)
-		{
+		catch (Exception ex) {
 			// Some shit happened during the render. What do chief?
 			StringWriter sw = new StringWriter();
 			ex.printStackTrace(new PrintWriter(sw));
@@ -104,37 +91,31 @@ public abstract class Applet extends PApplet
 		}
 	}
 
-	public boolean isKeyPressed(int keyCode)
-	{
+	public boolean isKeyPressed(int keyCode) {
 		return keyCodesPressed.contains(keyCode);
 	}
 
-	protected MouseEvent scaleMouseEvent(MouseEvent mouseEvent)
-	{
+	protected MouseEvent scaleMouseEvent(MouseEvent mouseEvent) {
 		int scale = pixelDensity;
 		return new MouseEvent(mouseEvent.getNative(), mouseEvent.getMillis(), mouseEvent.getAction(), mouseEvent.getModifiers(), scale * mouseEvent.getX(), scale * mouseEvent.getY(), mouseEvent.getButton(), mouseEvent.getCount());
 	}
 
-	protected void push()
-	{
+	protected void push() {
 		pushMatrix();
 		pushStyle();
 	}
 
-	protected void pop()
-	{
+	protected void pop() {
 		popStyle();
 		popMatrix();
 	}
 
-	protected void dontCloseOnExit()
-	{
+	protected void dontCloseOnExit() {
 		closeOnExit = false;
 	}
 
 	@Override
-	public void exitActual()
-	{
+	public void exitActual() {
 		if (closeOnExit) super.exitActual();
 	}
 }

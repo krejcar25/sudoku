@@ -6,21 +6,18 @@ import cz.krejcar25.sudoku.ui.Drawable;
 import org.jetbrains.annotations.NotNull;
 import processing.core.PApplet;
 
-public class DrawableGridCore extends Drawable
-{
+public class DrawableGridCore extends Drawable {
 	private final GridCore core;
 	private final GridCore solvedCore;
 	private final float sx;
 	private final float sy;
 	private boolean showSolved;
 
-	DrawableGridCore(Applet applet, float x, float y, int width, int height, @NotNull GridCore core)
-	{
+	DrawableGridCore(Applet applet, float x, float y, int width, int height, @NotNull GridCore core) {
 		this(applet, x, y, width, height, core, null);
 	}
 
-	DrawableGridCore(Applet applet, float x, float y, int width, int height, @NotNull GridCore core, GridCore solvedCore)
-	{
+	DrawableGridCore(Applet applet, float x, float y, int width, int height, @NotNull GridCore core, GridCore solvedCore) {
 		super(applet, x, y, width, height);
 		this.core = core;
 		this.solvedCore = solvedCore;
@@ -29,28 +26,22 @@ public class DrawableGridCore extends Drawable
 		this.showSolved = false;
 	}
 
-	void setShowSolved(boolean showSolved)
-	{
+	void setShowSolved(boolean showSolved) {
 		this.showSolved = showSolved;
 	}
 
-	boolean isShowingSolved()
-	{
+	boolean isShowingSolved() {
 		return this.showSolved;
 	}
 
-	public GridCore getCore()
-	{
+	public GridCore getCore() {
 		return core;
 	}
 
 	@Override
-	protected void draw()
-	{
-		for (int y = 0; y < core.ncr; y++)
-		{
-			for (int x = 0; x < core.ncr; x++)
-			{
+	protected void draw() {
+		for (int y = 0; y < core.ncr; y++) {
+			for (int x = 0; x < core.ncr; x++) {
 				push();
 				stroke(51);
 				fill(core.isBaseGame(x, y) ? 220 : 255);
@@ -60,12 +51,10 @@ public class DrawableGridCore extends Drawable
 
 
 				int thisNum = showSolved ? core.getSolved(x, y) : core.get(x, y);
-				if (thisNum > -1)
-				{
+				if (thisNum > -1) {
 					push();
 					if (core.isBaseGame(x, y)) fill(51);
-					else if (solvedCore != null)
-					{
+					else if (solvedCore != null) {
 						if (core.get(x, y) == solvedCore.getSolved(x, y)) fill(0, 255, 0);
 						else fill(255, 0, 0);
 					}
@@ -87,14 +76,12 @@ public class DrawableGridCore extends Drawable
 		push();
 		stroke(0);
 		strokeWeight(3);
-		for (int i = 1; i < core.sizeb; i++)
-		{
+		for (int i = 1; i < core.sizeb; i++) {
 			int linex = Applet.floor(i * core.sizea * sx);
 			line(linex, 0, linex, height);
 		}
 
-		for (int i = 1; i <= core.sizea; i++)
-		{
+		for (int i = 1; i <= core.sizea; i++) {
 			int liney = Applet.floor(i * core.sizeb * sy);
 			line(0, liney, width, liney);
 		}

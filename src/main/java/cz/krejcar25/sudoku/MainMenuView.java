@@ -13,12 +13,10 @@ import processing.event.MouseEvent;
 
 import java.util.ArrayList;
 
-public class MainMenuView extends BaseView
-{
+public class MainMenuView extends BaseView {
 	private final ArrayList<Button<?>> buttons;
 
-	MainMenuView(SudokuApplet applet)
-	{
+	MainMenuView(SudokuApplet applet) {
 		super(applet, 800, 600);
 		buttons = new ArrayList<>();
 		int bsx = 340;
@@ -26,8 +24,7 @@ public class MainMenuView extends BaseView
 		int baseY = 200;
 		int yDelta = 80;
 		int index = 0;
-		for (GridProperties gridProperties : GridProperties.values())
-		{
+		for (GridProperties gridProperties : GridProperties.values()) {
 			int bx = (2 * (index % 2) + 1) * width / 4;
 			int by = baseY + ((index / 2) * yDelta);
 			Button<Object> button = new Button<>(this, bx, by, bsx, bsy, gridProperties.getName(), sender -> viewStack.push(new DifficultySelectView(getRootApplet(), gridProperties)));
@@ -40,8 +37,7 @@ public class MainMenuView extends BaseView
 		buttonEvents.add(new Pair<>("Scoreboard", sender -> showScoreboardSizeSelectView()));
 		buttonEvents.add(new Pair<>("Help", sender -> showHelpView()));
 		buttonEvents.add(new Pair<>("Network Control", sender -> showNetworkControl()));
-		for (Pair<String, ButtonEvents<Object>> buttonEvent : buttonEvents)
-		{
+		for (Pair<String, ButtonEvents<Object>> buttonEvent : buttonEvents) {
 			int bx = (2 * (index % 2) + 1) * width / 4;
 			int by = baseY + ((index / 2) * yDelta);
 			Button<Object> button = new Button<>(this, bx, by, bsx, bsy, buttonEvent.fst, buttonEvent.snd);
@@ -51,20 +47,17 @@ public class MainMenuView extends BaseView
 	}
 
 	@Override
-	public void mouseDown(int mx, int my, boolean rmb)
-	{
+	public void mouseDown(int mx, int my, boolean rmb) {
 
 	}
 
 	@Override
-	public void mouseUp(int mx, int my, boolean rmb)
-	{
+	public void mouseUp(int mx, int my, boolean rmb) {
 
 	}
 
 	@Override
-	protected void draw()
-	{
+	protected void draw() {
 		push();
 		background(220);
 		textSize(40);
@@ -72,64 +65,51 @@ public class MainMenuView extends BaseView
 		textAlign(PApplet.CENTER, PApplet.CENTER);
 		text("Main menu", 400, 100);
 
-		for (Button button : buttons)
-		{
+		for (Button button : buttons) {
 			button.update();
-			//image(button, button.x, button.y);
 		}
 
-		if (overlay != null)
-		{
+		if (overlay != null) {
 			overlay.update();
-			//image(overlay, overlay.x, overlay.y);
 		}
 		pop();
 	}
 
 	@Override
-	public void click(int mx, int my, boolean rmb)
-	{
-		if (!rmb)
-		{
+	public void click(int mx, int my, boolean rmb) {
+		if (!rmb) {
 			for (Button button : buttons) if (button.isClick(mx - x, my - y)) button.click();
 		}
 	}
 
 	@Override
-	public void mouseDrag(MouseEvent mouseEvent)
-	{
+	public void mouseDrag(MouseEvent mouseEvent) {
 
 	}
 
 	@Override
-	public void scroll(MouseEvent event)
-	{
+	public void scroll(MouseEvent event) {
 
 	}
 
 	@Override
-	public void keyDown(KeyEvent keyEvent)
-	{
+	public void keyDown(KeyEvent keyEvent) {
 		if (keyEvent.getKeyCode() == ESC) getApplet().exit();
 	}
 
-	private void showSettingsView()
-	{
+	private void showSettingsView() {
 		viewStack.push(new SettingsView(parent));
 	}
 
-	private void showScoreboardSizeSelectView()
-	{
+	private void showScoreboardSizeSelectView() {
 		viewStack.push(new ScoreboardSizeSelectView(getApplet()));
 	}
 
-	private void showHelpView()
-	{
+	private void showHelpView() {
 		viewStack.push(new HelpView(getApplet()));
 	}
 
-	private void showNetworkControl()
-	{
+	private void showNetworkControl() {
 		viewStack.push(new cz.krejcar25.sudoku.networkControl.MainMenuView(parent));
 	}
 }

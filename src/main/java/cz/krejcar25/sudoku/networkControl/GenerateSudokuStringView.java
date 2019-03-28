@@ -17,8 +17,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class GenerateSudokuStringView extends BaseView implements Runnable
-{
+public class GenerateSudokuStringView extends BaseView implements Runnable {
 	private final GridProperties gridProperties;
 	private final int clueCount;
 	private final int count;
@@ -26,8 +25,7 @@ public class GenerateSudokuStringView extends BaseView implements Runnable
 	private final ArrayList<String> sudokus;
 	private final ArrayList<Control> controls;
 
-	GenerateSudokuStringView(Applet applet, GridProperties gridProperties, int clueCount, int count)
-	{
+	GenerateSudokuStringView(Applet applet, GridProperties gridProperties, int clueCount, int count) {
 		super(applet, 800, 600);
 		this.gridProperties = gridProperties;
 		this.clueCount = clueCount;
@@ -40,52 +38,44 @@ public class GenerateSudokuStringView extends BaseView implements Runnable
 	}
 
 	@Override
-	public void mouseDown(int mx, int my, boolean rmb)
-	{
+	public void mouseDown(int mx, int my, boolean rmb) {
 
 	}
 
 	@Override
-	public void mouseUp(int mx, int my, boolean rmb)
-	{
+	public void mouseUp(int mx, int my, boolean rmb) {
 
 	}
 
 	@Override
-	public void click(int mx, int my, boolean rmb)
-	{
+	public void click(int mx, int my, boolean rmb) {
 		if (!rmb) for (Control control : controls) if (control.isClick(mx, my)) control.click();
 	}
 
 	@Override
-	public void mouseDrag(MouseEvent mouseEvent)
-	{
+	public void mouseDrag(MouseEvent mouseEvent) {
 
 	}
 
 	@Override
-	public void scroll(MouseEvent event)
-	{
+	public void scroll(MouseEvent event) {
 
 	}
 
 	@Override
-	public void keyDown(KeyEvent keyEvent)
-	{
+	public void keyDown(KeyEvent keyEvent) {
 
 	}
 
 	@Override
-	protected void draw()
-	{
+	protected void draw() {
 		push();
 		background(220);
 		textSize(50);
 		fill(51);
 		textAlign(CENTER, CENTER);
 
-		if (cycle.get() < count)
-		{
+		if (cycle.get() < count) {
 			text("Generating", width / 2f, 100);
 			fill(150);
 			noStroke();
@@ -95,25 +85,20 @@ public class GenerateSudokuStringView extends BaseView implements Runnable
 			fill(51);
 			text(String.format("%d / %d", cycle.get(), count), 400, 450);
 		}
-		else
-		{
+		else {
 			text("Generation finished", width / 2f, 100);
 		}
 		pop();
 
-		for (int i = controls.size() - 1; i >= 0; i--)
-		{
+		for (int i = controls.size() - 1; i >= 0; i--) {
 			controls.get(i).update();
-			//image(control, control.x, control.y);
 		}
 	}
 
 	@Override
-	public void run()
-	{
+	public void run() {
 		ArrayList<GridCore> cores = new ArrayList<>();
-		for (cycle.set(0); cycle.get() < count; cycle.getAndIncrement())
-		{
+		for (cycle.set(0); cycle.get() < count; cycle.getAndIncrement()) {
 			GridCore core = new GridCore(gridProperties);
 			new SudokuGenerator(core).generate(clueCount, false);
 			sudokus.add(core.getGridString());
@@ -133,22 +118,18 @@ public class GenerateSudokuStringView extends BaseView implements Runnable
 					{
 						String path = file.getAbsolutePath();
 
-						if (!path.endsWith(extension))
-						{
+						if (!path.endsWith(extension)) {
 							file = new File(path + "." + extension);
 						}
-						try (FileOutputStream out = new FileOutputStream(file))
-						{
+						try (FileOutputStream out = new FileOutputStream(file)) {
 							BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(out));
-							for (String line : sudokus)
-							{
+							for (String line : sudokus) {
 								writer.write(line);
 								writer.newLine();
 							}
 							writer.close();
 						}
-						catch (IOException e)
-						{
+						catch (IOException e) {
 							e.printStackTrace();
 						}
 					})

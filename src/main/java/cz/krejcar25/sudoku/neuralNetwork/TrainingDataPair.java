@@ -1,7 +1,6 @@
 package cz.krejcar25.sudoku.neuralNetwork;
 
-public interface TrainingDataPair
-{
+public interface TrainingDataPair {
 	int getRequiredInputCount();
 
 	int getRequiredOutputCount();

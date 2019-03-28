@@ -22,20 +22,18 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class NetworkEstimateView extends BaseView
-{
+public class NetworkEstimateView extends BaseView {
 	private static final int gridWidth = 800;
 	private static final int gridHeight = 800;
 	private static final int topBarHeight = 50;
 	private static final int bottomBarHeight = 50;
 	private final DrawableGridCore base;
 	private final ArrayList<DrawableGridCore> guesses;
-	private int guessIndex;
 	private final ArrayList<Control> controls;
 	private final Map<NavigationDirection, Button<NavigationDirection>> navigationButtons;
+	private int guessIndex;
 
-	NetworkEstimateView(Applet applet, GridCore base, NeuralNetwork network)
-	{
+	NetworkEstimateView(Applet applet, GridCore base, NeuralNetwork network) {
 		super(applet, 2 * gridWidth, topBarHeight + gridHeight + bottomBarHeight);
 		this.base = new DrawableGridCore(applet, 0, topBarHeight, gridWidth, gridHeight, base);
 		this.guesses = new ArrayList<>();
@@ -51,12 +49,10 @@ public class NetworkEstimateView extends BaseView
 		float byb = gridHeight + topBarHeight; // button y base
 		int bi = 0; // button index
 
-		for (NavigationDirection direction : NavigationDirection.values())
-		{
+		for (NavigationDirection direction : NavigationDirection.values()) {
 			float bx = (float) gridWidth + bi * bxs + bxs / 2f;
 			float by = byb + bottomBarHeight / 2f;
-			try
-			{
+			try {
 				InputStream resourceStream = NetworkEstimateView.class.getResourceAsStream(String.format("%s.png", direction.getImageName()));
 				BufferedImage image = ImageIO.read(resourceStream);
 				PImage icon = new PImage(image);
@@ -66,16 +62,14 @@ public class NetworkEstimateView extends BaseView
 				controls.add(b);
 				bi++;
 			}
-			catch (Exception ex)
-			{
+			catch (Exception ex) {
 				Applet.println("Can't create button: " + ex.getMessage());
 			}
 		}
 
 		GridCore intermediate = base.copy();
 
-		while (!intermediate.isFinished())
-		{
+		while (!intermediate.isFinished()) {
 			NetworkOutputStore store = new NetworkOutputStore(network.estimate(intermediate.getInput()));
 			int placeIndex = 0;
 			NetworkOutputStore.GridCell top;
@@ -86,8 +80,7 @@ public class NetworkEstimateView extends BaseView
 			isEmpty = intermediate.get(top.x, top.y) == -1;
 			placeIndex++;
 
-			while ((!canPlaceNumber || !isEmpty) && placeIndex < store.size())
-			{
+			while ((!canPlaceNumber || !isEmpty) && placeIndex < store.size()) {
 				top = store.getTop(placeIndex);
 				canPlaceNumber = intermediate.canPlaceNumber(top.n, top.x, top.y, -1);
 				isEmpty = intermediate.get(top.x, top.y) == -1;
@@ -101,23 +94,19 @@ public class NetworkEstimateView extends BaseView
 		}
 
 		int solvedToggleSize = bottomBarHeight;
-		ControlLabel solvedToggleLabel = new ControlLabel(new Toggle(this, (gridWidth - solvedToggleSize) / 2, topBarHeight + gridHeight, 2 * solvedToggleSize, solvedToggleSize, new ToggleEvents()
-		{
+		ControlLabel solvedToggleLabel = new ControlLabel(new Toggle(this, (gridWidth - solvedToggleSize) / 2, topBarHeight + gridHeight, 2 * solvedToggleSize, solvedToggleSize, new ToggleEvents() {
 			@Override
-			public void toggled(Control sender)
-			{
+			public void toggled(Control sender) {
 
 			}
 
 			@Override
-			public void switchedOn(Control sender)
-			{
+			public void switchedOn(Control sender) {
 				((NetworkEstimateView) sender.getBaseView()).base.setShowSolved(true);
 			}
 
 			@Override
-			public void switchedOff(Control sender)
-			{
+			public void switchedOff(Control sender) {
 				((NetworkEstimateView) sender.getBaseView()).base.setShowSolved(false);
 			}
 		}), ControlLabel.CONTROL_LEFT, "Show solved grid");
@@ -127,31 +116,26 @@ public class NetworkEstimateView extends BaseView
 		this.controls.add(Button.getStandardBackButton(this));
 	}
 
-	private void navigationButtons_click(@NotNull Button<NavigationDirection> sender)
-	{
+	private void navigationButtons_click(@NotNull Button<NavigationDirection> sender) {
 		navigate(sender.userObject);
 	}
 
-	private void navigate(@NotNull NavigationDirection direction)
-	{
-		switch (direction)
-		{
+	private void navigate(@NotNull NavigationDirection direction) {
+		switch (direction) {
 			case First:
 				this.guessIndex = 0;
 				this.navigationButtons.get(NavigationDirection.Previous).setEnabled(false);
 				this.navigationButtons.get(NavigationDirection.Next).setEnabled(true);
 				break;
 			case Previous:
-				if (guessIndex > 0)
-				{
+				if (guessIndex > 0) {
 					if (--this.guessIndex <= 0)
 						this.navigationButtons.get(NavigationDirection.Previous).setEnabled(false);
 					this.navigationButtons.get(NavigationDirection.Next).setEnabled(true);
 				}
 				break;
 			case Next:
-				if (this.guessIndex + 1 < guesses.size())
-				{
+				if (this.guessIndex + 1 < guesses.size()) {
 					if (++this.guessIndex + 1 >= guesses.size())
 						this.navigationButtons.get(NavigationDirection.Next).setEnabled(false);
 					this.navigationButtons.get(NavigationDirection.Previous).setEnabled(true);
@@ -168,51 +152,42 @@ public class NetworkEstimateView extends BaseView
 	}
 
 	@Override
-	public void mouseDown(int mx, int my, boolean rmb)
-	{
+	public void mouseDown(int mx, int my, boolean rmb) {
 
 	}
 
 	@Override
-	public void mouseUp(int mx, int my, boolean rmb)
-	{
+	public void mouseUp(int mx, int my, boolean rmb) {
 
 	}
 
 	@Override
-	public void click(int mx, int my, boolean rmb)
-	{
+	public void click(int mx, int my, boolean rmb) {
 		if (!rmb) for (Control control : controls) if (control.isClick(mx, my)) control.click();
 	}
 
 	@Override
-	public void mouseDrag(MouseEvent mouseEvent)
-	{
+	public void mouseDrag(MouseEvent mouseEvent) {
 
 	}
 
 	@Override
-	public void scroll(MouseEvent event)
-	{
+	public void scroll(MouseEvent event) {
 
 	}
 
 	@Override
-	public void keyDown(KeyEvent keyEvent)
-	{
+	public void keyDown(KeyEvent keyEvent) {
 
 	}
 
 	@Override
-	protected void draw()
-	{
+	protected void draw() {
 		background(51);
 		base.update();
-		//image(base, base.x, base.y);
 
 		DrawableGridCore guess = guesses.get(guessIndex);
 		guess.update();
-		//image(guess, guess.x, guess.y);
 
 		push();
 		fill(255, 0, 0);
@@ -228,40 +203,32 @@ public class NetworkEstimateView extends BaseView
 		line(gridWidth, topBarHeight, gridWidth, topBarHeight + gridHeight);
 		pop();
 
-		for (Control control : controls)
-		{
+		for (Control control : controls) {
 			control.update();
-			//image(control, control.x, control.y);
 		}
 	}
 
-	private enum NavigationDirection
-	{
+	private enum NavigationDirection {
 		First("rw"), Previous("prev"), Next("next"), Last("ff");
 
 		private final String imageName;
 
-		NavigationDirection(String imageName)
-		{
+		NavigationDirection(String imageName) {
 			this.imageName = imageName;
 		}
 
 		@Contract(pure = true)
-		String getImageName()
-		{
+		String getImageName() {
 			return imageName;
 		}
 	}
 
-	private static class NetworkOutputStore
-	{
+	private static class NetworkOutputStore {
 		private ArrayList<GridCell> cells;
 
-		NetworkOutputStore(@NotNull double[] doubles)
-		{
+		NetworkOutputStore(@NotNull double[] doubles) {
 			double cbrt = Math.cbrt(doubles.length);
-			if (cbrt == Math.floor(cbrt) && !Double.isInfinite(cbrt))
-			{
+			if (cbrt == Math.floor(cbrt) && !Double.isInfinite(cbrt)) {
 				this.cells = new ArrayList<>();
 				int ncr = (int) cbrt;
 
@@ -275,23 +242,19 @@ public class NetworkEstimateView extends BaseView
 			else throw new IllegalArgumentException("The size of the doubles array is not an integer cube.");
 		}
 
-		GridCell getTop(int offset)
-		{
+		GridCell getTop(int offset) {
 			return cells.get(offset);
 		}
 
-		int size()
-		{
+		int size() {
 			return cells.size();
 		}
 
-		private class GridCell
-		{
+		private class GridCell {
 			private final int x, y, n;
 			private final double value;
 
-			GridCell(int x, int y, int n, double value)
-			{
+			GridCell(int x, int y, int n, double value) {
 				this.x = x;
 				this.y = y;
 				this.n = n;

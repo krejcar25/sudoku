@@ -2,23 +2,19 @@ package cz.krejcar25.sudoku.scoreboard;
 
 import java.util.Comparator;
 
-class ScoreboardComparator implements Comparator<ScoreboardEntry>
-{
+class ScoreboardComparator implements Comparator<ScoreboardEntry> {
 	private final Scoreboard.SortBy sortBy;
 	private final int sortOrder;
 
-	ScoreboardComparator(Scoreboard.SortBy sortBy, int sortOrder)
-	{
+	ScoreboardComparator(Scoreboard.SortBy sortBy, int sortOrder) {
 		this.sortBy = sortBy;
 		this.sortOrder = sortOrder;
 	}
 
 	@Override
-	public int compare(ScoreboardEntry o1, ScoreboardEntry o2)
-	{
+	public int compare(ScoreboardEntry o1, ScoreboardEntry o2) {
 		int diff;
-		switch (sortBy)
-		{
+		switch (sortBy) {
 			case Date:
 				diff = Long.compare(o1.getDateStarted().getTime(), o2.getDateStarted().getTime());
 				break;

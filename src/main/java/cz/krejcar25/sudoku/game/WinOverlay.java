@@ -1,15 +1,16 @@
 package cz.krejcar25.sudoku.game;
 
-import cz.krejcar25.sudoku.ui.*;
+import cz.krejcar25.sudoku.ui.BaseOverlay;
+import cz.krejcar25.sudoku.ui.BaseView;
+import cz.krejcar25.sudoku.ui.Clock;
+import cz.krejcar25.sudoku.ui.OverlayType;
 import cz.krejcar25.sudoku.ui.control.Button;
 import processing.core.PApplet;
 
-class WinOverlay extends BaseOverlay
-{
+class WinOverlay extends BaseOverlay {
 	private final Clock clock;
 
-	WinOverlay(BaseView baseView, BaseGrid grid)
-	{
+	WinOverlay(BaseView baseView, BaseGrid grid) {
 		super(baseView, PApplet.constrain((baseView.width - 540) / 2, 0, baseView.width - 540), (int) (grid.getCore().ncr * grid.getSy() / 2) - 100, PApplet.constrain(baseView.width, 0, 540), 200, OverlayType.OK, (sender) ->
 		{
 			System.out.println("WinOverlay OK button has received click event, popping");
@@ -21,8 +22,7 @@ class WinOverlay extends BaseOverlay
 	}
 
 	@Override
-	protected void draw()
-	{
+	protected void draw() {
 		background(0);
 		push();
 		fill(200, 210, 200);
@@ -38,13 +38,10 @@ class WinOverlay extends BaseOverlay
 	}
 
 	@Override
-	public void click(int mx, int my, boolean rmb)
-	{
+	public void click(int mx, int my, boolean rmb) {
 		System.out.println("WinOverlay has received click event");
-		for (Button button : buttons)
-		{
-			if (button.isClick(mx - x, my - y))
-			{
+		for (Button button : buttons) {
+			if (button.isClick(mx - x, my - y)) {
 				System.out.println("WinOverlay has found appropriate button");
 				button.click();
 			}

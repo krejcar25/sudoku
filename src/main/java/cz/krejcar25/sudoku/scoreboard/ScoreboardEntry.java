@@ -8,15 +8,13 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-class ScoreboardEntry implements Serializable
-{
+class ScoreboardEntry implements Serializable {
 	private final GridProperties gridSize;
 	private final GridDifficulty difficulty;
 	private final Date dateStarted;
 	private final long durationMillis;
 
-	ScoreboardEntry(GridProperties gridSize, GridDifficulty difficulty, Date dateStarted, long durationMillis)
-	{
+	ScoreboardEntry(GridProperties gridSize, GridDifficulty difficulty, Date dateStarted, long durationMillis) {
 		this.gridSize = gridSize;
 		this.difficulty = difficulty;
 		this.dateStarted = dateStarted;
@@ -24,8 +22,7 @@ class ScoreboardEntry implements Serializable
 	}
 
 	// Generates random entry for testing
-	ScoreboardEntry(GridProperties gridSize, GridDifficulty difficulty)
-	{
+	ScoreboardEntry(GridProperties gridSize, GridDifficulty difficulty) {
 		this.gridSize = gridSize;
 		this.difficulty = difficulty;
 		GregorianCalendar dateStarted = new GregorianCalendar();
@@ -35,28 +32,23 @@ class ScoreboardEntry implements Serializable
 		this.durationMillis = randomBetween(60000, 7200000);
 	}
 
-	private int randomBetween(int start, int end)
-	{
+	private int randomBetween(int start, int end) {
 		return start + (int) Math.round(Math.random() * (end - start));
 	}
 
-	GridProperties getGridSize()
-	{
+	GridProperties getGridSize() {
 		return gridSize;
 	}
 
-	GridDifficulty getDifficulty()
-	{
+	GridDifficulty getDifficulty() {
 		return difficulty;
 	}
 
-	Date getDateStarted()
-	{
+	Date getDateStarted() {
 		return dateStarted;
 	}
 
-	long getDurationMillis()
-	{
+	long getDurationMillis() {
 		return durationMillis;
 	}
 }

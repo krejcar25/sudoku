@@ -7,8 +7,7 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE})
-public @interface NeuralNetworkLayerProperties
-{
+public @interface NeuralNetworkLayerProperties {
 	boolean needsProperties() default false;
 
 	String label();

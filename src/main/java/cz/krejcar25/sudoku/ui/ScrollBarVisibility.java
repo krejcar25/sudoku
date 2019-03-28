@@ -1,15 +1,12 @@
 package cz.krejcar25.sudoku.ui;
 
-public enum ScrollBarVisibility
-{
+public enum ScrollBarVisibility {
 	Visible,
 	Hidden,
 	Automatic;
 
-	public boolean showScrollBar(int v, int c)
-	{
-		switch (this)
-		{
+	public boolean showScrollBar(int v, int c) {
+		switch (this) {
 			case Visible:
 				return true;
 			case Hidden:

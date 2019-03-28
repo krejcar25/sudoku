@@ -2,8 +2,7 @@ package cz.krejcar25.sudoku.game;
 
 import org.jetbrains.annotations.Nullable;
 
-public enum GridDifficulty
-{
+public enum GridDifficulty {
 	Custom(-2, true, false, "Custom"),
 	Debug(-1, false, false, "Debug"),
 	Easy(0, true, true, "Easy"),
@@ -16,8 +15,7 @@ public enum GridDifficulty
 	private final boolean playable;
 	private final String name;
 
-	GridDifficulty(int level, boolean selectable, boolean playable, String name)
-	{
+	GridDifficulty(int level, boolean selectable, boolean playable, String name) {
 		this.level = level;
 		this.selectable = selectable;
 		this.playable = playable;
@@ -25,30 +23,25 @@ public enum GridDifficulty
 	}
 
 	@Nullable
-	public static GridDifficulty fromLevel(int level)
-	{
+	public static GridDifficulty fromLevel(int level) {
 		for (GridDifficulty difficulty : values()) if (difficulty.level == level) return difficulty;
 		return null;
 	}
 
-	public int getLevel()
-	{
+	public int getLevel() {
 		return level;
 	}
 
 	@Override
-	public String toString()
-	{
+	public String toString() {
 		return this.name;
 	}
 
-	public boolean isSelectable()
-	{
+	public boolean isSelectable() {
 		return selectable;
 	}
 
-	public boolean isPlayable()
-	{
+	public boolean isPlayable() {
 		return playable;
 	}
 }

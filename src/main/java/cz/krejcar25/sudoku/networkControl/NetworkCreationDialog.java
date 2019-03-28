@@ -17,8 +17,8 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-public class NetworkCreationDialog extends JDialog
-{
+public class NetworkCreationDialog extends JDialog {
+	private final DefaultListModel<NeuralNetworkLayer> layersListModel;
 	private JPanel contentPane;
 	private JButton buttonOK;
 	private JButton buttonCancel;
@@ -26,7 +26,6 @@ public class NetworkCreationDialog extends JDialog
 	private JSpinner newLayerSizeSpinner;
 	private JButton propertiesButton;
 	private JList<NeuralNetworkLayer> layersList;
-	private final DefaultListModel<NeuralNetworkLayer> layersListModel;
 	private JSpinner inputLayerSizeSpinner;
 	private JButton addLayerButton;
 	private JButton removeLastButton;
@@ -36,8 +35,7 @@ public class NetworkCreationDialog extends JDialog
 	private NeuralNetwork network;
 	private NetworkChartApplet chartApplet;
 
-	NetworkCreationDialog(Applet owner, Class... deepLayerClasses)
-	{
+	NetworkCreationDialog(Applet owner, Class... deepLayerClasses) {
 		setContentPane(contentPane);
 		setModal(true);
 		getRootPane().setDefaultButton(buttonOK);
@@ -48,10 +46,8 @@ public class NetworkCreationDialog extends JDialog
 
 		// call onCancel() when cross is clicked
 		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-		addWindowListener(new WindowAdapter()
-		{
-			public void windowClosing(WindowEvent e)
-			{
+		addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e) {
 				onCancel();
 			}
 		});
@@ -62,11 +58,9 @@ public class NetworkCreationDialog extends JDialog
 		newLayerTypeComboBox.addActionListener(e -> propertiesButton.setEnabled(newLayerTypeComboBox.getItemAt(newLayerTypeComboBox.getSelectedIndex()).needsPropertiesButton));
 
 		layersListModel = new DefaultListModel<>();
-		layersListModel.addListDataListener(new ListDataListener()
-		{
+		layersListModel.addListDataListener(new ListDataListener() {
 			@Override
-			public void intervalAdded(ListDataEvent e)
-			{
+			public void intervalAdded(ListDataEvent e) {
 				inputLayerSizeSpinner.setEnabled(layersListModel.isEmpty());
 				removeLastButton.setEnabled(!layersListModel.isEmpty());
 				buttonOK.setEnabled(!layersListModel.isEmpty());
@@ -74,8 +68,7 @@ public class NetworkCreationDialog extends JDialog
 			}
 
 			@Override
-			public void intervalRemoved(ListDataEvent e)
-			{
+			public void intervalRemoved(ListDataEvent e) {
 				inputLayerSizeSpinner.setEnabled(layersListModel.isEmpty());
 				removeLastButton.setEnabled(!layersListModel.isEmpty());
 				buttonOK.setEnabled(!layersListModel.isEmpty());
@@ -83,8 +76,7 @@ public class NetworkCreationDialog extends JDialog
 			}
 
 			@Override
-			public void contentsChanged(ListDataEvent e)
-			{
+			public void contentsChanged(ListDataEvent e) {
 
 			}
 		});
@@ -114,11 +106,9 @@ public class NetworkCreationDialog extends JDialog
 
 		chartButton.addActionListener(e ->
 		{
-			if (e.getActionCommand().equals("SHOW"))
-			{
+			if (e.getActionCommand().equals("SHOW")) {
 				network = new NeuralNetwork(new DeepLayer(layersListModel.get(0).getInCount(), layersListModel.get(0).getNodes(), ActivationFunction.SIGMOID));
-				for (int i = 1; i < layersListModel.size(); i++)
-				{
+				for (int i = 1; i < layersListModel.size(); i++) {
 					network.addLayer(layersListModel.get(i));
 				}
 				chartApplet = new NetworkChartApplet(owner, network, closedApplet ->
@@ -136,8 +126,7 @@ public class NetworkCreationDialog extends JDialog
 				chartButton.setText("Chart <<");
 				pack();
 			}
-			else if (e.getActionCommand().equals("HIDE"))
-			{
+			else if (e.getActionCommand().equals("HIDE")) {
 				network = null;
 				chartApplet = null;
 				networkDisplayPanel.remove(0);
@@ -152,8 +141,7 @@ public class NetworkCreationDialog extends JDialog
 		setVisible(true);
 	}
 
-	private void onOK()
-	{
+	private void onOK() {
 		NeuralNetwork network = new NeuralNetwork(layersListModel.elementAt(0));
 		for (int i = 1; i < layersListModel.size(); i++) network.addLayer(layersListModel.elementAt(i));
 
@@ -164,8 +152,7 @@ public class NetworkCreationDialog extends JDialog
 				.setOkAction(file ->
 				{
 					String path = file.getAbsolutePath();
-					if (!path.endsWith(extension))
-					{
+					if (!path.endsWith(extension)) {
 						file = new File(path + "." + extension);
 					}
 					if (network.saveToFile(file.getAbsolutePath())) dispose();
@@ -174,32 +161,27 @@ public class NetworkCreationDialog extends JDialog
 				.show(false);
 	}
 
-	private void onCancel()
-	{
+	private void onCancel() {
 		// add your code here if necessary
 		dispose();
 	}
 
-	private void addLayerButton_actionPerformed()
-	{
+	private void addLayerButton_actionPerformed() {
 		LayerTypeDescription layerType = newLayerTypeComboBox.getItemAt(newLayerTypeComboBox.getSelectedIndex());
 		int lastOutput = (layersListModel.isEmpty()) ? (int) inputLayerSizeSpinner.getValue() : layersListModel.getElementAt(layersListModel.getSize() - 1).getNodes();
-		try
-		{
+		try {
 			Method createMethod = layerType.type.getMethod("create", int.class, int.class);
 			@SuppressWarnings("JavaReflectionInvocation")
 			NeuralNetworkLayer layer = (NeuralNetworkLayer) createMethod.invoke(null, lastOutput, newLayerSizeSpinner.getValue());
 			layersListModel.addElement(layer);
 			if (network != null) network.addLayer(layer);
 		}
-		catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException | ClassCastException e1)
-		{
+		catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException | ClassCastException e1) {
 			e1.printStackTrace();
 		}
 	}
 
-	private void sizeSpinnerStatesChanged()
-	{
+	private void sizeSpinnerStatesChanged() {
 		int input = (int) inputLayerSizeSpinner.getValue();
 		int newLayer = (int) newLayerSizeSpinner.getValue();
 		if (input < 0) inputLayerSizeSpinner.setValue(0);
@@ -207,21 +189,18 @@ public class NetworkCreationDialog extends JDialog
 		addLayerButton.setEnabled(input > 0 && newLayer > 0);
 	}
 
-	private class LayerTypeDescription
-	{
+	private class LayerTypeDescription {
 		final Class<? extends NeuralNetworkLayer> type;
 		final boolean needsPropertiesButton;
 		final String label;
 
-		LayerTypeDescription(Class<? extends NeuralNetworkLayer> type, boolean needsPropertiesButton, String label)
-		{
+		LayerTypeDescription(Class<? extends NeuralNetworkLayer> type, boolean needsPropertiesButton, String label) {
 			this.type = type;
 			this.needsPropertiesButton = needsPropertiesButton;
 			this.label = label;
 		}
 
-		public String toString()
-		{
+		public String toString() {
 			return label;
 		}
 	}

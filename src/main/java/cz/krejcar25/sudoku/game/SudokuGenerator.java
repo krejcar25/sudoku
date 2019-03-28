@@ -8,50 +8,43 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class SudokuGenerator implements Runnable
-{
+public class SudokuGenerator implements Runnable {
 	private static final Random random = new Random();
-	private final GridCore core;
 	final Timer timer;
+	private final GridCore core;
 	private final ArrayList<ArrayList<ArrayList<Integer>>> numbers;
 	private boolean used;
 	private int clueCount;
 	private volatile boolean shouldRun = true;
 
-	public SudokuGenerator(GridCore core)
-	{
+	public SudokuGenerator(GridCore core) {
 		this.core = core;
 		numbers = new ArrayList<>();
 		used = false;
 		timer = new Timer("GridGenerator");
 	}
 
-	private void replenish(int x, int y)
-	{
+	private void replenish(int x, int y) {
 		ArrayList<Integer> list = numbers.get(x).get(y);
 		list.clear();
-		for (int i = 0; i < core.ncr; i++)
-		{
+		for (int i = 0; i < core.ncr; i++) {
 			list.add(i);
 		}
 	}
 
-	public void generate(int clueCount, boolean async)
-	{
+	public void generate(int clueCount, boolean async) {
 		this.clueCount = clueCount;
 		Thread thread = new Thread(this);
 		if (async) thread.start();
 		else thread.run();
 	}
 
-	void stopGeneration()
-	{
+	void stopGeneration() {
 		shouldRun = false;
 	}
 
 	@Override
-	public void run()
-	{
+	public void run() {
 		if (used) return;
 		used = true;
 
@@ -60,52 +53,41 @@ public class SudokuGenerator implements Runnable
 		int gx = 0;
 		int gy = 0;
 
-		for (int x = 0; x < core.ncr; x++)
-		{
+		for (int x = 0; x < core.ncr; x++) {
 			numbers.add(new ArrayList<>());
-			for (int y = 0; y < core.ncr; y++)
-			{
+			for (int y = 0; y < core.ncr; y++) {
 				numbers.get(x).add(new ArrayList<>());
 				replenish(x, y);
 			}
 		}
 
-		do
-		{
-			if (available(gx, gy))
-			{
+		do {
+			if (available(gx, gy)) {
 				int n = random.nextInt(numbers.get(gx).get(gy).size());
-				try
-				{
-					if (core.canPlaceNumber(numbers.get(gx).get(gy).get(n), gx, gy, -1))
-					{
+				try {
+					if (core.canPlaceNumber(numbers.get(gx).get(gy).get(n), gx, gy, -1)) {
 						core.set(gx, gy, numbers.get(gx).get(gy).get(n));
 						gx++;
 					}
-					else
-					{
+					else {
 						numbers.get(gx).get(gy).remove(n);
 					}
 				}
-				catch (IndexOutOfBoundsException ex)
-				{
+				catch (IndexOutOfBoundsException ex) {
 					if (core.getOwner() != null) core.getOwner().view.removeFromViewStack();
 				}
 			}
-			else
-			{
+			else {
 				replenish(gx, gy);
 				core.set(gx, gy, -1);
 				gx--;
 			}
 
-			if (gx < 0)
-			{
+			if (gx < 0) {
 				gx += core.ncr;
 				gy--;
 			}
-			else if (gx >= core.ncr)
-			{
+			else if (gx >= core.ncr) {
 				gx -= core.ncr;
 				gy++;
 			}
@@ -122,8 +104,7 @@ public class SudokuGenerator implements Runnable
 		int removed = 0;
 		int remStart = core.ncr * core.ncr;
 
-		for (int i = 0; removed < (remStart - clueCount - 1) && i < cells.length && shouldRun; i++)
-		{
+		for (int i = 0; removed < (remStart - clueCount - 1) && i < cells.length && shouldRun; i++) {
 			Point v = cells[i];
 			int x = v.x;
 			int y = v.y;
@@ -132,16 +113,14 @@ public class SudokuGenerator implements Runnable
 
 			SudokuApplet.println("Trying to remove clue " + i + ", " + removed + " already removed, " + (remStart - clueCount - removed) + " remaining.");
 
-			if (core.get(x, y) > -1)
-			{
+			if (core.get(x, y) > -1) {
 				int cell = core.get(x, y);
 				int mirror = core.get(ox, oy);
 				core.set(x, y, -1);
 				core.set(ox, oy, -1);
 				//core.lockAsBase(false, false);
 				int solutions = new SudokuSolver(core).countSolutions();
-				if (solutions > 1)
-				{
+				if (solutions > 1) {
 					core.set(x, y, cell);
 					core.set(ox, oy, mirror);
 					SudokuApplet.println("Actually I had to put it back, found multiple solutions...");
@@ -163,8 +142,7 @@ public class SudokuGenerator implements Runnable
 		if (core.getOwner() != null) core.getOwner().getGameClock().start();
 	}
 
-	private boolean available(int x, int y)
-	{
+	private boolean available(int x, int y) {
 		return numbers.get(x).get(y).size() > 0;
 	}
 }

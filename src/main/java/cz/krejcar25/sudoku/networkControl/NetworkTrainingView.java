@@ -17,21 +17,19 @@ import processing.event.MouseEvent;
 import java.io.*;
 import java.util.ArrayList;
 
-public class NetworkTrainingView extends BaseView
-{
-	private Stage stage;
+public class NetworkTrainingView extends BaseView {
 	private final ArrayList<Control> controls;
 	private final Button<Stage> currentButton;
 	private final GridCoreTrainingDataSet dataSet;
+	private final int buttonMargin = 75;
+	private Stage stage;
 	private NeuralNetwork network;
 	private NetworkTrainRunnable trainRunnable;
 	private Clock trainingClock;
 	private Button pauseButton;
 	private Button progressDemoButton;
-	private final int buttonMargin = 75;
 
-	NetworkTrainingView(Applet applet)
-	{
+	NetworkTrainingView(Applet applet) {
 		super(applet, 800, 800);
 		stage = Stage.SelectSudokus;
 		controls = new ArrayList<>();
@@ -40,23 +38,20 @@ public class NetworkTrainingView extends BaseView
 		currentButton = new Button<>(this, width / 2f, 600, width - 2 * buttonMargin, 2 * buttonMargin, "Select a Sudokus file", sender -> openDataSetFile());
 	}
 
-	private void openDataSetFile()
-	{
+	private void openDataSetFile() {
 		String extension = GridCore.FILE_TYPE;
 		new FileChooserFactory()
 				.addFileType(GridCore.FILE_TYPE_DESC, extension)
 				.setAllowAll(false)
 				.setOkAction(file -> {
-					try (FileInputStream in = new FileInputStream(file))
-					{
+					try (FileInputStream in = new FileInputStream(file)) {
 						BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-						reader.lines().forEach(line -> dataSet.addCore(line));
+						reader.lines().forEach(dataSet::addCore);
 						stage = Stage.SelectNetwork;
 						currentButton.setLabel("Select a Neural Network file");
 						currentButton.setClick(sender -> openNetworkFile());
 					}
-					catch (IOException e)
-					{
+					catch (IOException e) {
 						e.printStackTrace();
 					}
 				})
@@ -64,32 +59,27 @@ public class NetworkTrainingView extends BaseView
 				.show();
 	}
 
-	private void openNetworkFile()
-	{
+	private void openNetworkFile() {
 		String extension = NeuralNetwork.FILE_TYPE;
 		new FileChooserFactory()
 				.addFileType(NeuralNetwork.FILE_TYPE_DESC, extension)
 				.setAllowAll(false)
 				.setOkAction(file -> {
 					network = NeuralNetwork.loadFromFile(file.getAbsolutePath());
-					if (network != null)
-					{
-						if (dataSet.checkDataDimensions(network.getInputCount(), network.getOutputCount()))
-						{
+					if (network != null) {
+						if (dataSet.checkDataDimensions(network.getInputCount(), network.getOutputCount())) {
 							int width = 700;
 							int height = 200;
-							overlay = new BaseOverlay(this, ((this.width) - width) / 2f, ((this.height) - height) / 2f, width, height, OverlayType.OK, (ButtonEvents) sender1 -> removeFromViewStack())
-							{
+							overlay = new BaseOverlay(this, ((this.width) - width) / 2f, ((this.height) - height) / 2f, width, height, OverlayType.OK, (ButtonEvents) sender1 -> removeFromViewStack()) {
 
 								@Override
-								public void click(int mx, int my, boolean rmb)
-								{
-									for (Button button : buttons) if (button.isClick(mx - this.x, my - this.y)) button.click();
+								public void click(int mx, int my, boolean rmb) {
+									for (Button button : buttons)
+										if (button.isClick(mx - this.x, my - this.y)) button.click();
 								}
 
 								@Override
-								protected void draw()
-								{
+								protected void draw() {
 									background(51);
 									push();
 									fill(200, 210, 200);
@@ -114,8 +104,7 @@ public class NetworkTrainingView extends BaseView
 				.show();
 	}
 
-	private void startTraining()
-	{
+	private void startTraining() {
 		stage = Stage.Training;
 		this.trainRunnable = new NetworkTrainRunnable(this.network, this.dataSet);
 		this.trainRunnable.startTrain();
@@ -130,17 +119,14 @@ public class NetworkTrainingView extends BaseView
 		this.controls.add(this.pauseButton);
 	}
 
-	private void pauseButton_click()
-	{
-		if (trainRunnable.isPaused())
-		{
+	private void pauseButton_click() {
+		if (trainRunnable.isPaused()) {
 			this.pauseButton.setLabel("Pause");
 			this.controls.remove(progressDemoButton);
 			this.trainRunnable.resume();
 			this.trainingClock.start();
 		}
-		else
-		{
+		else {
 			this.trainingClock.pause();
 			this.trainRunnable.pause();
 			this.pauseButton.setLabel("Resume");
@@ -148,8 +134,7 @@ public class NetworkTrainingView extends BaseView
 		}
 	}
 
-	private void progressDemoButton_click() throws IllegalArgumentException
-	{
+	private void progressDemoButton_click() throws IllegalArgumentException {
 		GridCore training = this.dataSet.getRandomPair();
 		GridProperties properties = training.gridProperties;
 		GridCore testCore = new GridCore(properties);
@@ -157,8 +142,7 @@ public class NetworkTrainingView extends BaseView
 		viewStack.push(new NetworkEstimateView(getApplet(), testCore, network));
 	}
 
-	private void finishTraining()
-	{
+	private void finishTraining() {
 		this.trainRunnable.stop();
 		this.trainingClock.stop();
 		this.stage = Stage.TrainingFinished;
@@ -166,16 +150,14 @@ public class NetworkTrainingView extends BaseView
 		this.currentButton.setClick(sender -> saveNetwork());
 	}
 
-	private void saveNetwork()
-	{
+	private void saveNetwork() {
 		String extension = NeuralNetwork.FILE_TYPE;
 		new FileChooserFactory()
 				.addFileType(NeuralNetwork.FILE_TYPE_DESC, extension)
 				.setAllowAll(false)
 				.setOkAction(file -> {
 					String path = file.getAbsolutePath();
-					if (!path.endsWith(extension))
-					{
+					if (!path.endsWith(extension)) {
 						file = new File(path + "." + extension);
 					}
 					if (this.network.saveToFile(file.getAbsolutePath())) removeFromViewStack();
@@ -185,20 +167,17 @@ public class NetworkTrainingView extends BaseView
 	}
 
 	@Override
-	public void mouseDown(int mx, int my, boolean rmb)
-	{
+	public void mouseDown(int mx, int my, boolean rmb) {
 
 	}
 
 	@Override
-	public void mouseUp(int mx, int my, boolean rmb)
-	{
+	public void mouseUp(int mx, int my, boolean rmb) {
 
 	}
 
 	@Override
-	public void click(int mx, int my, boolean rmb)
-	{
+	public void click(int mx, int my, boolean rmb) {
 		if (overlay != null) overlay.click(mx, my, rmb);
 		if (currentButton != null && currentButton.isClick(mx, my)) currentButton.click();
 		else
@@ -206,26 +185,22 @@ public class NetworkTrainingView extends BaseView
 	}
 
 	@Override
-	public void mouseDrag(MouseEvent mouseEvent)
-	{
+	public void mouseDrag(MouseEvent mouseEvent) {
 
 	}
 
 	@Override
-	public void scroll(MouseEvent event)
-	{
+	public void scroll(MouseEvent event) {
 
 	}
 
 	@Override
-	public void keyDown(KeyEvent keyEvent)
-	{
+	public void keyDown(KeyEvent keyEvent) {
 
 	}
 
 	@Override
-	protected void draw()
-	{
+	protected void draw() {
 		background(220);
 
 		textAlign(CENTER, CENTER);
@@ -233,8 +208,7 @@ public class NetworkTrainingView extends BaseView
 		fill(51);
 		strokeWeight(0);
 
-		if (stage == Stage.Training)
-		{
+		if (stage == Stage.Training) {
 			textSize(40);
 			text(String.format("Training iterations: %d", network.getTrainCycles()), width / 2f, 200, 700, 100);
 			text(String.format("Loss: %e", trainRunnable.getLastError()), width / 2f, 250, 700, 100);
@@ -248,27 +222,21 @@ public class NetworkTrainingView extends BaseView
 			pop();
 		}
 
-		if (currentButton != null)
-		{
+		if (currentButton != null) {
 			currentButton.update();
-			//image(currentButton, currentButton.x, currentButton.y);
+
 		}
 
-		for (Control control : controls)
-		{
+		for (Control control : controls) {
 			control.update();
-			//image(control, control.x, control.y);
 		}
 
-		if (overlay != null)
-		{
+		if (overlay != null) {
 			overlay.update();
-			//image(overlay, overlay.x, overlay.y);
 		}
 	}
 
-	private enum Stage
-	{
+	private enum Stage {
 		SelectSudokus, SelectNetwork, StartTraining, Training, TrainingFinished
 	}
 }

@@ -2,8 +2,7 @@ package cz.krejcar25.sudoku.game;
 
 import java.awt.*;
 
-public enum GridProperties
-{
+public enum GridProperties {
 	Grid4x4(2, 2, 3, 0, 5, 1, 5, 2, 5, 3, 5, 0, 6, 1, 6, 2, 6, 1, 7, 1, "4x4", 360, 720, 11, 9, 7, 6),
 	Grid6x6(3, 2, 2, 0, 7, 1, 7, 2, 7, 3, 7, 0, 8, 1, 8, 2, 8, 4, 7, 1, "6x6", 540, 810, 18, 16, 14, 12),
 	Grid9x9(3, 3, 1, 0, 10, 1, 10, 2, 10, 3, 10, 4, 10, 5, 10, 6, 10, 7, 10, 1, "9x9", 720, 880, 30, 27, 24, 21),
@@ -17,8 +16,7 @@ public enum GridProperties
 	private final int width, height;
 	private final int[] clueCounts;
 
-	GridProperties(int sizea, int sizeb, int controlRows, int newGameX, int newGameY, int helpX, int helpY, int orderToggleX, int orderToggleY, int deleteX, int deleteY, int smallNumX, int smallNumY, int settingsX, int settingsY, int exitX, int exitY, int timerX, int timerY, int drawNumberOffset, String name, int width, int height, int... clueCounts)
-	{
+	GridProperties(int sizea, int sizeb, int controlRows, int newGameX, int newGameY, int helpX, int helpY, int orderToggleX, int orderToggleY, int deleteX, int deleteY, int smallNumX, int smallNumY, int settingsX, int settingsY, int exitX, int exitY, int timerX, int timerY, int drawNumberOffset, String name, int width, int height, int... clueCounts) {
 		this.sizea = sizea;
 		this.sizeb = sizeb;
 		this.controlRows = controlRows;
@@ -37,94 +35,76 @@ public enum GridProperties
 		this.clueCounts = clueCounts;
 	}
 
-	public int getSizea()
-	{
+	public int getSizea() {
 		return sizea;
 	}
 
-	public int getSizeb()
-	{
+	public int getSizeb() {
 		return sizeb;
 	}
 
-	public int getControlRows()
-	{
+	public int getControlRows() {
 		return controlRows;
 	}
 
-	public Point getNewGamePos()
-	{
+	public Point getNewGamePos() {
 		return newGamePos;
 	}
 
-	public Point getHelpPos()
-	{
+	public Point getHelpPos() {
 		return helpPos;
 	}
 
-	public Point getOrderTogglePos()
-	{
+	public Point getOrderTogglePos() {
 		return orderTogglePos;
 	}
 
-	public Point getDeletePos()
-	{
+	public Point getDeletePos() {
 		return deletePos;
 	}
 
-	public Point getSmallNumPos()
-	{
+	public Point getSmallNumPos() {
 		return smallNumPos;
 	}
 
-	public Point getSettingsPos()
-	{
+	public Point getSettingsPos() {
 		return settingsPos;
 	}
 
-	public Point getExitPos()
-	{
+	public Point getExitPos() {
 		return exitPos;
 	}
 
-	public Point getTimerPos()
-	{
+	public Point getTimerPos() {
 		return timerPos;
 	}
 
-	public int getDrawNumberOffset()
-	{
+	public int getDrawNumberOffset() {
 		return drawNumberOffset;
 	}
 
-	public String getName()
-	{
+	public String getName() {
 		return String.format("Sudoku %s", name);
 	}
 
-	public String getShortName()
-	{
+	public String getShortName() {
 		return name;
 	}
 
-	public int getWidth()
-	{
+	public int getWidth() {
 		return width;
 	}
 
-	public int getHeight()
-	{
+	public int getHeight() {
 		return height;
 	}
 
-	public int getClueCount(GridDifficulty gridDifficulty)
-	{
+	public int getClueCount(GridDifficulty gridDifficulty) {
 		return gridDifficulty == GridDifficulty.Debug ? (((sizea * sizeb) * (sizea * sizeb)) - 2) : clueCounts[gridDifficulty.getLevel()];
 	}
 
 	@Override
-	public String toString()
-	{
+	public String toString() {
 		return name;
 	}
 }

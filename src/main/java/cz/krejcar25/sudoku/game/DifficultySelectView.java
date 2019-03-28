@@ -12,14 +12,12 @@ import processing.event.MouseEvent;
 
 import java.util.ArrayList;
 
-public class DifficultySelectView extends BaseView
-{
+public class DifficultySelectView extends BaseView {
 	final GameView gameView;
 	private final ArrayList<Control> controls;
 	private final Checkbox animateCheckbox;
 
-	public DifficultySelectView(SudokuApplet sudokuApplet, GridProperties gridProperties)
-	{
+	public DifficultySelectView(SudokuApplet sudokuApplet, GridProperties gridProperties) {
 		super(sudokuApplet, 800, 600);
 		this.gameView = new GameView(sudokuApplet, gridProperties);
 		int bsx = 340;
@@ -30,23 +28,19 @@ public class DifficultySelectView extends BaseView
 		controls.add(new Button<>(this, width / 4f, 280, bsx, bsy, "Hard", sender -> startGeneration(GridDifficulty.Hard)));
 		controls.add(new Button<>(this, 3 * width / 4f, 280, bsx, bsy, "Extreme", sender -> startGeneration(GridDifficulty.Extreme)));
 		controls.add(Button.getStandardBackButton(this));
-		animateCheckbox = new Checkbox(this, 300, 400, 30, 30, new ToggleEvents()
-		{
+		animateCheckbox = new Checkbox(this, 300, 400, 30, 30, new ToggleEvents() {
 			@Override
-			public void toggled(Control sender)
-			{
+			public void toggled(Control sender) {
 
 			}
 
 			@Override
-			public void switchedOn(Control sender)
-			{
+			public void switchedOn(Control sender) {
 
 			}
 
 			@Override
-			public void switchedOff(Control sender)
-			{
+			public void switchedOff(Control sender) {
 
 			}
 		});
@@ -55,8 +49,7 @@ public class DifficultySelectView extends BaseView
 		controls.add(animateLabel);
 	}
 
-	private void startGeneration(GridDifficulty gridDifficulty)
-	{
+	private void startGeneration(GridDifficulty gridDifficulty) {
 		overlay = new GeneratingOverlay(this, gridDifficulty);
 		new Thread(() ->
 		{
@@ -66,22 +59,18 @@ public class DifficultySelectView extends BaseView
 	}
 
 	@Override
-	public void mouseDown(int mx, int my, boolean rmb)
-	{
+	public void mouseDown(int mx, int my, boolean rmb) {
 
 	}
 
 	@Override
-	public void mouseUp(int mx, int my, boolean rmb)
-	{
+	public void mouseUp(int mx, int my, boolean rmb) {
 
 	}
 
 	@Override
-	public void click(int mx, int my, boolean rmb)
-	{
-		if (rmb)
-		{
+	public void click(int mx, int my, boolean rmb) {
+		if (rmb) {
 			removeFromViewStack();
 			throw new RuntimeException("This is a test exception thrown in a DifficultySelectView");
 		}
@@ -89,26 +78,22 @@ public class DifficultySelectView extends BaseView
 	}
 
 	@Override
-	public void mouseDrag(MouseEvent mouseEvent)
-	{
+	public void mouseDrag(MouseEvent mouseEvent) {
 
 	}
 
 	@Override
-	public void scroll(MouseEvent event)
-	{
+	public void scroll(MouseEvent event) {
 
 	}
 
 	@Override
-	public void keyDown(KeyEvent keyEvent)
-	{
+	public void keyDown(KeyEvent keyEvent) {
 
 	}
 
 	@Override
-	protected void draw()
-	{
+	protected void draw() {
 		push();
 		background(220);
 		textSize(40);
@@ -116,16 +101,12 @@ public class DifficultySelectView extends BaseView
 		textAlign(CENTER, CENTER);
 		text("Select difficulty for " + gameView.gridProperties.getName(), 400, 100);
 
-		for (Control control : controls)
-		{
+		for (Control control : controls) {
 			control.update();
-			//image(control, control.x, control.y);
 		}
 
-		if (overlay != null)
-		{
+		if (overlay != null) {
 			overlay.update();
-			//image(overlay, overlay.x, overlay.y);
 		}
 		pop();
 	}

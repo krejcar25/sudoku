@@ -5,34 +5,28 @@ import cz.krejcar25.sudoku.neuralNetwork.TrainingDataSet;
 
 import java.util.ArrayList;
 
-public class GridCoreTrainingDataSet implements TrainingDataSet<GridCore>
-{
+public class GridCoreTrainingDataSet implements TrainingDataSet<GridCore> {
 	private final ArrayList<GridCore> cores;
 
-	public GridCoreTrainingDataSet()
-	{
+	public GridCoreTrainingDataSet() {
 		cores = new ArrayList<>();
 	}
 
-	public void addCore(String coreString)
-	{
+	public void addCore(String coreString) {
 		addCore(GridCore.fromGridString(coreString));
 	}
 
-	private void addCore(GridCore core)
-	{
+	private void addCore(GridCore core) {
 		cores.add(core);
 	}
 
 	@Override
-	public GridCore[] getAllData()
-	{
+	public GridCore[] getAllData() {
 		return cores.toArray(new GridCore[0]);
 	}
 
 	@Override
-	public GridCore getRandomPair()
-	{
+	public GridCore getRandomPair() {
 		return cores.get((int) Math.floor(Math.random() * cores.size()));
 	}
 

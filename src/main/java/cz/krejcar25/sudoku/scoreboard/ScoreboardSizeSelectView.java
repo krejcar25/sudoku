@@ -1,7 +1,10 @@
 package cz.krejcar25.sudoku.scoreboard;
 
 import cz.krejcar25.sudoku.game.GridProperties;
-import cz.krejcar25.sudoku.ui.*;
+import cz.krejcar25.sudoku.ui.Applet;
+import cz.krejcar25.sudoku.ui.BaseOverlay;
+import cz.krejcar25.sudoku.ui.BaseView;
+import cz.krejcar25.sudoku.ui.OverlayType;
 import cz.krejcar25.sudoku.ui.control.Button;
 import cz.krejcar25.sudoku.ui.control.Control;
 import processing.event.KeyEvent;
@@ -9,12 +12,10 @@ import processing.event.MouseEvent;
 
 import java.util.ArrayList;
 
-public class ScoreboardSizeSelectView extends BaseView
-{
+public class ScoreboardSizeSelectView extends BaseView {
 	private final ArrayList<Control> controls;
 
-	public ScoreboardSizeSelectView(Applet applet)
-	{
+	public ScoreboardSizeSelectView(Applet applet) {
 		super(applet, 800, 600);
 		controls = new ArrayList<>();
 		int bsx = 340;
@@ -22,8 +23,7 @@ public class ScoreboardSizeSelectView extends BaseView
 		int baseY = 200;
 		int yDelta = 80;
 		int index = 0;
-		for (GridProperties gridProperties : GridProperties.values())
-		{
+		for (GridProperties gridProperties : GridProperties.values()) {
 			int bx = (2 * (index % 2) + 1) * width / 4;
 			int by = baseY + ((index / 2) * yDelta);
 			Button button = new Button<>(this, bx, by, bsx, bsy, gridProperties.getName(), sender -> viewStack.push(new ScoreboardDifficultySelectView(getApplet(), gridProperties)));
@@ -40,18 +40,15 @@ public class ScoreboardSizeSelectView extends BaseView
 							yesButton.getRootApplet().scoreboard.save();
 							overlay = null;
 						},
-						noButton -> overlay = null)
-				{
+						noButton -> overlay = null) {
 
 					@Override
-					public void click(int mx, int my, boolean rmb)
-					{
+					public void click(int mx, int my, boolean rmb) {
 						for (Button button : buttons) if (button.isClick(mx, my)) button.click();
 					}
 
 					@Override
-					protected void draw()
-					{
+					protected void draw() {
 						background(0);
 						push();
 						fill(200, 210, 200);
@@ -71,48 +68,40 @@ public class ScoreboardSizeSelectView extends BaseView
 	}
 
 	@Override
-	public void mouseDown(int mx, int my, boolean rmb)
-	{
+	public void mouseDown(int mx, int my, boolean rmb) {
 
 	}
 
 	@Override
-	public void mouseUp(int mx, int my, boolean rmb)
-	{
+	public void mouseUp(int mx, int my, boolean rmb) {
 
 	}
 
 	@Override
-	public void click(int mx, int my, boolean rmb)
-	{
+	public void click(int mx, int my, boolean rmb) {
 		if (overlay != null) overlay.click(mx - overlay.x, my - overlay.y, rmb);
-		else for (Control control : controls)
-		{
+		else for (Control control : controls) {
 			if (control.isClick(mx, my)) control.click();
 		}
 	}
 
 	@Override
-	public void mouseDrag(MouseEvent mouseEvent)
-	{
+	public void mouseDrag(MouseEvent mouseEvent) {
 
 	}
 
 	@Override
-	public void scroll(MouseEvent event)
-	{
+	public void scroll(MouseEvent event) {
 
 	}
 
 	@Override
-	public void keyDown(KeyEvent keyEvent)
-	{
+	public void keyDown(KeyEvent keyEvent) {
 
 	}
 
 	@Override
-	protected void draw()
-	{
+	protected void draw() {
 		background(220);
 		fill(51);
 		strokeWeight(0);
@@ -120,16 +109,12 @@ public class ScoreboardSizeSelectView extends BaseView
 		textAlign(CENTER, CENTER);
 		text("Select size:", width / 2f, 100);
 
-		for (Control control : controls)
-		{
+		for (Control control : controls) {
 			control.update();
-			//image(control, control.x, control.y);
 		}
 
-		if (overlay != null)
-		{
+		if (overlay != null) {
 			overlay.update();
-			//image(overlay, overlay.x, overlay.y);
 		}
 	}
 }

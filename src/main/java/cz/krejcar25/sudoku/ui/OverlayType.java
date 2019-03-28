@@ -1,7 +1,6 @@
 package cz.krejcar25.sudoku.ui;
 
-public enum OverlayType
-{
+public enum OverlayType {
 	Info(new String[0]),
 	OK(new String[]{
 			"OK"
@@ -14,8 +13,7 @@ public enum OverlayType
 	final int buttonCount;
 	final String[] buttonLabels;
 
-	OverlayType(String[] buttonLabels)
-	{
+	OverlayType(String[] buttonLabels) {
 		this.buttonCount = buttonLabels.length;
 		this.buttonLabels = buttonLabels;
 	}

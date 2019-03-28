@@ -1,15 +1,13 @@
 package cz.krejcar25.sudoku.game;
 
-class FlashSquare
-{
+class FlashSquare {
 	final int x;
 	final int y;
 	final int c;
 	private final int timestamp;
 	private final int lifespan;
 
-	FlashSquare(int x, int y, int timestamp, int lifespan, int c)
-	{
+	FlashSquare(int x, int y, int timestamp, int lifespan, int c) {
 		this.x = x;
 		this.y = y;
 		this.timestamp = timestamp;
@@ -17,8 +15,7 @@ class FlashSquare
 		this.c = c;
 	}
 
-	boolean isValid(int time)
-	{
+	boolean isValid(int time) {
 		return time < timestamp + lifespan;
 	}
 }

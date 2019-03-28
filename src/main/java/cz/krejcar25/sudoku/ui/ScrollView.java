@@ -8,35 +8,32 @@ import processing.event.MouseEvent;
 
 import java.util.ArrayList;
 
-public abstract class ScrollView extends BaseView
-{
+public abstract class ScrollView extends BaseView {
+	protected final ArrayList<Control> additionalControls;
 	@SuppressWarnings("FieldCanBeLocal")
 	private final int horizontalScrollBarWidth = 5;
 	private final ScrollBarVisibility horizontalScrollBarVisibility = ScrollBarVisibility.Automatic;
-	protected Color horizontalScrollBarColor = new Color(51);
 	private final ScrollBarVisibility verticalScrollBarVisibility = ScrollBarVisibility.Automatic;
 	@SuppressWarnings("FieldCanBeLocal")
 	private final int verticalScrollBarWidth = 5;
+	private final int scrollSpeed = 30;
+	protected Color horizontalScrollBarColor = new Color(51);
 	protected Color verticalScrollBarColor = new Color(51);
+	protected ScrollViewContent content;
 	private int horizontalScroll = 0;
 	private int verticalScroll = 0;
-	private final int scrollSpeed = 30;
-	protected ScrollViewContent content;
-	protected final ArrayList<Control> additionalControls;
 	private int hScrollO = -1;
 	private int vScrollO = -1;
 	private int mousePressX = -1;
 	private int mousePressY = -1;
 
-	protected ScrollView(Applet applet, int width, int height)
-	{
+	protected ScrollView(Applet applet, int width, int height) {
 		super(applet, width, height);
 		additionalControls = new ArrayList<>();
 	}
 
 	@Override
-	protected void draw()
-	{
+	protected void draw() {
 		boolean showH = horizontalScrollBarVisibility.showScrollBar(width, content.width);
 		boolean showV = verticalScrollBarVisibility.showScrollBar(height, content.height);
 
@@ -45,8 +42,7 @@ public abstract class ScrollView extends BaseView
 		push();
 		noStroke();
 
-		if (showH)
-		{
+		if (showH) {
 			push();
 			translate(0, height - horizontalScrollBarWidth);
 			fill(horizontalScrollBarColor.r, horizontalScrollBarColor.g, horizontalScrollBarColor.b);
@@ -55,8 +51,7 @@ public abstract class ScrollView extends BaseView
 			pop();
 		}
 
-		if (showV)
-		{
+		if (showV) {
 			push();
 			translate(width - verticalScrollBarWidth, 0);
 			fill(verticalScrollBarColor.r, verticalScrollBarColor.g, verticalScrollBarColor.b);
@@ -67,22 +62,17 @@ public abstract class ScrollView extends BaseView
 
 		pop();
 		push();
-		for (Control control : additionalControls)
-		{
+		for (Control control : additionalControls) {
 			control.update();
-			//image(control, control.x, control.y);
 		}
 		pop();
-		if (overlay != null)
-		{
+		if (overlay != null) {
 			overlay.update();
-			//image(overlay, overlay.x, overlay.y);
 		}
 	}
 
 	@Override
-	public void keyDown(KeyEvent keyEvent)
-	{
+	public void keyDown(KeyEvent keyEvent) {
 		int x = 0;
 		int y = 0;
 
@@ -95,23 +85,19 @@ public abstract class ScrollView extends BaseView
 	}
 
 	@Override
-	public void click(int mx, int my, boolean rmb)
-	{
-		if (rmb)
-		{
+	public void click(int mx, int my, boolean rmb) {
+		if (rmb) {
 			removeFromViewStack();
 			return;
 		}
 		content.click(mx - x + horizontalScroll, my - y + verticalScroll, false);
-		for (Control control : additionalControls)
-		{
+		for (Control control : additionalControls) {
 			if (control.isClick(mx, my)) control.click();
 		}
 	}
 
 	@Override
-	public void mouseDown(int mx, int my, boolean rmb)
-	{
+	public void mouseDown(int mx, int my, boolean rmb) {
 		hScrollO = horizontalScroll;
 		vScrollO = verticalScroll;
 		mousePressX = mx;
@@ -119,15 +105,13 @@ public abstract class ScrollView extends BaseView
 	}
 
 	@Override
-	public void mouseUp(int mx, int my, boolean rmb)
-	{
+	public void mouseUp(int mx, int my, boolean rmb) {
 		mousePressX = -1;
 		mousePressY = -1;
 	}
 
 	@Override
-	public void mouseDrag(MouseEvent mouseEvent)
-	{
+	public void mouseDrag(MouseEvent mouseEvent) {
 		horizontalScroll = SudokuApplet.constrain(hScrollO - (mouseEvent.getX() - mousePressX), 0, content.width - width);
 		verticalScroll = SudokuApplet.constrain(vScrollO - (mouseEvent.getY() - mousePressY), 0, content.height - height);
 		content.x = -horizontalScroll;
@@ -135,14 +119,12 @@ public abstract class ScrollView extends BaseView
 	}
 
 	@Override
-	public void scroll(MouseEvent mouseEvent)
-	{
+	public void scroll(MouseEvent mouseEvent) {
 		boolean hor = getApplet().isKeyPressed(SHIFT);
 		scroll(hor ? scrollSpeed * mouseEvent.getCount() : 0, hor ? 0 : scrollSpeed * mouseEvent.getCount());
 	}
 
-	private void scroll(float x, float y)
-	{
+	private void scroll(float x, float y) {
 		horizontalScroll = SudokuApplet.floor(SudokuApplet.constrain(horizontalScroll + x, 0, content.width - width));
 		verticalScroll = SudokuApplet.floor(SudokuApplet.constrain(verticalScroll + y, 0, content.height - height));
 		content.x = -horizontalScroll;

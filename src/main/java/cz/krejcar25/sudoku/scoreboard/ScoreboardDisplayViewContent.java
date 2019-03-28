@@ -11,24 +11,20 @@ import processing.core.PGraphics;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
-public class ScoreboardDisplayViewContent extends ScrollViewContent
-{
+public class ScoreboardDisplayViewContent extends ScrollViewContent {
 	private final GridProperties gridProperties;
 	private final GridDifficulty gridDifficulty;
-	private ArrayList<ScoreboardEntry> entries;
-
 	private final int contentY = 170;
 	private final int tableHeight;
 	private final int contentTextSize = 25;
 	private final int tableMargin = 20;
-
+	private ArrayList<ScoreboardEntry> entries;
 	private Scoreboard.SortBy sortBy;
 	private int sortOrder;
 
 	private PGraphics table;
 
-	ScoreboardDisplayViewContent(ScrollView scrollView, GridProperties gridProperties, GridDifficulty gridDifficulty)
-	{
+	ScoreboardDisplayViewContent(ScrollView scrollView, GridProperties gridProperties, GridDifficulty gridDifficulty) {
 		super(scrollView, 800, 600);
 		this.gridProperties = gridProperties;
 		this.gridDifficulty = gridDifficulty;
@@ -43,15 +39,12 @@ public class ScoreboardDisplayViewContent extends ScrollViewContent
 	}
 
 	@Override
-	public void click(int mx, int my, boolean rmb)
-	{
+	public void click(int mx, int my, boolean rmb) {
 		if (rmb) scrollView.removeFromViewStack();
-		else if (SudokuApplet.isBetween(tableMargin, mx, width - tableMargin) && SudokuApplet.isBetween(contentY, my, contentY + 40))
-		{
+		else if (SudokuApplet.isBetween(tableMargin, mx, width - tableMargin) && SudokuApplet.isBetween(contentY, my, contentY + 40)) {
 			Scoreboard.SortBy newSort = (mx < width / 2f) ? Scoreboard.SortBy.Date : Scoreboard.SortBy.Time;
 			if (sortBy == newSort) sortOrder *= -1;
-			else
-			{
+			else {
 				sortBy = newSort;
 				sortOrder = 1;
 			}
@@ -61,8 +54,7 @@ public class ScoreboardDisplayViewContent extends ScrollViewContent
 	}
 
 	@Override
-	protected void draw()
-	{
+	protected void draw() {
 		textSize(40);
 		fill(51);
 		textAlign(CENTER, CENTER);
@@ -70,8 +62,7 @@ public class ScoreboardDisplayViewContent extends ScrollViewContent
 		image(this.table, tableMargin, contentY);
 	}
 
-	private void generateTable()
-	{
+	private void generateTable() {
 		this.table = this.parent.createGraphics(this.width - 2 * tableMargin, tableHeight);
 		this.table.beginDraw();
 		this.table.fill(51);
@@ -99,8 +90,7 @@ public class ScoreboardDisplayViewContent extends ScrollViewContent
 		this.table.pushStyle();
 		this.table.translate(0, 40);
 		this.table.textSize(contentTextSize);
-		for (ScoreboardEntry entry : entries)
-		{
+		for (ScoreboardEntry entry : entries) {
 			this.table.pushMatrix();
 			this.table.pushStyle();
 			float lineHeight = this.parent.g.textSize + 5;

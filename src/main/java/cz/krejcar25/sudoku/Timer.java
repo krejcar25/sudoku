@@ -2,8 +2,7 @@ package cz.krejcar25.sudoku;
 
 import java.util.Date;
 
-public class Timer
-{
+public class Timer {
 
 	private final String name;
 	private long startTime = 0;
@@ -13,18 +12,15 @@ public class Timer
 	private boolean running = false;
 	private boolean finished = false;
 
-	public Timer(String name)
-	{
+	public Timer(String name) {
 		this.name = name;
 	}
 
-	public static String formatMillis(long val)
-	{
+	public static String formatMillis(long val) {
 		StringBuilder builder = new StringBuilder(20);
 		String sgn = "";
 
-		if (val < 0)
-		{
+		if (val < 0) {
 			sgn = "-";
 			val = Math.abs(val);
 		}
@@ -43,46 +39,38 @@ public class Timer
 		return builder.toString();
 	}
 
-	public void start()
-	{
+	public void start() {
 		start(0);
 	}
 
-	private void start(long offset)
-	{
+	private void start(long offset) {
 		if (finished) return;
 		long startTime = System.currentTimeMillis() - offset;
-		if (running && pauseStart > -1)
-		{
+		if (running && pauseStart > -1) {
 			pauseTotal += (startTime - pauseStart);
 			pauseStart = -1;
 			System.out.println("Timer " + name + " resumed at " + startTime);
 		}
-		else if (!running)
-		{
+		else if (!running) {
 			this.startTime = startTime;
 			System.out.println("Timer " + name + " started at " + startTime);
 			this.running = true;
 		}
 	}
 
-	public void pause()
-	{
+	public void pause() {
 		pause(0);
 	}
 
-	private void pause(long offset)
-	{
-		if (running && pauseStart == -1)
-		{
+	private void pause(long offset) {
+		if (running && pauseStart == -1) {
 			long pauseStart = System.currentTimeMillis() - offset;
 			this.pauseStart = pauseStart;
 			System.out.println("Timer " + name + " paused at " + pauseStart);
 		}
 	}
 
-	public void stop()
-	{
+	public void stop() {
 		if (!running) return;
 		this.stopTime = System.currentTimeMillis();
 		System.out.println("Timer " + name + " stopped at " + stopTime);
@@ -91,49 +79,40 @@ public class Timer
 	}
 
 	//elaspsed time in milliseconds
-	public long getElapsedTime()
-	{
+	public long getElapsedTime() {
 		long elapsed = -pauseTotal;
 		if (isPaused()) elapsed -= System.currentTimeMillis() - pauseStart;
-		if (running)
-		{
+		if (running) {
 			elapsed += (System.currentTimeMillis() - startTime);
 		}
-		else
-		{
+		else {
 			elapsed += (stopTime - startTime);
 		}
 		return elapsed;
 	}
 
 	//elaspsed time in seconds
-	public long getElapsedTimeSecs()
-	{
+	public long getElapsedTimeSecs() {
 		return getElapsedTime() / 1000;
 	}
 
-	public boolean isPaused()
-	{
+	public boolean isPaused() {
 		return pauseStart > -1;
 	}
 
-	public boolean isRunning()
-	{
+	public boolean isRunning() {
 		return running;
 	}
 
-	public long getMinutes()
-	{
+	public long getMinutes() {
 		return getElapsedTimeSecs() / 60;
 	}
 
-	public long getSeconds()
-	{
+	public long getSeconds() {
 		return getElapsedTime() % 60;
 	}
 
-	public Date getStartDate()
-	{
+	public Date getStartDate() {
 		return new Date(startTime);
 	}
 }

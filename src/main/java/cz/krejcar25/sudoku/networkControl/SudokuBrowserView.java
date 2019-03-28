@@ -15,16 +15,14 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
-public class SudokuBrowserView extends BaseView
-{
-	boolean shouldLeave;
+public class SudokuBrowserView extends BaseView {
 	private final ArrayList<String> cores;
 	private final ArrayList<Control> controls;
+	boolean shouldLeave;
 	private DrawableGridCore core;
 	private int coreIndex = 0;
 
-	SudokuBrowserView(Applet applet)
-	{
+	SudokuBrowserView(Applet applet) {
 		super(applet, 800, 800);
 		cores = new ArrayList<>();
 		controls = new ArrayList<>();
@@ -36,13 +34,11 @@ public class SudokuBrowserView extends BaseView
 				.setAllowAll(false)
 				.setOkAction(file ->
 				{
-					try (FileInputStream in = new FileInputStream(file))
-					{
+					try (FileInputStream in = new FileInputStream(file)) {
 						BufferedReader reader = new BufferedReader(new InputStreamReader(in));
 						reader.lines().forEach(line -> cores.add(line));
 					}
-					catch (IOException e)
-					{
+					catch (IOException e) {
 						e.printStackTrace();
 					}
 
@@ -56,46 +52,38 @@ public class SudokuBrowserView extends BaseView
 	}
 
 	@Override
-	public void mouseDown(int mx, int my, boolean rmb)
-	{
+	public void mouseDown(int mx, int my, boolean rmb) {
 
 	}
 
 	@Override
-	public void mouseUp(int mx, int my, boolean rmb)
-	{
+	public void mouseUp(int mx, int my, boolean rmb) {
 
 	}
 
 	@Override
-	public void click(int mx, int my, boolean rmb)
-	{
+	public void click(int mx, int my, boolean rmb) {
 		if (!rmb) for (Control control : controls) if (control.isClick(mx, my)) control.click();
 	}
 
 	@Override
-	public void mouseDrag(MouseEvent mouseEvent)
-	{
+	public void mouseDrag(MouseEvent mouseEvent) {
 
 	}
 
 	@Override
-	public void scroll(MouseEvent event)
-	{
+	public void scroll(MouseEvent event) {
 
 	}
 
 	@Override
-	public void keyDown(KeyEvent keyEvent)
-	{
+	public void keyDown(KeyEvent keyEvent) {
 		boolean changed = false;
-		if (keyEvent.getKeyCode() == LEFT && coreIndex > 0)
-		{
+		if (keyEvent.getKeyCode() == LEFT && coreIndex > 0) {
 			coreIndex--;
 			changed = true;
 		}
-		else if (keyEvent.getKeyCode() == RIGHT && coreIndex + 1 < cores.size())
-		{
+		else if (keyEvent.getKeyCode() == RIGHT && coreIndex + 1 < cores.size()) {
 			coreIndex++;
 			changed = true;
 		}
@@ -107,15 +95,12 @@ public class SudokuBrowserView extends BaseView
 	}
 
 	@Override
-	protected void draw()
-	{
+	protected void draw() {
 		core.update();
 		image(core, core.x, core.y, core.width, core.height);
 
-		for (Control control : controls)
-		{
+		for (Control control : controls) {
 			control.update();
-			//image(control, control.x, control.y);
 		}
 	}
 }

@@ -3,8 +3,7 @@ package cz.krejcar25.sudoku.ui;
 import cz.krejcar25.sudoku.Timer;
 import processing.core.PApplet;
 
-public class Clock extends Drawable
-{
+public class Clock extends Drawable {
 	private static final int baseWidth = 975;
 	private static final int baseHeight = 370;
 
@@ -16,8 +15,7 @@ public class Clock extends Drawable
 	private float displayWidth = baseWidth;
 	private float displayHeight = baseHeight;
 
-	public Clock(Applet applet, float x, float y, String name)
-	{
+	public Clock(Applet applet, float x, float y, String name) {
 		super(applet, x, y, baseWidth, baseHeight);
 		this.timer = new Timer(name);
 		this.minD = new Digit(getApplet(), 0, 0);
@@ -26,8 +24,7 @@ public class Clock extends Drawable
 		this.secU = new Digit(getApplet(), minD.width + minU.width + 50 + secD.width, 0);
 	}
 
-	public Clock(Applet applet, float x, float y, Timer timer)
-	{
+	public Clock(Applet applet, float x, float y, Timer timer) {
 		super(applet, x, y, baseWidth, baseHeight);
 		this.timer = timer;
 		this.minD = new Digit(getApplet(), 0, 0);
@@ -36,73 +33,60 @@ public class Clock extends Drawable
 		this.secU = new Digit(getApplet(), minD.width + minU.width + 50 + secD.width, 0);
 	}
 
-	private static float getWidthFromHeight(float height)
-	{
+	private static float getWidthFromHeight(float height) {
 		return height * baseWidth / baseHeight;
 	}
 
-	private static float getHeightFromWidth(float width)
-	{
+	private static float getHeightFromWidth(float width) {
 		return width * baseHeight / baseWidth;
 	}
 
-	public void start()
-	{
+	public void start() {
 		timer.start();
 	}
 
-	public void pause()
-	{
+	public void pause() {
 		timer.pause();
 	}
 
-	public void stop()
-	{
+	public void stop() {
 		timer.stop();
 	}
 
-	public boolean isPaused()
-	{
+	public boolean isPaused() {
 		return timer.isPaused();
 	}
 
-	public boolean isRunning()
-	{
+	public boolean isRunning() {
 		return timer.isRunning();
 	}
 
-	public void setDisplayWidthWithHeight(float height)
-	{
+	public void setDisplayWidthWithHeight(float height) {
 		this.displayWidth = getWidthFromHeight(height);
 		this.displayHeight = height;
 		this.scale = height / baseHeight;
 	}
 
-	public void setDisplayHeightWithWidth(float width)
-	{
+	public void setDisplayHeightWithWidth(float width) {
 		this.displayWidth = width;
 		this.displayHeight = getHeightFromWidth(width);
 		this.scale = width / baseWidth;
 	}
 
-	public float getDisplayWidth()
-	{
+	public float getDisplayWidth() {
 		return displayWidth;
 	}
 
-	public float getDisplayHeight()
-	{
+	public float getDisplayHeight() {
 		return displayHeight;
 	}
 
-	public Timer getTimer()
-	{
+	public Timer getTimer() {
 		return timer;
 	}
 
 	@Override
-	protected void draw()
-	{
+	protected void draw() {
 		long time = timer.getElapsedTimeSecs();
 		minD.setDigit(PApplet.abs(PApplet.floor(PApplet.floor(time / 60f) / 10f)));
 		minD.update();

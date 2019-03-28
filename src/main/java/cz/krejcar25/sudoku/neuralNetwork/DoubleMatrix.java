@@ -6,15 +6,13 @@ import org.jetbrains.annotations.NotNull;
 import java.io.Serializable;
 import java.util.Arrays;
 
-public class DoubleMatrix implements Serializable
-{
+public class DoubleMatrix implements Serializable {
 	static final long serialVersionUID = -5744503367528885903L;
 	private final int rows;
 	private final int cols;
 	private final double[][] values;
 
-	DoubleMatrix(int rows, int cols)
-	{
+	DoubleMatrix(int rows, int cols) {
 		this.rows = rows;
 		this.cols = cols;
 
@@ -22,22 +20,19 @@ public class DoubleMatrix implements Serializable
 	}
 
 	@Contract("null -> fail; !null -> new")
-	static DoubleMatrix fromArray(@NotNull double... values)
-	{
+	static DoubleMatrix fromArray(@NotNull double... values) {
 		return new DoubleMatrix(values.length, 1).map(((value, i, j) -> values[i]));
 	}
 
 	@Contract(" -> new")
-	DoubleMatrix copy()
-	{
+	DoubleMatrix copy() {
 		DoubleMatrix dm = new DoubleMatrix(rows, cols);
 		dm.map((value, i, j) -> values[i][j]);
 		return dm;
 	}
 
 	@Contract("null -> fail; !null -> this")
-	public DoubleMatrix add(DoubleMatrix dm)
-	{
+	public DoubleMatrix add(DoubleMatrix dm) {
 		if (rows != dm.rows || cols != dm.cols)
 			throw new IllegalArgumentException("Dimensions of both matrices must be identical");
 		map((value, i, j) -> value + dm.values[i][j]);
@@ -45,8 +40,7 @@ public class DoubleMatrix implements Serializable
 	}
 
 	@Contract("null -> fail; !null -> this")
-	DoubleMatrix sub(DoubleMatrix dm)
-	{
+	DoubleMatrix sub(DoubleMatrix dm) {
 		if (rows != dm.rows || cols != dm.cols)
 			throw new IllegalArgumentException("Dimensions of both matrices must be identical");
 		map((value, i, j) -> value - dm.values[i][j]);
@@ -54,37 +48,32 @@ public class DoubleMatrix implements Serializable
 	}
 
 	@Contract("_ -> this")
-	DoubleMatrix mult(double coefficient)
-	{
+	DoubleMatrix mult(double coefficient) {
 		map((value, i, j) -> value * coefficient);
 		return this;
 	}
 
 	@Contract("_, _ -> this")
-	DoubleMatrix randomise(double min, double max)
-	{
+	DoubleMatrix randomise(double min, double max) {
 		map((value, i, j) -> (Math.random() * (max - min) + min));
 		return this;
 	}
 
 	@Contract(" -> new")
-	DoubleMatrix transpose()
-	{
+	DoubleMatrix transpose() {
 		DoubleMatrix dm = new DoubleMatrix(cols, rows);
 		dm.map((value, i, j) -> values[j][i]);
 		return dm;
 	}
 
 	@Contract("null -> fail; !null -> this")
-	DoubleMatrix mult(DoubleMatrix dm)
-	{
+	DoubleMatrix mult(DoubleMatrix dm) {
 		if (cols == dm.cols && rows == dm.rows) return map(((value, i, j) -> value * dm.values[i][j]));
 		else throw new IllegalArgumentException("Dimensions of both matrices must be identical");
 	}
 
 	@Contract("null -> fail; !null -> new")
-	DoubleMatrix matmult(DoubleMatrix dm)
-	{
+	DoubleMatrix matmult(DoubleMatrix dm) {
 		if (cols == dm.rows) return new DoubleMatrix(rows, dm.cols).map((value, i, j) ->
 		{
 			double sum = 0;
@@ -98,37 +87,31 @@ public class DoubleMatrix implements Serializable
 
 	@Override
 	@Contract(" -> new")
-	public String toString()
-	{
+	public String toString() {
 		return Arrays.deepToString(values);
 	}
 
-	public double get(int i, int j)
-	{
+	public double get(int i, int j) {
 		return values[i][j];
 	}
 
-	public DoubleMatrix set(int i, int j, double val)
-	{
+	public DoubleMatrix set(int i, int j, double val) {
 		values[i][j] = val;
 		return this;
 	}
 
 	@Contract("_ -> this")
-	DoubleMatrix map(MapFunction<Double> function)
-	{
+	DoubleMatrix map(MapFunction<Double> function) {
 		for (int j = 0; j < cols; j++)
 			for (int i = 0; i < rows; i++) values[i][j] = function.map(values[i][j], i, j);
 		return this;
 	}
 
-	int getRows()
-	{
+	int getRows() {
 		return rows;
 	}
 
-	int getCols()
-	{
+	int getCols() {
 		return cols;
 	}
 }

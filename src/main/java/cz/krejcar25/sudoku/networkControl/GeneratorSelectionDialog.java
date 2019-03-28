@@ -8,8 +8,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-public class GeneratorSelectionDialog extends JDialog
-{
+public class GeneratorSelectionDialog extends JDialog {
 	private final DefaultComboBoxModel<GridProperties> sizeComboBoxModel;
 	private final DefaultComboBoxModel<GridDifficulty> difficultyComboBoxModel;
 	private final CreateGenerationViewAction createGenerationViewAction;
@@ -21,8 +20,7 @@ public class GeneratorSelectionDialog extends JDialog
 	private JComboBox<GridDifficulty> difficultyComboBox;
 	private JSpinner clueCountSpinner;
 
-	GeneratorSelectionDialog(CreateGenerationViewAction createGenerationViewAction)
-	{
+	GeneratorSelectionDialog(CreateGenerationViewAction createGenerationViewAction) {
 		this.createGenerationViewAction = createGenerationViewAction;
 		setContentPane(contentPane);
 		setModal(true);
@@ -34,10 +32,8 @@ public class GeneratorSelectionDialog extends JDialog
 
 		// call onCancel() when cross is clicked
 		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-		addWindowListener(new WindowAdapter()
-		{
-			public void windowClosing(WindowEvent e)
-			{
+		addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e) {
 				onCancel();
 			}
 		});
@@ -71,20 +67,17 @@ public class GeneratorSelectionDialog extends JDialog
 		pack();
 	}
 
-	private void onOK()
-	{
+	private void onOK() {
 		createGenerationViewAction.create(sizeComboBoxModel.getElementAt(sizeComboBox.getSelectedIndex()), (int) clueCountSpinner.getValue(), Integer.parseInt(countSpinner.getValue().toString()));
 		dispose();
 	}
 
-	private void onCancel()
-	{
+	private void onCancel() {
 		// add your code here if necessary
 		dispose();
 	}
 
-	private void setClueLimit()
-	{
+	private void setClueLimit() {
 		GridProperties gp = sizeComboBoxModel.getElementAt(sizeComboBox.getSelectedIndex());
 		int ncr = (int) Math.pow(gp.getSizea() * gp.getSizeb(), 2);
 		int min = ncr / 3;
@@ -92,8 +85,7 @@ public class GeneratorSelectionDialog extends JDialog
 		clueCountSpinner.setModel(new SpinnerNumberModel(val, min, ncr, 1));
 	}
 
-	private void setClueCount()
-	{
+	private void setClueCount() {
 		if (difficultyComboBox.getSelectedItem() != GridDifficulty.Custom)
 			this.clueCountSpinner.setValue(sizeComboBoxModel.getElementAt(sizeComboBox.getSelectedIndex()).getClueCount(difficultyComboBoxModel.getElementAt(difficultyComboBox.getSelectedIndex())));
 	}

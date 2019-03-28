@@ -15,21 +15,18 @@ import processing.core.PApplet;
 import java.io.*;
 
 @SuppressWarnings("SpellCheckingInspection")
-public class Main
-{
+public class Main {
 	public static final PastebinFactory pastebinFactory = new PastebinFactory();
 	public static final Pastebin pastebin = pastebinFactory.createPastebin("b05b784a8076c6b40a846c50688adfd1");
 
-	public static void main(String[] args)
-	{
+	public static void main(String[] args) {
 		Options options = new Options();
 
 		// Option declarations
 		{
 			StringBuilder sizeDesc = new StringBuilder();
 			sizeDesc.append("Specify Sudokus size. Valid are: ");
-			for (int i = 0; i < GridProperties.values().length; i++)
-			{
+			for (int i = 0; i < GridProperties.values().length; i++) {
 				if (i > 0) sizeDesc.append(", ");
 				sizeDesc.append(GridProperties.values()[i].getShortName());
 			}
@@ -80,24 +77,19 @@ public class Main
 		}
 
 		CommandLineParser parser = new DefaultParser();
-		try
-		{
+		try {
 			CommandLine cmd = parser.parse(options, args);
 			if (cmd.hasOption('h')) printHelp(options);
-			else
-			{
+			else {
 				if (cmd.hasOption("game")) PApplet.main("cz.krejcar25.sudoku.SudokuApplet");
-				else if (cmd.hasOption("generator"))
-				{
-					if (cmd.hasOption("size"))
-					{
+				else if (cmd.hasOption("generator")) {
+					if (cmd.hasOption("size")) {
 						GridProperties properties = null;
 						for (GridProperties testGp : GridProperties.values())
 							if (testGp.getShortName().equals(cmd.getOptionValue("size"))) properties = testGp;
 						if (properties == null)
 							System.out.println("The size parameter could not be understood. See help for valid options.");
-						else
-						{
+						else {
 							int difficultyIndex = onlyOneBoolean(
 									cmd.hasOption("easy"),
 									cmd.hasOption("medium"),
@@ -108,26 +100,22 @@ public class Main
 
 							if (difficultyIndex == -2) System.out.println("Only one size parameter can be specified.");
 							else if (difficultyIndex == -1) System.out.println("No size argument was specified.");
-							else
-							{
+							else {
 								int clueCount;
 								if (difficultyIndex == 4) clueCount = Integer.parseInt(cmd.getOptionValue("clueCount"));
 								else clueCount = properties.getClueCount(GridDifficulty.fromLevel(difficultyIndex));
 								if (cmd.hasOption("count"))
 									if (cmd.hasOption("output"))
-										try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(cmd.getOptionValue("output")))))
-										{
+										try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(cmd.getOptionValue("output"))))) {
 											int count = Integer.parseInt(cmd.getOptionValue("count"));
-											for (int i = 0; i < count; i++)
-											{
+											for (int i = 0; i < count; i++) {
 												GridCore core = new GridCore(properties);
 												new SudokuGenerator(core).generate(clueCount, false);
 												writer.write(core.getGridString());
 												writer.newLine();
 											}
 										}
-										catch (IOException ex)
-										{
+										catch (IOException ex) {
 											ex.printStackTrace(System.out);
 										}
 									else System.out.println("No output path was specified.");
@@ -137,20 +125,15 @@ public class Main
 					}
 					else System.out.println("No size parameter was not specified. See help for usage.");
 				}
-				else if (cmd.hasOption("classroom"))
-				{
-					if (cmd.hasOption("sudokus"))
-					{
-						if (cmd.hasOption("network"))
-						{
+				else if (cmd.hasOption("classroom")) {
+					if (cmd.hasOption("sudokus")) {
+						if (cmd.hasOption("network")) {
 							File sudokusFile = new File(cmd.getOptionValue("sudokus"));
 							File outputFile = new File(cmd.getOptionValue(cmd.hasOption("output") ? "output" : "network"));
 
-							try
-							{
+							try {
 								NeuralNetwork network = NeuralNetwork.loadFromFile(cmd.getOptionValue("network"));
-								if (network != null)
-								{
+								if (network != null) {
 									GridCoreTrainingDataSet dataSet = new GridCoreTrainingDataSet();
 									new BufferedReader(new InputStreamReader(new FileInputStream(sudokusFile))).lines().forEach(dataSet::addCore);
 									NetworkTrainRunnable runnable = new NetworkTrainRunnable(network, dataSet);
@@ -166,8 +149,7 @@ public class Main
 								else
 									System.out.println("Neural network could not be loaded from the specified file. Details above.");
 							}
-							catch (IOException ex)
-							{
+							catch (IOException ex) {
 								ex.printStackTrace(System.out);
 							}
 						}
@@ -178,15 +160,13 @@ public class Main
 				else PApplet.main("cz.krejcar25.sudoku.SudokuApplet");
 			}
 		}
-		catch (ParseException ex)
-		{
+		catch (ParseException ex) {
 			System.out.println("A ParseException occured.");
 			printHelp(options);
 		}
 	}
 
-	private static void printHelp(Options options)
-	{
+	private static void printHelp(Options options) {
 		HelpFormatter helpFormatter = new HelpFormatter();
 		helpFormatter.printHelp(
 				80,
@@ -199,13 +179,11 @@ public class Main
 				true);
 	}
 
-	private static int onlyOneBoolean(boolean... booleans)
-	{
+	private static int onlyOneBoolean(boolean... booleans) {
 		int index = -1;
 		int count = 0;
 		for (int i = 0; i < booleans.length; i++)
-			if (booleans[i])
-			{
+			if (booleans[i]) {
 				index = i;
 				count++;
 			}

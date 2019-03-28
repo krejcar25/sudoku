@@ -11,13 +11,11 @@ import processing.event.MouseEvent;
 
 import java.util.ArrayList;
 
-public class ScoreboardDifficultySelectView extends BaseView
-{
+public class ScoreboardDifficultySelectView extends BaseView {
 	private final GridProperties gridProperties;
 	private final ArrayList<Control> controls;
 
-	ScoreboardDifficultySelectView(Applet sudokuApplet, GridProperties gridProperties)
-	{
+	ScoreboardDifficultySelectView(Applet sudokuApplet, GridProperties gridProperties) {
 		super(sudokuApplet, 800, 600);
 		this.gridProperties = gridProperties;
 		this.controls = new ArrayList<>();
@@ -33,48 +31,40 @@ public class ScoreboardDifficultySelectView extends BaseView
 	}
 
 	@Override
-	public void mouseDown(int mx, int my, boolean rmb)
-	{
+	public void mouseDown(int mx, int my, boolean rmb) {
 
 	}
 
 	@Override
-	public void mouseUp(int mx, int my, boolean rmb)
-	{
+	public void mouseUp(int mx, int my, boolean rmb) {
 
 	}
 
 	@Override
-	public void click(int mx, int my, boolean rmb)
-	{
+	public void click(int mx, int my, boolean rmb) {
 		if (rmb) removeFromViewStack();
-		else for (Control control : controls)
-		{
+		else for (Control control : controls) {
 			if (control.isClick(mx, my)) control.click();
 		}
 	}
 
 	@Override
-	public void mouseDrag(MouseEvent mouseEvent)
-	{
+	public void mouseDrag(MouseEvent mouseEvent) {
 
 	}
 
 	@Override
-	public void scroll(MouseEvent event)
-	{
+	public void scroll(MouseEvent event) {
 
 	}
 
 	@Override
-	public void keyDown(KeyEvent keyEvent)
-	{
+	public void keyDown(KeyEvent keyEvent) {
 
 	}
 
 	@Override
-	protected void draw()
-	{
+	protected void draw() {
 		push();
 		background(220);
 		textSize(40);
@@ -82,16 +72,12 @@ public class ScoreboardDifficultySelectView extends BaseView
 		textAlign(CENTER, CENTER);
 		text("Display results from \r\n" + gridProperties.getName() + " of difficulty:", 400, 100);
 
-		for (Control control : controls)
-		{
+		for (Control control : controls) {
 			control.update();
-			//image(control, control.x, control.y);
 		}
 
-		if (overlay != null)
-		{
+		if (overlay != null) {
 			overlay.update();
-			//image(overlay, overlay.x, overlay.y);
 		}
 		pop();
 	}

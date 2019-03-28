@@ -5,26 +5,22 @@ import cz.krejcar25.sudoku.ui.Clock;
 import cz.krejcar25.sudoku.ui.OverlayType;
 import processing.core.PApplet;
 
-public class GeneratingOverlay extends BaseOverlay
-{
+public class GeneratingOverlay extends BaseOverlay {
 	private Clock clock;
 	private int clueCount;
 	private GridDifficulty gridDifficulty;
 
-	GeneratingOverlay(DifficultySelectView difficultySelectView, GridDifficulty gridDifficulty)
-	{
+	GeneratingOverlay(DifficultySelectView difficultySelectView, GridDifficulty gridDifficulty) {
 		super(difficultySelectView, 105, 350, 600, 200, OverlayType.Info);
 		init(difficultySelectView.gameView, gridDifficulty);
 	}
 
-	GeneratingOverlay(GameView gameView, GridDifficulty gridDifficulty)
-	{
+	GeneratingOverlay(GameView gameView, GridDifficulty gridDifficulty) {
 		super(gameView, PApplet.constrain((gameView.width - 540) / 2, 0, gameView.width - 540), (int) (gameView.getGrid().getCore().ncr * gameView.getGrid().getSy() / 2) - 100, PApplet.constrain(gameView.width, 0, 540), 200, OverlayType.Info);
 		init(gameView, gridDifficulty);
 	}
 
-	private void init(GameView gameView, GridDifficulty gridDifficulty)
-	{
+	private void init(GameView gameView, GridDifficulty gridDifficulty) {
 		this.clock = new Clock(getApplet(), 0, 120, gameView.getGenerator().timer);
 		this.clock.setDisplayWidthWithHeight(60);
 		this.clock.x = (width - this.clock.getDisplayWidth()) / 2f;
@@ -33,8 +29,7 @@ public class GeneratingOverlay extends BaseOverlay
 	}
 
 	@Override
-	protected void draw()
-	{
+	protected void draw() {
 		background(0);
 		push();
 		fill(200, 210, 200);
@@ -52,8 +47,7 @@ public class GeneratingOverlay extends BaseOverlay
 	}
 
 	@Override
-	public void click(int mx, int my, boolean rmb)
-	{
+	public void click(int mx, int my, boolean rmb) {
 		System.out.println("GeneratingOverlay has received click event");
 	}
 }

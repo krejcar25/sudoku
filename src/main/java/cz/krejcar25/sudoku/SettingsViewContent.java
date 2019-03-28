@@ -8,33 +8,27 @@ import cz.krejcar25.sudoku.ui.control.Toggle;
 
 import java.util.ArrayList;
 
-public class SettingsViewContent extends ScrollViewContent
-{
+public class SettingsViewContent extends ScrollViewContent {
 	private final ArrayList<Control> controls;
 
-	SettingsViewContent(SettingsView settingsView)
-	{
+	SettingsViewContent(SettingsView settingsView) {
 		super(settingsView, 800, 1200);
 		controls = new ArrayList<>();
 
-		Toggle numFirst = new Toggle(settingsView, 600, 150, 80, 40, new ToggleEvents()
-		{
+		Toggle numFirst = new Toggle(settingsView, 600, 150, 80, 40, new ToggleEvents() {
 			@Override
-			public void toggled(Control sender)
-			{
+			public void toggled(Control sender) {
 				getRootApplet().settings.setDefaultNumberFirst(((Toggle) sender).state);
 				getRootApplet().settings.save();
 			}
 
 			@Override
-			public void switchedOn(Control sender)
-			{
+			public void switchedOn(Control sender) {
 
 			}
 
 			@Override
-			public void switchedOff(Control sender)
-			{
+			public void switchedOff(Control sender) {
 
 			}
 		});
@@ -42,24 +36,20 @@ public class SettingsViewContent extends ScrollViewContent
 		ControlLabel numFirstLabel = new ControlLabel(numFirst, ControlLabel.CONTROL_RIGHT, "Number first by default");
 		numFirstLabel.fixLabelOnX(50);
 		controls.add(numFirstLabel);
-		Toggle notes = new Toggle(settingsView, 600, 200, 80, 40, new ToggleEvents()
-		{
+		Toggle notes = new Toggle(settingsView, 600, 200, 80, 40, new ToggleEvents() {
 			@Override
-			public void toggled(Control sender)
-			{
+			public void toggled(Control sender) {
 				getRootApplet().settings.setDefaultNotes(((Toggle) sender).state);
 				getRootApplet().settings.save();
 			}
 
 			@Override
-			public void switchedOn(Control sender)
-			{
+			public void switchedOn(Control sender) {
 
 			}
 
 			@Override
-			public void switchedOff(Control sender)
-			{
+			public void switchedOff(Control sender) {
 
 			}
 		});
@@ -70,14 +60,11 @@ public class SettingsViewContent extends ScrollViewContent
 	}
 
 	@Override
-	protected void draw()
-	{
+	protected void draw() {
 		push();
 		background(51);
-		for (Control c : controls)
-		{
+		for (Control c : controls) {
 			c.update();
-			//image(c, c.x, c.y);
 		}
 		textSize(80);
 		textAlign(LEFT, TOP);
@@ -89,8 +76,7 @@ public class SettingsViewContent extends ScrollViewContent
 	}
 
 	@Override
-	public void click(int mx, int my, boolean rmb)
-	{
+	public void click(int mx, int my, boolean rmb) {
 		for (Control c : controls) if (c.isClick(mx, my)) c.click();
 	}
 }

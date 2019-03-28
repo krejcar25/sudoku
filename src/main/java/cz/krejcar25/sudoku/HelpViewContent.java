@@ -2,22 +2,18 @@ package cz.krejcar25.sudoku;
 
 import cz.krejcar25.sudoku.ui.ScrollViewContent;
 
-public class HelpViewContent extends ScrollViewContent
-{
-	HelpViewContent(HelpView helpView)
-	{
+public class HelpViewContent extends ScrollViewContent {
+	HelpViewContent(HelpView helpView) {
 		super(helpView, 800, 1200);
 	}
 
 	@Override
-	public void click(int mx, int my, boolean rmb)
-	{
+	public void click(int mx, int my, boolean rmb) {
 
 	}
 
 	@Override
-	protected void draw()
-	{
+	protected void draw() {
 		background(51);
 		push();
 		textAlign(LEFT, TOP);
@@ -29,22 +25,19 @@ public class HelpViewContent extends ScrollViewContent
 		pop();
 	}
 
-	private void header(String header)
-	{
+	private void header(String header) {
 		textSize(80);
 		text(header, 0, 0);
 		translate(0, 100);
 	}
 
-	private void section(String section)
-	{
+	private void section(String section) {
 		textSize(60);
 		text(section, 0, 0);
 		translate(0, 80);
 	}
 
-	private void textLine(String text)
-	{
+	private void textLine(String text) {
 		textSize(40);
 		int lines = (int) Math.ceil((double) (textWidth(text) / (width - 100))) + 1;
 		text(text, 0, 0, width - 50, lines * this.parent.g.textSize);

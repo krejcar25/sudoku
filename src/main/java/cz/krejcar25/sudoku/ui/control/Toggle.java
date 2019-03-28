@@ -4,15 +4,13 @@ import cz.krejcar25.sudoku.SudokuApplet;
 import cz.krejcar25.sudoku.event.ToggleEvents;
 import cz.krejcar25.sudoku.ui.BaseView;
 
-public class Toggle extends Control
-{
+public class Toggle extends Control {
 	public boolean state;
 	private ToggleEvents toggleEvents;
 
 	private int motionStart;
 
-	public Toggle(BaseView baseView, int x, int y, int width, int height, ToggleEvents toggleEvents)
-	{
+	public Toggle(BaseView baseView, int x, int y, int width, int height, ToggleEvents toggleEvents) {
 		super(baseView, x, y, width, height);
 		if (height * 1.5 > width) throw new IllegalArgumentException();
 		this.state = false;
@@ -20,8 +18,7 @@ public class Toggle extends Control
 	}
 
 	@Override
-	public boolean isClick(int mx, int my)
-	{
+	public boolean isClick(int mx, int my) {
 		if (!enabled) return false;
 		boolean hor = this.x < mx && mx < (this.x + this.width);
 		boolean ver = this.y < my && my < (this.y + this.height);
@@ -29,8 +26,7 @@ public class Toggle extends Control
 	}
 
 	@Override
-	public void click()
-	{
+	public void click() {
 		state = !state;
 		motionStart = parent.frameCount;
 		toggleEvents.toggled(this);
@@ -39,16 +35,13 @@ public class Toggle extends Control
 	}
 
 	@Override
-	protected void draw()
-	{
+	protected void draw() {
 		push();
-		if (state)
-		{
+		if (state) {
 			fill(0, 200, 0);
 			stroke(150, 0);
 		}
-		else
-		{
+		else {
 			fill(220);
 			stroke(150);
 		}

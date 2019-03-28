@@ -3,8 +3,7 @@ package cz.krejcar25.sudoku.ui.control;
 import org.intellij.lang.annotations.MagicConstant;
 import org.jetbrains.annotations.NotNull;
 
-public class ControlLabel extends Control
-{
+public class ControlLabel extends Control {
 	public static final int CONTROL_LEFT = 0;
 	public static final int CONTROL_RIGHT = 1;
 
@@ -13,8 +12,7 @@ public class ControlLabel extends Control
 	private final int controlSide;
 	private float controlMargin = 10;
 
-	public ControlLabel(@NotNull Control internalControl, @MagicConstant(intValues = {CONTROL_LEFT, CONTROL_RIGHT}) int controlSide, String label)
-	{
+	public ControlLabel(@NotNull Control internalControl, @MagicConstant(intValues = {CONTROL_LEFT, CONTROL_RIGHT}) int controlSide, String label) {
 		super(internalControl.baseView, internalControl.x, internalControl.y, 1, internalControl.height);
 		this.internalControl = internalControl;
 		this.controlSide = controlSide;
@@ -25,11 +23,9 @@ public class ControlLabel extends Control
 		internalControl.y -= this.y;
 	}
 
-	public void centerOnX(int centerX)
-	{
+	public void centerOnX(int centerX) {
 		x = centerX - width / 2f;
-		switch (controlSide)
-		{
+		switch (controlSide) {
 			case CONTROL_LEFT:
 				internalControl.x = 0;
 				break;
@@ -39,13 +35,10 @@ public class ControlLabel extends Control
 		}
 	}
 
-	public void fixLabelOnX(int x)
-	{
-		if (controlSide == CONTROL_RIGHT)
-		{
+	public void fixLabelOnX(int x) {
+		if (controlSide == CONTROL_RIGHT) {
 			float textLength = labelSize();
-			if ((this.x + internalControl.x) - x > textLength)
-			{
+			if ((this.x + internalControl.x) - x > textLength) {
 				float move = x - this.x;
 				this.x = x;
 				internalControl.x -= move;
@@ -54,13 +47,11 @@ public class ControlLabel extends Control
 		}
 	}
 
-	private void autosize()
-	{
+	private void autosize() {
 		this.width = (int) (internalControl.width + labelSize() + controlMargin);
 	}
 
-	private float labelSize()
-	{
+	private float labelSize() {
 		push();
 		textSize(4 * height / 5f);
 		float labelSize = (label.isEmpty()) ? 0 : textWidth(label);
@@ -69,42 +60,34 @@ public class ControlLabel extends Control
 	}
 
 	@Override
-	protected void beforeDraw()
-	{
+	protected void beforeDraw() {
 		autosize();
 	}
 
 	@Override
-	protected void draw()
-	{
+	protected void draw() {
 		textAlign(LEFT, TOP);
 		textSize(4 * height / 5f);
 
-		if (controlSide == CONTROL_LEFT)
-		{
+		if (controlSide == CONTROL_LEFT) {
 			internalControl.update();
-			//image(internalControl, 0, 0);
 
 			text(label, internalControl.width + controlMargin, 0);
 		}
-		else
-		{
+		else {
 			text(label, 0, 0);
 
 			internalControl.update();
-			//image(internalControl, (int) textWidth(label) + controlMargin, 0);
 		}
 	}
 
 	@Override
-	public boolean isClick(int mx, int my)
-	{
+	public boolean isClick(int mx, int my) {
 		return internalControl.isClick(mx - this.x, my - this.y);
 	}
 
 	@Override
-	public void click()
-	{
+	public void click() {
 		internalControl.click();
 	}
 }

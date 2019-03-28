@@ -9,8 +9,7 @@ import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.util.function.Consumer;
 
-public class FileChooserFactory
-{
+public class FileChooserFactory {
 	public static final int OPEN = 0;
 	public static final int SAVE = 1;
 	private final JFileChooser fileChooser;
@@ -20,69 +19,56 @@ public class FileChooserFactory
 	private int mode;
 	private int result = -1;
 
-	public FileChooserFactory()
-	{
+	public FileChooserFactory() {
 		this.fileChooser = new JFileChooser();
 	}
 
-	public FileChooserFactory setOkAction(Consumer<File> action)
-	{
+	public FileChooserFactory setOkAction(Consumer<File> action) {
 		this.okAction = action;
 		return this;
 	}
 
-	public FileChooserFactory setCancelAction(Runnable action)
-	{
+	public FileChooserFactory setCancelAction(Runnable action) {
 		this.cancelAction = action;
 		return this;
 	}
 
-	public FileChooserFactory addFileType(String description, String... validExtensions)
-	{
+	public FileChooserFactory addFileType(String description, String... validExtensions) {
 		fileChooser.addChoosableFileFilter(new FileNameExtensionFilter(description, validExtensions));
 		return this;
 	}
 
-	public FileChooserFactory setAllowAll(boolean allow)
-	{
+	public FileChooserFactory setAllowAll(boolean allow) {
 		fileChooser.setAcceptAllFileFilterUsed(allow);
 		return this;
 	}
 
-	public FileChooserFactory setMode(@MagicConstant(intValues = {OPEN, SAVE}) int mode)
-	{
+	public FileChooserFactory setMode(@MagicConstant(intValues = {OPEN, SAVE}) int mode) {
 		this.mode = mode;
 		return this;
 	}
 
-	public void show()
-	{
+	public void show() {
 		show(true);
 	}
 
-	public void show(boolean invokeAndWait)
-	{
-		switch (mode)
-		{
+	public void show(boolean invokeAndWait) {
+		switch (mode) {
 			case OPEN:
-				try
-				{
+				try {
 					if (invokeAndWait) EventQueue.invokeAndWait(this::open);
 					else open();
 				}
-				catch (InterruptedException | InvocationTargetException e)
-				{
+				catch (InterruptedException | InvocationTargetException e) {
 					e.printStackTrace();
 				}
 				break;
 			case SAVE:
-				try
-				{
+				try {
 					if (invokeAndWait) EventQueue.invokeAndWait(this::save);
 					else save();
 				}
-				catch (InterruptedException | InvocationTargetException e)
-				{
+				catch (InterruptedException | InvocationTargetException e) {
 					e.printStackTrace();
 				}
 				break;
@@ -92,13 +78,11 @@ public class FileChooserFactory
 		else if (result == JFileChooser.CANCEL_OPTION && cancelAction != null) cancelAction.run();
 	}
 
-	private void open()
-	{
+	private void open() {
 		result = fileChooser.showOpenDialog(null);
 	}
 
-	private void save()
-	{
+	private void save() {
 		result = fileChooser.showSaveDialog(null);
 	}
 }

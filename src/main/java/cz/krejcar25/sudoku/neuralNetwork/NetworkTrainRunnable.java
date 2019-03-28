@@ -1,7 +1,6 @@
 package cz.krejcar25.sudoku.neuralNetwork;
 
-public class NetworkTrainRunnable implements Runnable
-{
+public class NetworkTrainRunnable implements Runnable {
 	private final NeuralNetwork network;
 	private final TrainingDataSet trainingData;
 	private volatile boolean runAllowed;
@@ -12,8 +11,7 @@ public class NetworkTrainRunnable implements Runnable
 	private volatile double lastError;
 	private volatile Runnable trainCycleFinishedCallback;
 
-	public NetworkTrainRunnable(NeuralNetwork network, TrainingDataSet trainingData)
-	{
+	public NetworkTrainRunnable(NeuralNetwork network, TrainingDataSet trainingData) {
 		this.runAllowed = false;
 		this.shouldPause = false;
 		this.isPaused = false;
@@ -33,31 +31,26 @@ public class NetworkTrainRunnable implements Runnable
 		this.thread.setName("NeuralNetwork-TrainThread");
 	}
 
-	public void setTrainCycleFinishedCallback(Runnable callback)
-	{
+	public void setTrainCycleFinishedCallback(Runnable callback) {
 		this.trainCycleFinishedCallback = callback;
 	}
 
 	@Override
-	public void run()
-	{
+	public void run() {
 		this.runAllowed = true;
 		this.shouldPause = false;
 		this.isPaused = false;
 		this.running = true;
 
-		while (runAllowed)
-		{
-			if (shouldPause)
-			{
+		while (runAllowed) {
+			if (shouldPause) {
 				isPaused = true;
 				running = false;
 				while (shouldPause) Thread.yield();
 				isPaused = false;
 				running = true;
 			}
-			else
-			{
+			else {
 				lastError = network.train(trainingData.getRandomPair());
 				if (trainCycleFinishedCallback != null) new Thread(trainCycleFinishedCallback).start();
 			}
@@ -67,18 +60,15 @@ public class NetworkTrainRunnable implements Runnable
 		this.running = false;
 	}
 
-	public void startTrain()
-	{
+	public void startTrain() {
 		thread.start();
 	}
 
-	public boolean isPaused()
-	{
+	public boolean isPaused() {
 		return isPaused;
 	}
 
-	public boolean pause()
-	{
+	public boolean pause() {
 		boolean pausedBefore = isPaused;
 		if (runAllowed) shouldPause = true;
 		else return false;
@@ -86,20 +76,17 @@ public class NetworkTrainRunnable implements Runnable
 		return !pausedBefore;
 	}
 
-	public void resume()
-	{
+	public void resume() {
 		if (runAllowed) shouldPause = false;
 	}
 
-	public void stop()
-	{
+	public void stop() {
 		this.runAllowed = false;
 		this.shouldPause = false;
 		while (running) Thread.yield();
 	}
 
-	public double getLastError()
-	{
+	public double getLastError() {
 		return lastError;
 	}
 }

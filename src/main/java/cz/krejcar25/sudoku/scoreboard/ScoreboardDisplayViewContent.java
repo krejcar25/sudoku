@@ -30,7 +30,9 @@ public class ScoreboardDisplayViewContent extends ScrollViewContent {
 		this.gridDifficulty = gridDifficulty;
 		this.sortBy = Scoreboard.SortBy.Time;
 		this.sortOrder = 1;
-		this.entries = getRootApplet().scoreboard.getEntries(gridProperties, gridDifficulty, sortBy, sortOrder);
+		SudokuApplet applet = getRootApplet();
+		Scoreboard scoreboard = applet.scoreboard;
+		this.entries = scoreboard.getEntries(gridProperties, gridDifficulty, sortBy, sortOrder);
 
 		this.tableHeight = 150 + entries.size() * (contentTextSize + 5);
 		int requiredHeight = SudokuApplet.floor(contentY + this.tableHeight);

@@ -3,6 +3,7 @@ package cz.krejcar25.sudoku;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import cz.krejcar25.sudoku.scoreboard.Scoreboard;
+import cz.krejcar25.sudoku.scoreboard.ScoreboardWasMessedAroundWithException;
 import cz.krejcar25.sudoku.ui.Applet;
 import cz.krejcar25.sudoku.ui.BaseView;
 import cz.krejcar25.sudoku.ui.ViewStack;
@@ -16,6 +17,7 @@ public class SudokuApplet extends Applet {
 	public Settings settings;
 	public Scoreboard scoreboard;
 	public PImage door;
+	private boolean scoreboardTamperedWithFlag = false;
 	private PImage icon;
 
 	@Override
@@ -39,6 +41,10 @@ public class SudokuApplet extends Applet {
 		surface.setTitle("Sudoku");
 
 		stack = new ViewStack(new MainMenuView(this));
+		if (scoreboardTamperedWithFlag) {
+			scoreboardTamperedWithFlag = false;
+			stack.push(new IPromiseToNeverEverMessAroundWithTheScoreboardFileAgainView(this));
+		}
 		loadImages();
 		surface.setIcon(icon);
 	}
@@ -53,62 +59,60 @@ public class SudokuApplet extends Applet {
 
 	private void loadSettings() {
 		try {
-			Settings.isValidConfig();
-			settings = Settings.loadSettings();
-		}
-		catch (FileNotFoundException e) {
-			Settings.prepare();
-			loadSettings();
-		}
-		catch (InvalidFormatException | JsonParseException e) {
-			println("An error occurred during parsing the configuration file. More details below...");
-			e.printStackTrace();
-			e.getMessage();
-			println("The program will now exit...");
-			exit();
-		}
-		catch (IOException e) {
-			e.printStackTrace();
-			exit();
-		}
-		catch (IllegalArgumentException e) {
-			println("The specified path is a dictionary. This is not allowed.");
-			exit();
-		}
-		catch (StackOverflowError error) {
-			// Tried to prepare the settings on and on and it didn`t work somehow... Check the file system
-			println("Wow, something evil happened! 🤬 Much confised. Such unlucky. Goodbye 😭");
+			try {
+				Settings.isValidConfig();
+				settings = Settings.loadSettings();
+			} catch (FileNotFoundException e) {
+				Settings.prepare();
+				loadSettings();
+			} catch (InvalidFormatException | JsonParseException e) {
+				println("An error occurred during parsing the configuration file. More details below...");
+				e.printStackTrace();
+				e.getMessage();
+				println("The program will now exit...");
+				exit();
+			} catch (IOException e) {
+				e.printStackTrace();
+				exit();
+			} catch (IllegalArgumentException e) {
+				println("The specified path is a dictionary. This is not allowed.");
+				exit();
+			}
+		} catch (StackOverflowError error) {
+			// Tried to prepare the settings on and on and it didn't work somehow... Check the file system
+			println("Wow, something evil happened woith settings! 🤬 Much confised. Such unlucky. Goodbye 😭");
 			exit();
 		}
 	}
 
 	private void loadScoreboard() {
 		try {
-			Scoreboard.isValidScoreboard(Scoreboard.DEF_PATH);
-			scoreboard = Scoreboard.loadScoreboard(Scoreboard.DEF_PATH);
-		}
-		catch (FileNotFoundException e) {
-			Scoreboard.prepare(Scoreboard.DEF_PATH);
-			loadScoreboard();
-		}
-		catch (InvalidFormatException | JsonParseException e) {
-			println("An error occurred during parsing the scoreboard file. More details below...");
-			e.printStackTrace();
-			e.getMessage();
-			println("The program will now exit...");
-			exit();
-		}
-		catch (IOException e) {
-			e.printStackTrace();
-			exit();
-		}
-		catch (IllegalArgumentException e) {
-			println("The specified path is a dictionary. This is not allowed.");
-			exit();
-		}
-		catch (StackOverflowError error) {
-			// Tried to prepare the settings on and on and it didn`t work somehow... Check the file system
-			println("Wow, something evil happened! 🤬 Much confised. Such unlucky. Goodbye 😭");
+			try {
+				Scoreboard.isValidScoreboard();
+				scoreboard = Scoreboard.loadScoreboard();
+			} catch (ScoreboardWasMessedAroundWithException e) {
+				scoreboardTamperedWithFlag = true;
+				Scoreboard.prepare();
+				loadScoreboard();
+			} catch (FileNotFoundException e) {
+				Scoreboard.prepare();
+				loadScoreboard();
+			} catch (InvalidFormatException | JsonParseException e) {
+				println("An error occurred during parsing the scoreboard file. More details below...");
+				e.printStackTrace();
+				e.getMessage();
+				println("The program will now exit...");
+				exit();
+			} catch (IOException e) {
+				e.printStackTrace();
+				exit();
+			} catch (IllegalArgumentException e) {
+				println("The specified path is a dictionary. This is not allowed.");
+				exit();
+			}
+		} catch (StackOverflowError error) {
+			// Tried to prepare the scoreboard on and on and it didn't work somehow... Check the file system
+			println("Wow, something evil happened with scoreboard! 🤬 Much confised. Such unlucky. Goodbye 😭");
 			exit();
 		}
 	}
@@ -142,8 +146,7 @@ public class SudokuApplet extends Applet {
 		try {
 			door = getImage("/image/door.png");
 			icon = getImage("/image/icon.png");
-		}
-		catch (Exception ex) {
+		} catch (Exception ex) {
 			return;
 		}
 		door.loadPixels();

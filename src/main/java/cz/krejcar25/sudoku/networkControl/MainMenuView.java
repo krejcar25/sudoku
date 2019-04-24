@@ -6,7 +6,6 @@ import cz.krejcar25.sudoku.event.ButtonEvents;
 import cz.krejcar25.sudoku.game.GridCore;
 import cz.krejcar25.sudoku.game.GridProperties;
 import cz.krejcar25.sudoku.game.SudokuGenerator;
-import cz.krejcar25.sudoku.neuralNetwork.DeepLayer;
 import cz.krejcar25.sudoku.neuralNetwork.NeuralNetwork;
 import cz.krejcar25.sudoku.ui.Applet;
 import cz.krejcar25.sudoku.ui.BaseView;
@@ -38,7 +37,7 @@ public class MainMenuView extends BaseView {
 		buttonEvents.add(new Pair<>("XOR Test", sender -> viewStack.push(new NetworkLearningSimulationView(sender.getApplet(), NetworkLearningSimulatorScenario.XOR, sender.getApplet().isKeyPressed(PConstants.SHIFT)))));
 		buttonEvents.add(new Pair<>("OR Test", sender -> viewStack.push(new NetworkLearningSimulationView(sender.getApplet(), NetworkLearningSimulatorScenario.OR, sender.getApplet().isKeyPressed(PConstants.SHIFT)))));
 		buttonEvents.add(new Pair<>("RGB Test", sender -> viewStack.push(new NetworkLearningSimulationView(sender.getApplet(), NetworkLearningSimulatorScenario.RGB, sender.getApplet().isKeyPressed(PConstants.SHIFT)))));
-		buttonEvents.add(new Pair<>("Create network", sender -> new NetworkCreationDialog(getApplet(), DeepLayer.class)));
+		buttonEvents.add(new Pair<>("Create network", sender -> new NetworkCreationDialog(getApplet())));
 		buttonEvents.add(new Pair<>("Generate sudokus", sender -> new GeneratorSelectionDialog(((gridProperties, clueCount, count) -> viewStack.push(new GenerateSudokuStringView(applet, gridProperties, clueCount, count)))).setVisible(true)));
 		buttonEvents.add(new Pair<>("Train network", sender -> viewStack.push(new NetworkTrainingView(sender.getApplet()))));
 		buttonEvents.add(new Pair<>("Test network", button1 -> testNetwork()));

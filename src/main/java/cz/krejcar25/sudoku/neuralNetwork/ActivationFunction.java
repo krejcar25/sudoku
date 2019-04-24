@@ -1,39 +1,15 @@
 package cz.krejcar25.sudoku.neuralNetwork;
 
-import org.jetbrains.annotations.Contract;
-
-import java.io.Serializable;
-
 @SuppressWarnings("unused")
-public interface ActivationFunction extends Serializable {
-	ActivationFunction SIGMOID = new ActivationFunction() {
-		@Contract(pure = true)
-		@Override
-		public double func(double value, int x, int y) {
-			return 1 / (1 + Math.exp(-value));
-		}
+public enum ActivationFunction {
+	SIGMOID((value, x, y) -> 1 / (1 + Math.exp(-value)), (value, x, y) -> value * (1 - value)),
+	TANH((value, x, y) -> Math.tanh(value), (value, x, y) -> 1 - Math.pow(value, 2));
 
-		@Contract(pure = true)
-		@Override
-		public double derivative(double value, int x, int y) {
-			return value * (1 - value);
-		}
-	};
-	ActivationFunction TANH = new ActivationFunction() {
-		@Contract(pure = true)
-		@Override
-		public double func(double value, int x, int y) {
-			return Math.tanh(value);
-		}
+	public final MapFunction<Double> function;
+	public final MapFunction<Double> derivative;
 
-		@Contract(pure = true)
-		@Override
-		public double derivative(double value, int x, int y) {
-			return 1 - Math.pow(value, 2);
-		}
-	};
-
-	double func(double value, int x, int y);
-
-	double derivative(double value, int x, int y);
+	ActivationFunction(MapFunction<Double> function, MapFunction<Double> derivation) {
+		this.function = function;
+		this.derivative = derivation;
+	}
 }

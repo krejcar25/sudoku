@@ -1,7 +1,9 @@
 package cz.krejcar25.sudoku.networkControl;
 
 import cz.krejcar25.sudoku.FileChooserFactory;
-import cz.krejcar25.sudoku.neuralNetwork.*;
+import cz.krejcar25.sudoku.neuralNetwork.ActivationFunction;
+import cz.krejcar25.sudoku.neuralNetwork.NeuralNetwork;
+import cz.krejcar25.sudoku.neuralNetwork.NeuralNetworkLayer;
 import cz.krejcar25.sudoku.ui.Applet;
 import processing.awt.PSurfaceAWT;
 
@@ -13,16 +15,12 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 
 public class NetworkCreationDialog extends JDialog {
 	private final DefaultListModel<NeuralNetworkLayer> layersListModel;
 	private JPanel contentPane;
 	private JButton buttonOK;
 	private JButton buttonCancel;
-	private JComboBox<LayerTypeDescription> newLayerTypeComboBox;
 	private JSpinner newLayerSizeSpinner;
 	private JButton propertiesButton;
 	private JList<NeuralNetworkLayer> layersList;
@@ -35,7 +33,7 @@ public class NetworkCreationDialog extends JDialog {
 	private NeuralNetwork network;
 	private NetworkChartApplet chartApplet;
 
-	NetworkCreationDialog(Applet owner, Class... deepLayerClasses) {
+	NetworkCreationDialog(Applet owner) {
 		setContentPane(contentPane);
 		setModal(true);
 		getRootPane().setDefaultButton(buttonOK);
@@ -54,8 +52,6 @@ public class NetworkCreationDialog extends JDialog {
 
 		// call onCancel() on ESCAPE
 		contentPane.registerKeyboardAction(e -> onCancel(), KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
-
-		newLayerTypeComboBox.addActionListener(e -> propertiesButton.setEnabled(newLayerTypeComboBox.getItemAt(newLayerTypeComboBox.getSelectedIndex()).needsPropertiesButton));
 
 		layersListModel = new DefaultListModel<>();
 		layersListModel.addListDataListener(new ListDataListener() {
@@ -80,7 +76,6 @@ public class NetworkCreationDialog extends JDialog {
 
 			}
 		});
-		layersList.setCellRenderer(new NetworkLayerListItemRenderer());
 		layersList.setModel(layersListModel);
 
 		addLayerButton.addActionListener(e3 -> addLayerButton_actionPerformed());
@@ -98,16 +93,10 @@ public class NetworkCreationDialog extends JDialog {
 			if (!layersListModel.isEmpty()) layersListModel.removeElementAt(layersListModel.size() - 1);
 		});
 
-		for (Class layer : deepLayerClasses)
-			if (NeuralNetworkLayer.class.isAssignableFrom(layer)) for (Annotation annotation : layer.getAnnotations())
-				if (annotation instanceof NeuralNetworkLayerProperties)
-					//noinspection unchecked
-					newLayerTypeComboBox.addItem(new LayerTypeDescription((Class<? extends NeuralNetworkLayer>) layer, ((NeuralNetworkLayerProperties) annotation).needsProperties(), ((NeuralNetworkLayerProperties) annotation).label()));
-
 		chartButton.addActionListener(e ->
 		{
 			if (e.getActionCommand().equals("SHOW")) {
-				network = new NeuralNetwork(new DeepLayer(layersListModel.get(0).getInCount(), layersListModel.get(0).getNodes(), ActivationFunction.SIGMOID));
+				network = new NeuralNetwork(new NeuralNetworkLayer(layersListModel.get(0).getInCount(), layersListModel.get(0).getNodes(), ActivationFunction.SIGMOID));
 				for (int i = 1; i < layersListModel.size(); i++) {
 					network.addLayer(layersListModel.get(i));
 				}
@@ -167,18 +156,10 @@ public class NetworkCreationDialog extends JDialog {
 	}
 
 	private void addLayerButton_actionPerformed() {
-		LayerTypeDescription layerType = newLayerTypeComboBox.getItemAt(newLayerTypeComboBox.getSelectedIndex());
 		int lastOutput = (layersListModel.isEmpty()) ? (int) inputLayerSizeSpinner.getValue() : layersListModel.getElementAt(layersListModel.getSize() - 1).getNodes();
-		try {
-			Method createMethod = layerType.type.getMethod("create", int.class, int.class);
-			@SuppressWarnings("JavaReflectionInvocation")
-			NeuralNetworkLayer layer = (NeuralNetworkLayer) createMethod.invoke(null, lastOutput, newLayerSizeSpinner.getValue());
-			layersListModel.addElement(layer);
-			if (network != null) network.addLayer(layer);
-		}
-		catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException | ClassCastException e1) {
-			e1.printStackTrace();
-		}
+		NeuralNetworkLayer layer = new NeuralNetworkLayer(lastOutput, (int) newLayerSizeSpinner.getValue(), ActivationFunction.SIGMOID);
+		layersListModel.addElement(layer);
+		if (network != null) network.addLayer(layer);
 	}
 
 	private void sizeSpinnerStatesChanged() {

@@ -1,9 +1,18 @@
 package cz.krejcar25.sudoku.neuralNetwork;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipException;
+import java.util.zip.ZipFile;
+import java.util.zip.ZipOutputStream;
 
 public class NeuralNetwork implements Serializable {
 	public static final String FILE_TYPE = "nn";
@@ -16,6 +25,13 @@ public class NeuralNetwork implements Serializable {
 	private int outputCount;
 	private int trainCycles = 0;
 
+	@JsonCreator
+	private NeuralNetwork() {
+		inputCount = -1;
+		layers = new ArrayList<>();
+		learningRate = 0;
+	}
+
 	public NeuralNetwork(@NotNull NeuralNetworkLayer layer) {
 		this.inputCount = layer.getInCount();
 		this.outputCount = layer.getNodes();
@@ -26,21 +42,31 @@ public class NeuralNetwork implements Serializable {
 		this.learningRate = 0.1;
 	}
 
+	@Nullable
 	public static NeuralNetwork loadFromFile(@NotNull String path) {
-		try (ObjectInputStream stream = new ObjectInputStream(new FileInputStream(new File(path)))) {
-			NeuralNetwork neuralNetwork = (NeuralNetwork) stream.readObject();
-			stream.close();
-			return neuralNetwork;
-		}
-		catch (FileNotFoundException ex) {
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
+		File file = new File(path);
+		try (FileInputStream fileStream = new FileInputStream(file)) {
+			try {
+				ZipFile zip = new ZipFile(file);
+				NeuralNetwork network = mapper.readValue(zip.getInputStream(zip.getEntry("network.json")), NeuralNetwork.class);
+				for (NeuralNetworkLayer layer : network.layers) layer.setNetwork(network);
+				return network;
+			} catch (ZipException ex) {
+				System.out.println("A ZipException occurred. Perhaps the file is in the old format and wasn't yet converted. Attempting old deserialization now...");
+				ObjectInputStream stream = new ObjectInputStream(fileStream);
+				NeuralNetwork neuralNetwork = (NeuralNetwork) stream.readObject();
+				stream.close();
+				return neuralNetwork;
+			}
+		} catch (FileNotFoundException ex) {
 			System.out.println("The specified file could not be found...");
 			return null;
-		}
-		catch (IOException ex) {
+		} catch (IOException ex) {
 			System.out.println("An exception occurred: " + ex.getMessage());
 			return null;
-		}
-		catch (ClassCastException | ClassNotFoundException ex) {
+		} catch (ClassCastException | ClassNotFoundException ex) {
 			System.out.println("This is probably not a NeuralNetwork file.");
 			return null;
 		}
@@ -58,7 +84,7 @@ public class NeuralNetwork implements Serializable {
 		return output;
 	}
 
-	double train(TrainingDataPair pair) {
+	double train(@NotNull TrainingDataPair pair) {
 		return train(pair.getInput(), pair.getDesiredOutput());
 	}
 
@@ -92,14 +118,13 @@ public class NeuralNetwork implements Serializable {
 		return totalError;
 	}
 
-	public void addLayer(NeuralNetworkLayer layer) {
+	public void addLayer(@NotNull NeuralNetworkLayer layer) {
 		NeuralNetworkLayer last = layers.get(layers.size() - 1);
 		if (last.getNodes() == layer.getInCount()) {
 			layers.add(layer);
 			outputCount = layer.getNodes();
 			layer.setNetwork(this);
-		}
-		else
+		} else
 			throw new IllegalArgumentException(String.format("Input node count of the added layer (%d) must match the output node count of the last added layer (%d).", layer.getInCount(), last.getNodes()));
 	}
 
@@ -124,19 +149,19 @@ public class NeuralNetwork implements Serializable {
 	}
 
 	public boolean saveToFile(@NotNull String path) {
-		try (ObjectOutputStream stream = new ObjectOutputStream(new FileOutputStream(new File(path)))) {
-			stream.writeObject(this);
-			stream.flush();
-			stream.close();
-			return true;
-		}
-		catch (FileNotFoundException ex) {
+		boolean ret = false;
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
+		try (ZipOutputStream zipFile = new ZipOutputStream(new FileOutputStream(new File(path)))) {
+			zipFile.putNextEntry(new ZipEntry("network.json"));
+			mapper.writerWithDefaultPrettyPrinter().writeValue(zipFile, this);
+			// zipFile.closeEntry();
+			ret = true;
+		} catch (FileNotFoundException ex) {
 			System.out.println("The specified file could not be found...");
-			return false;
-		}
-		catch (IOException ex) {
+		} catch (IOException ex) {
 			System.out.println("An exception occurred: " + ex.getMessage());
-			return false;
 		}
+		return ret;
 	}
 }

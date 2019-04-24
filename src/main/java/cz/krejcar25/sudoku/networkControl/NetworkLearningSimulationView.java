@@ -1,9 +1,9 @@
 package cz.krejcar25.sudoku.networkControl;
 
 import cz.krejcar25.sudoku.neuralNetwork.ActivationFunction;
-import cz.krejcar25.sudoku.neuralNetwork.DeepLayer;
 import cz.krejcar25.sudoku.neuralNetwork.NetworkTrainRunnable;
 import cz.krejcar25.sudoku.neuralNetwork.NeuralNetwork;
+import cz.krejcar25.sudoku.neuralNetwork.NeuralNetworkLayer;
 import cz.krejcar25.sudoku.ui.Applet;
 import cz.krejcar25.sudoku.ui.BaseView;
 import cz.krejcar25.sudoku.ui.Drawable;
@@ -25,9 +25,9 @@ public class NetworkLearningSimulationView extends BaseView {
 
 	NetworkLearningSimulationView(Applet applet, NetworkLearningSimulatorScenario mode, boolean showChart) {
 		super(applet, 800, 800);
-		this.network = new NeuralNetwork(new DeepLayer(2, 4, ActivationFunction.SIGMOID));
-		this.network.addLayer(new DeepLayer(4, 4, ActivationFunction.SIGMOID));
-		this.network.addLayer(new DeepLayer(4, 3, ActivationFunction.SIGMOID));
+		this.network = new NeuralNetwork(new NeuralNetworkLayer(2, 4, ActivationFunction.SIGMOID));
+		this.network.addLayer(new NeuralNetworkLayer(4, 4, ActivationFunction.SIGMOID));
+		this.network.addLayer(new NeuralNetworkLayer(4, 3, ActivationFunction.SIGMOID));
 
 		if (showChart) {
 			chartApplet = new NetworkChartApplet(applet, network, closedApplet ->

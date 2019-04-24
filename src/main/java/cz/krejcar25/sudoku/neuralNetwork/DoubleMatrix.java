@@ -1,5 +1,6 @@
 package cz.krejcar25.sudoku.neuralNetwork;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -10,8 +11,20 @@ public class DoubleMatrix implements Serializable {
 	static final long serialVersionUID = -5744503367528885903L;
 	private final int rows;
 	private final int cols;
+	@NotNull
 	private final double[][] values;
 
+
+	@Contract(pure = true)
+	@JsonCreator
+	private DoubleMatrix() {
+		this.rows = -1;
+		this.cols = -1;
+
+		this.values = new double[1][1];
+	}
+
+	@Contract(pure = true)
 	DoubleMatrix(int rows, int cols) {
 		this.rows = rows;
 		this.cols = cols;
@@ -32,7 +45,7 @@ public class DoubleMatrix implements Serializable {
 	}
 
 	@Contract("null -> fail; !null -> this")
-	public DoubleMatrix add(DoubleMatrix dm) {
+	public DoubleMatrix add(@NotNull DoubleMatrix dm) {
 		if (rows != dm.rows || cols != dm.cols)
 			throw new IllegalArgumentException("Dimensions of both matrices must be identical");
 		map((value, i, j) -> value + dm.values[i][j]);
@@ -40,7 +53,7 @@ public class DoubleMatrix implements Serializable {
 	}
 
 	@Contract("null -> fail; !null -> this")
-	DoubleMatrix sub(DoubleMatrix dm) {
+	DoubleMatrix sub(@NotNull DoubleMatrix dm) {
 		if (rows != dm.rows || cols != dm.cols)
 			throw new IllegalArgumentException("Dimensions of both matrices must be identical");
 		map((value, i, j) -> value - dm.values[i][j]);
@@ -67,13 +80,13 @@ public class DoubleMatrix implements Serializable {
 	}
 
 	@Contract("null -> fail; !null -> this")
-	DoubleMatrix mult(DoubleMatrix dm) {
+	DoubleMatrix mult(@NotNull DoubleMatrix dm) {
 		if (cols == dm.cols && rows == dm.rows) return map(((value, i, j) -> value * dm.values[i][j]));
 		else throw new IllegalArgumentException("Dimensions of both matrices must be identical");
 	}
 
 	@Contract("null -> fail; !null -> new")
-	DoubleMatrix matmult(DoubleMatrix dm) {
+	DoubleMatrix matmult(@NotNull DoubleMatrix dm) {
 		if (cols == dm.rows) return new DoubleMatrix(rows, dm.cols).map((value, i, j) ->
 		{
 			double sum = 0;

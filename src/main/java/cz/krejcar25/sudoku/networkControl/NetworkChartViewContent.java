@@ -1,6 +1,5 @@
 package cz.krejcar25.sudoku.networkControl;
 
-import cz.krejcar25.sudoku.neuralNetwork.DeepLayer;
 import cz.krejcar25.sudoku.neuralNetwork.NeuralNetwork;
 import cz.krejcar25.sudoku.ui.Applet;
 import cz.krejcar25.sudoku.ui.ScrollView;
@@ -82,7 +81,7 @@ public class NetworkChartViewContent extends ScrollViewContent {
 			for (int i = 0; i < positions.get(l).size(); i++) {
 				PVector to = positions.get(l).get(i);
 				for (int p = 0; p < positions.get(l - 1).size(); p++) {
-					double w = ((DeepLayer) network.getLayers().get(l - 1)).getWeights().get(i, p);
+					double w = network.getLayers().get(l - 1).getWeights().get(i, p);
 					strokeWeight(Applet.map((float) Math.abs(w), 0, 10, 0, 5));
 					stroke(w > 0 ? 0 : 255, 0, w > 0 ? 255 : 0);
 					PVector from = positions.get(l - 1).get(p);
@@ -100,7 +99,7 @@ public class NetworkChartViewContent extends ScrollViewContent {
 				ellipse(to.x, to.y, d, d);
 				fill(51);
 				textSize(d / 2);
-				text(String.valueOf((int) Math.floor(((DeepLayer) network.getLayers().get(l - 1)).getBias().get(i, 0) * 10)), to.x, to.y);
+				text(String.valueOf((int) Math.floor(network.getLayers().get(l - 1).getBias().get(i, 0) * 10)), to.x, to.y);
 			}
 		}
 

@@ -35,7 +35,6 @@ public class MainMenuView extends BaseView {
 		ArrayList<Pair<String, ButtonEvents<Object>>> buttonEvents = new ArrayList<>();
 		buttonEvents.add(new Pair<>("Settings", sender -> showSettingsView()));
 		buttonEvents.add(new Pair<>("Scoreboard", sender -> showScoreboardSizeSelectView()));
-		buttonEvents.add(new Pair<>("Help", sender -> showHelpView()));
 		buttonEvents.add(new Pair<>("Network Control", sender -> showNetworkControl()));
 		for (Pair<String, ButtonEvents<Object>> buttonEvent : buttonEvents) {
 			int bx = (2 * (index % 2) + 1) * width / 4;
@@ -103,10 +102,6 @@ public class MainMenuView extends BaseView {
 
 	private void showScoreboardSizeSelectView() {
 		viewStack.push(new ScoreboardSizeSelectView(getApplet()));
-	}
-
-	private void showHelpView() {
-		viewStack.push(new HelpView(getApplet()));
 	}
 
 	private void showNetworkControl() {

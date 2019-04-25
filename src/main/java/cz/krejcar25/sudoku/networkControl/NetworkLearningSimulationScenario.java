@@ -5,7 +5,7 @@ import cz.krejcar25.sudoku.neuralNetwork.TrainingDataSet;
 
 import java.util.ArrayList;
 
-public enum NetworkLearningSimulatorScenario {
+public enum NetworkLearningSimulationScenario {
 	OR(new double[][]{
 			new double[]{0d, 0d},
 			new double[]{1d, 0d},
@@ -42,7 +42,7 @@ public enum NetworkLearningSimulatorScenario {
 
 	private final TrainingDataSet2_2 trainingData;
 
-	NetworkLearningSimulatorScenario(double[][] inputs, double[][] outputs) {
+	NetworkLearningSimulationScenario(double[][] inputs, double[][] outputs) {
 		this.trainingData = new TrainingDataSet2_2(inputs, outputs);
 	}
 

@@ -23,7 +23,7 @@ public class NetworkLearningSimulationView extends BaseView {
 
 	private NetworkChartApplet chartApplet;
 
-	NetworkLearningSimulationView(Applet applet, NetworkLearningSimulatorScenario mode, boolean showChart) {
+	NetworkLearningSimulationView(Applet applet, NetworkLearningSimulationScenario mode, boolean showChart) {
 		super(applet, 800, 800);
 		this.network = new NeuralNetwork(new DeepLayer(2, 4, ActivationFunction.SIGMOID));
 		this.network.addLayer(new DeepLayer(4, 4, ActivationFunction.SIGMOID));

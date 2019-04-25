@@ -52,7 +52,7 @@ public class DifficultySelectView extends BaseView {
 	}
 
 	private void startGeneration(GridDifficulty gridDifficulty) {
-		overlay = new GeneratingOverlay(this, gridDifficulty);
+		overlay = new GeneratingOverlay(this);
 		new Thread(() ->
 		{
 			gameView.generate(gridDifficulty, animateCheckbox.state);

@@ -138,7 +138,7 @@ public class BaseGrid extends Drawable {
 			gameClock = new Clock(getApplet(), gameClock.x, gameClock.y, gridProperties.getName());
 
 			generator = new SudokuGenerator(core);
-			if (view instanceof GameView) view.setOverlay(new GeneratingOverlay((GameView) view, gridDifficulty));
+			if (view instanceof GameView) view.setOverlay(new GeneratingOverlay((GameView) view));
 			if (!getApplet().isKeyPressed(Applet.SHIFT)) shouldUpdateGrid = false;
 			Thread t = new Thread(() ->
 			{

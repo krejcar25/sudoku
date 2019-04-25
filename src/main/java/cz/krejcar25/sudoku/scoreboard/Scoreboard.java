@@ -12,7 +12,6 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
@@ -34,16 +33,15 @@ public class Scoreboard {
 
 	final ArrayList<ScoreboardEntry> entries;
 
-	private Scoreboard(boolean testingData) {
+	private Scoreboard() {
 		this.entries = new ArrayList<>();
+	}
 
-		// Testing data generation
-		if (testingData) {
-			for (GridProperties properties : GridProperties.values()) {
-				for (GridDifficulty difficulty : GridDifficulty.values()) {
-					for (int i = 0; i < 50; i++) {
-						entries.add(new ScoreboardEntry(properties, difficulty));
-					}
+	public void randomize() {
+		for (GridProperties properties : GridProperties.values()) {
+			for (GridDifficulty difficulty : GridDifficulty.values()) {
+				for (int i = 0; i < 50; i++) {
+					entries.add(new ScoreboardEntry(properties, difficulty));
 				}
 			}
 		}
@@ -52,8 +50,6 @@ public class Scoreboard {
 	@Nullable
 	public static Scoreboard loadScoreboard() throws IOException, ScoreboardWasMessedAroundWithException {
 		try (final ZipFile zip = new ZipFile(DEF_PATH)) {
-			Enumeration<? extends ZipEntry> entries = zip.entries();
-
 			BufferedInputStream data = new BufferedInputStream(zip.getInputStream(zip.getEntry("scoreboard.data")));
 			data.mark(data.available());
 			BufferedInputStream hash = new BufferedInputStream(zip.getInputStream(zip.getEntry("scoreboard.sha256")));
@@ -65,7 +61,7 @@ public class Scoreboard {
 			byte[] computedSha256 = SHA256.digest(dataBytes);
 
 			if (Arrays.equals(storedSha256, computedSha256)) {
-				Scoreboard sb = new Scoreboard(false);
+				Scoreboard sb = new Scoreboard();
 				data.reset();
 				BufferedReader reader = new BufferedReader(new InputStreamReader(data));
 				reader.lines().forEach(sb::addEntry);
@@ -78,7 +74,7 @@ public class Scoreboard {
 	}
 
 	public static void prepare() {
-		Scoreboard scoreboard = new Scoreboard(true);
+		Scoreboard scoreboard = new Scoreboard();
 		scoreboard.save();
 	}
 

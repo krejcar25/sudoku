@@ -148,6 +148,8 @@ public class NetworkTrainingView extends BaseView {
 		this.stage = Stage.TrainingFinished;
 		this.currentButton.setLabel("Save trained network");
 		this.currentButton.setClick(sender -> saveNetwork());
+		this.controls.remove(this.pauseButton);
+		this.controls.remove(this.progressDemoButton);
 	}
 
 	private void saveNetwork() {

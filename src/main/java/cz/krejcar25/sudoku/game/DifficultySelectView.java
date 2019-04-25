@@ -7,6 +7,7 @@ import cz.krejcar25.sudoku.ui.control.Button;
 import cz.krejcar25.sudoku.ui.control.Checkbox;
 import cz.krejcar25.sudoku.ui.control.Control;
 import cz.krejcar25.sudoku.ui.control.ControlLabel;
+import cz.krejcar25.sudoku.ui.style.Color;
 import processing.event.KeyEvent;
 import processing.event.MouseEvent;
 
@@ -46,6 +47,7 @@ public class DifficultySelectView extends BaseView {
 		});
 		ControlLabel animateLabel = new ControlLabel(animateCheckbox, ControlLabel.CONTROL_LEFT, "Animate grid generation");
 		animateLabel.centerOnX(400);
+		animateLabel.textColor = new Color(51);
 		controls.add(animateLabel);
 	}
 

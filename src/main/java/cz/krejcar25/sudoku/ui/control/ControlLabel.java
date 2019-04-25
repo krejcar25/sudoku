@@ -1,5 +1,6 @@
 package cz.krejcar25.sudoku.ui.control;
 
+import cz.krejcar25.sudoku.ui.style.Color;
 import org.intellij.lang.annotations.MagicConstant;
 import org.jetbrains.annotations.NotNull;
 
@@ -12,6 +13,8 @@ public class ControlLabel extends Control {
 	private final int controlSide;
 	private float controlMargin = 10;
 
+	public Color textColor;
+
 	public ControlLabel(@NotNull Control internalControl, @MagicConstant(intValues = {CONTROL_LEFT, CONTROL_RIGHT}) int controlSide, String label) {
 		super(internalControl.baseView, internalControl.x, internalControl.y, 1, internalControl.height);
 		this.internalControl = internalControl;
@@ -21,6 +24,8 @@ public class ControlLabel extends Control {
 		if (controlSide == CONTROL_RIGHT) x -= textWidth(label);
 		internalControl.x -= this.x;
 		internalControl.y -= this.y;
+
+		textColor = new Color(220);
 	}
 
 	public void centerOnX(int centerX) {
@@ -68,6 +73,7 @@ public class ControlLabel extends Control {
 	protected void draw() {
 		textAlign(LEFT, TOP);
 		textSize(4 * height / 5f);
+		fill(textColor);
 
 		if (controlSide == CONTROL_LEFT) {
 			internalControl.update();

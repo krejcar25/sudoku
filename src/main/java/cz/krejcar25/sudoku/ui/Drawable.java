@@ -1,6 +1,7 @@
 package cz.krejcar25.sudoku.ui;
 
 import cz.krejcar25.sudoku.SudokuApplet;
+import cz.krejcar25.sudoku.ui.style.Color;
 import org.intellij.lang.annotations.MagicConstant;
 import processing.core.PConstants;
 import processing.core.PImage;
@@ -324,6 +325,10 @@ public abstract class Drawable implements PConstants {
 
 	protected void fill(float v1, float v2, float v3, float alpha) {
 		this.parent.fill(v1, v2, v3, alpha);
+	}
+
+	protected void fill(Color color) {
+		this.parent.fill(color.r, color.g, color.b);
 	}
 
 	protected void noFill() {

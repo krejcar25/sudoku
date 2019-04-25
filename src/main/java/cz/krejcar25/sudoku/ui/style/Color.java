@@ -4,7 +4,6 @@ public class Color {
 	public final int r;
 	public final int g;
 	public final int b;
-	public int a;
 
 	public Color(int gray) {
 		this.r = gray;
